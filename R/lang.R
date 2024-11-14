@@ -1,3 +1,4 @@
+#' @importFrom utils capture.output
 #' @import tools
 #' @import tools
 #' @import rlang

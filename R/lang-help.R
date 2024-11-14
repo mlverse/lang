@@ -1,9 +1,14 @@
+#' Translates help
+#' @param topic topic
+#' @param package package
+#' @param lang lang
+#' @param type type
 #' @export
 lang_help <- function(topic,
                       package = NULL,
                       lang = Sys.getenv("LANG"),
                       type = getOption("help_type")) {
-  help_file <- help(topic, help_type = "text")
+  help_file <- utils::help(topic, help_type = "text")
   help_path <- as.character(help_file)
   if (topic == path_file(help_path) && is.null(package)) {
     help_folder <- path_dir(help_path)

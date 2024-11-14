@@ -14,4 +14,5 @@ Imports:
     fs,
     mall,
     rlang,
+    rstudioapi,
     tools
