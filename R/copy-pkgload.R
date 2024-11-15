@@ -97,21 +97,17 @@ shim_help <- function(topic, package = NULL, ...) {
     package_name <- package
   }
   
-  # use_dev <-
-  #   (!missing(topic) && is_string(package_str) && package_str %in% dev_packages()) ||
-  #   (!missing(topic_name) && is_null(package_str) && !is_null(dev_topic_find(topic_str)))
-  # 
-  # if (use_dev) {
-  #   dev_help(topic_str, package_str)
-  # } else {
-  #   inject(utils::help(
-  #     !!maybe_missing(topic_name),
-  #     !!maybe_missing(package_name),
-  #     ...
-  #   ))
-  # }
+  if (!en_lang()) {
+    lang_help(topic_str, package_str)
+  } else {
+    inject(utils::help(
+      !!maybe_missing(topic_name),
+      !!maybe_missing(package_name),
+      ...
+    ))
+  }
   
-  lang_help(topic_str, package_str)
+  
 }
 
 
@@ -150,14 +146,12 @@ shim_question <- function(e1, e2) {
     cli::cli_abort("Unknown input.")
   }
   
-  # Search for the topic in devtools-loaded packages.
-  # If not found, call utils::`?`.
-  # if (!is.null(topic) && !is.null(dev_topic_find(topic, pkg))) {
-  #   dev_help(topic, pkg)
-  # } else {
-  #   eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
-  # }
-  lang_help(topic, pkg)
+  if (!en_lang()) {
+    lang_help(topic, pkg)
+  } else {
+    eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
+  }
+ 
 }
 
 insert_global_shims <- function(force = FALSE) {
@@ -176,4 +170,17 @@ insert_global_shims <- function(force = FALSE) {
   #e$system.file <- shim_system.file
   
   base::attach(e, name = "devtools_shims", warn.conflicts = FALSE)
+}
+
+en_lang <- function(lang = NULL) {
+  out <- FALSE
+  if(is.null(lang)) {
+    lang <- Sys.getenv("LANG", unset = "")  
+  }
+  if(nchar(lang) > 2) {
+    if(substr(lang, 1, 3) == "en_" | lang == tolower("english")) {
+      out <- TRUE
+    } 
+  }
+  out
 }
