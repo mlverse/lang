@@ -7,11 +7,10 @@
 #' @examples
 #' \donttest{
 #' library(lang)
-#' library(mall)
 #' llm_use("ollama", "llama3.2", .silent = TRUE)
 #' lang_help("aes", "ggplot2", lang = "french")
 #' }
-#' 
+#'
 #' @export
 lang_help <- function(topic,
                       package = NULL,
@@ -32,9 +31,9 @@ lang_help <- function(topic,
   tag_labels <- list(
     "\\title" = "Title",
     "\\description" = "Description",
-    "\\value" = "Value", 
-    "\\details" = "Details", 
-    "\\seealso" = "See Also", 
+    "\\value" = "Value",
+    "\\details" = "Details",
+    "\\seealso" = "See Also",
     "\\examples" = "Examples",
     "\\arguments" = "Arguments",
     "\\usage" = "Usage"
@@ -50,7 +49,7 @@ lang_help <- function(topic,
       tag_label <- paste0("Section: '", as.character(rd_i[[1]]), "'")
     }
     if (is.null(tag_label)) {
-      tag_label <- substr(tag_name, 2, nchar(tag_name)) 
+      tag_label <- substr(tag_name, 2, nchar(tag_name))
     }
     cli_progress_update()
     if (tag_name %in% standard_tags) {
@@ -113,6 +112,9 @@ print.lang_topic <- function(x, ...) {
   type <- arg_match0(x$type %||% "text", c("text", "html"))
   if (type == "html" && rstudioapi_available()) {
     return(rstudioapi::callFun("previewRd", x$path))
+  }
+  if (type == "text") {
+    Rd2txt(x$path)
   }
 }
 

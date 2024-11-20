@@ -2,9 +2,11 @@
 
 S3method(print,lang_topic)
 export(lang_help)
+export(llm_use)
 import(cli)
 import(fs)
 import(mall)
 import(rlang)
 import(tools)
+importFrom(mall,llm_use)
 importFrom(utils,capture.output)

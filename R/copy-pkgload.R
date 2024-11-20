@@ -6,10 +6,10 @@
 #' Drop-in replacements for help and ? functions
 #'
 #' The `?` and `help` functions are replacements for functions of the
-#' same name in the utils package. If the LANG environment variable is not set 
-#' to English, it will activate the translation to whatever language LANG is 
+#' same name in the utils package. If the LANG environment variable is not set
+#' to English, it will activate the translation to whatever language LANG is
 #' set to.
-#' 
+#'
 #' @param topic A name or character string specifying the help topic.
 #' @param package A name or character string specifying the package in which
 #'   to search for the help topic. If NULL, search all packages.
@@ -23,7 +23,7 @@
 shim_help <- function(topic, package = NULL, ...) {
   # Reproduce help's NSE for topic - try to eval it and see if it's a string
   topic_name <- substitute(topic)
-  
+
   is_string <- tryCatch(
     error = function(...) FALSE,
     {
@@ -31,7 +31,7 @@ shim_help <- function(topic, package = NULL, ...) {
       is_string(topic)
     }
   )
-  
+
   if (is_string) {
     topic_str <- topic
     topic_name <- sym(topic)
@@ -46,7 +46,7 @@ shim_help <- function(topic, package = NULL, ...) {
       cli::cli_abort("{.arg topic} must be a name.")
     }
   }
-  
+
   # help's NSE for package is slightly simpler
   package_name <- substitute(package)
   if (is_symbol(package_name)) {
@@ -58,7 +58,7 @@ shim_help <- function(topic, package = NULL, ...) {
     package_str <- package
     package_name <- package
   }
-  
+
   if (!en_lang()) {
     lang_help(topic_str, package_str)
   } else {
@@ -68,8 +68,6 @@ shim_help <- function(topic, package = NULL, ...) {
       ...
     ))
   }
-  
-  
 }
 
 
@@ -107,13 +105,12 @@ shim_question <- function(e1, e2) {
   } else {
     cli::cli_abort("Unknown input.")
   }
-  
+
   if (!en_lang()) {
     lang_help(topic, pkg)
   } else {
     eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
   }
- 
 }
 
 insert_global_shims <- function(force = FALSE) {
@@ -129,20 +126,20 @@ insert_global_shims <- function(force = FALSE) {
   e$`?` <- shim_question
   base::attach(
     what = e,
-    name = "devtools_shims", 
+    name = "devtools_shims",
     warn.conflicts = FALSE
-    )
+  )
 }
 
 which_lang <- function(lang = NULL) {
-  if(is.null(lang)) {
+  if (is.null(lang)) {
     env_lang <- Sys.getenv("LANG", unset = NA)
     env_language <- Sys.getenv("LANGUAGE", unset = NA)
     lang <- "english"
-    if(!is.na(env_lang)) {
+    if (!is.na(env_lang)) {
       lang <- env_lang
     }
-    if(!is.na(env_language)) {
+    if (!is.na(env_language)) {
       lang <- env_lang
     }
   }
@@ -152,10 +149,10 @@ which_lang <- function(lang = NULL) {
 en_lang <- function(lang = NULL) {
   out <- FALSE
   lang <- which_lang(lang)
-  if(nchar(lang) > 2) {
-    if(substr(lang, 1, 3) == "en_" | lang == tolower("english")) {
+  if (nchar(lang) > 2) {
+    if (substr(lang, 1, 3) == "en_" | lang == tolower("english")) {
       out <- TRUE
-    } 
+    }
   }
   out
 }

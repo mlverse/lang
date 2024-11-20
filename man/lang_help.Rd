@@ -22,7 +22,6 @@ Translates help
 \examples{
 \donttest{
 library(lang)
-library(mall)
 llm_use("ollama", "llama3.2", .silent = TRUE)
 lang_help("aes", "ggplot2", lang = "french")
 }
