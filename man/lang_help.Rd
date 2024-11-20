@@ -4,22 +4,27 @@
 \alias{lang_help}
 \title{Translates help}
 \usage{
-lang_help(
-  topic,
-  package = NULL,
-  lang = Sys.getenv("LANG"),
-  type = getOption("help_type")
-)
+lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 }
 \arguments{
-\item{topic}{topic}
+\item{topic}{The topic to search for}
 
-\item{package}{package}
+\item{package}{The R package to look for the topic}
 
-\item{lang}{lang}
+\item{lang}{Language to translate the help to}
 
-\item{type}{type}
+\item{type}{Produce "html" or "text" output for the help. It default to
+\code{getOption("help_type")}}
 }
 \description{
 Translates help
+}
+\examples{
+\donttest{
+library(lang)
+library(mall)
+llm_use("ollama", "llama3.2", .silent = TRUE)
+lang_help("aes", "ggplot2", lang = "french")
+}
+
 }

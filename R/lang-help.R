@@ -1,8 +1,17 @@
 #' Translates help
-#' @param topic topic
-#' @param package package
-#' @param lang lang
-#' @param type type
+#' @param topic The topic to search for
+#' @param package The R package to look for the topic
+#' @param lang Language to translate the help to
+#' @param type Produce "html" or "text" output for the help. It default to
+#' `getOption("help_type")`
+#' @examples
+#' \donttest{
+#' library(lang)
+#' library(mall)
+#' llm_use("ollama", "llama3.2", .silent = TRUE)
+#' lang_help("aes", "ggplot2", lang = "french")
+#' }
+#' 
 #' @export
 lang_help <- function(topic,
                       package = NULL,
