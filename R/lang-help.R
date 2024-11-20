@@ -1,4 +1,12 @@
 #' Translates help
+#' @description
+#' Translates a given topic into a target language. It uses the `lang` argument
+#' to determine which language to translate to. If not passed, this function will
+#' look for a target language in the LANG and LANGUAGE environment variables to
+#' determine the target language. If the target language is English, no translation
+#' will be processed, so the help returned will be the original package's 
+#' documentation. 
+#' 
 #' @param topic The topic to search for
 #' @param package The R package to look for the topic
 #' @param lang Language to translate the help to
@@ -10,7 +18,8 @@
 #' llm_use("ollama", "llama3.2", .silent = TRUE)
 #' lang_help("aes", "ggplot2", lang = "french")
 #' }
-#'
+#' @returns Returns either a text or html version of the topic's help
+#' documentation
 #' @export
 lang_help <- function(topic,
                       package = NULL,
