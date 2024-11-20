@@ -6,18 +6,10 @@
 #' Drop-in replacements for help and ? functions
 #'
 #' The `?` and `help` functions are replacements for functions of the
-#' same name in the utils package. 
+#' same name in the utils package. If the LANG environment variable is not set 
+#' to English, it will activate the translation to whatever language LANG is 
+#' set to.
 #' 
-#' The `?` function is a replacement for [utils::?()] from the
-#' utils package. It will search for help in devtools-loaded packages first,
-#' then in regular packages.
-#'
-#' The `help` function is a replacement for [utils::help()] from
-#' the utils package. If `package` is not specified, it will search for
-#' help in devtools-loaded packages first, then in regular packages. If
-#' `package` is specified, then it will search for help in devtools-loaded
-#' packages or regular packages, as appropriate.
-#'
 #' @param topic A name or character string specifying the help topic.
 #' @param package A name or character string specifying the package in which
 #'   to search for the help topic. If NULL, search all packages.
@@ -28,36 +20,6 @@
 #' @rdname help
 #' @name help
 #' @usage # help(topic, package = NULL, ...)
-#'
-#' @examples
-#' \dontrun{
-#' # This would load devtools and look at the help for load_all, if currently
-#' # in the devtools source directory.
-#' load_all()
-#' ?load_all
-#' help("load_all")
-#' }
-#'
-#' # To see the help pages for utils::help and utils::`?`:
-#' help("help", "utils")
-#' help("?", "utils")
-#'
-#' \dontrun{
-#' # Examples demonstrating the multiple ways of supplying arguments
-#' # NB: you can't do pkg <- "ggplot2"; help("ggplot2", pkg)
-#' help(lm)
-#' help(lm, stats)
-#' help(lm, 'stats')
-#' help('lm')
-#' help('lm', stats)
-#' help('lm', 'stats')
-#' help(package = stats)
-#' help(package = 'stats')
-#' topic <- "lm"
-#' help(topic)
-#' help(topic, stats)
-#' help(topic, 'stats')
-#' }
 shim_help <- function(topic, package = NULL, ...) {
   # Reproduce help's NSE for topic - try to eval it and see if it's a string
   topic_name <- substitute(topic)
@@ -162,21 +124,34 @@ insert_global_shims <- function(force = FALSE) {
     }
     base::detach("devtools_shims")
   }
-  
   e <- new.env()
-  
   e$help <- shim_help
   e$`?` <- shim_question
-  #e$system.file <- shim_system.file
-  
-  base::attach(e, name = "devtools_shims", warn.conflicts = FALSE)
+  base::attach(
+    what = e,
+    name = "devtools_shims", 
+    warn.conflicts = FALSE
+    )
+}
+
+which_lang <- function(lang = NULL) {
+  if(is.null(lang)) {
+    env_lang <- Sys.getenv("LANG", unset = NA)
+    env_language <- Sys.getenv("LANGUAGE", unset = NA)
+    lang <- "english"
+    if(!is.na(env_lang)) {
+      lang <- env_lang
+    }
+    if(!is.na(env_language)) {
+      lang <- env_lang
+    }
+  }
+  lang
 }
 
 en_lang <- function(lang = NULL) {
   out <- FALSE
-  if(is.null(lang)) {
-    lang <- Sys.getenv("LANG", unset = "")  
-  }
+  lang <- which_lang(lang)
   if(nchar(lang) > 2) {
     if(substr(lang, 1, 3) == "en_" | lang == tolower("english")) {
       out <- TRUE

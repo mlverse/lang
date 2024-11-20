@@ -6,9 +6,9 @@
 #' @export
 lang_help <- function(topic,
                       package = NULL,
-                      lang = Sys.getenv("LANG"),
+                      lang = NULL,
                       type = getOption("help_type")) {
-  
+  lang <- which_lang(lang)
   help_file <- utils::help(topic, help_type = "text")
   help_path <- as.character(help_file)
   if (topic == path_file(help_path) && is.null(package)) {

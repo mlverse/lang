@@ -26,46 +26,7 @@ to search for the help topic. If NULL, search all packages.}
 }
 \description{
 The \verb{?} and \code{help} functions are replacements for functions of the
-same name in the utils package.
-}
-\details{
-The \verb{?} function is a replacement for \code{\link[utils:Question]{utils::?()}} from the
-utils package. It will search for help in devtools-loaded packages first,
-then in regular packages.
-
-The \code{help} function is a replacement for \code{\link[utils:help]{utils::help()}} from
-the utils package. If \code{package} is not specified, it will search for
-help in devtools-loaded packages first, then in regular packages. If
-\code{package} is specified, then it will search for help in devtools-loaded
-packages or regular packages, as appropriate.
-}
-\examples{
-\dontrun{
-# This would load devtools and look at the help for load_all, if currently
-# in the devtools source directory.
-load_all()
-?load_all
-help("load_all")
-}
-
-# To see the help pages for utils::help and utils::`?`:
-help("help", "utils")
-help("?", "utils")
-
-\dontrun{
-# Examples demonstrating the multiple ways of supplying arguments
-# NB: you can't do pkg <- "ggplot2"; help("ggplot2", pkg)
-help(lm)
-help(lm, stats)
-help(lm, 'stats')
-help('lm')
-help('lm', stats)
-help('lm', 'stats')
-help(package = stats)
-help(package = 'stats')
-topic <- "lm"
-help(topic)
-help(topic, stats)
-help(topic, 'stats')
-}
+same name in the utils package. If the LANG environment variable is not set
+to English, it will activate the translation to whatever language LANG is
+set to.
 }
