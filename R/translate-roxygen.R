@@ -23,8 +23,9 @@ translate_roxygen <- function(lang = NULL, path = "R", dir = fs::path("man-lang"
   dir_create(dir)
   if (is_dir(path)) {
     r_files <- dir_ls(path, glob = "*.R")
-    for (files in r_files) {
-      translate_roxygen_file(path = files, lang = lang, dir = dir)
+    for (i in seq_along(r_files)) {
+      cli_inform("[{i}/{length(r_files)}] {r_files[[i]]}")
+      translate_roxygen_file(path = r_files[[i]], lang = lang, dir = dir)
     }
   } else {
     translate_roxygen_file(path = path, lang = lang, dir = dir)
@@ -32,25 +33,30 @@ translate_roxygen <- function(lang = NULL, path = "R", dir = fs::path("man-lang"
 }
 
 translate_roxygen_file <- function(path, lang = NULL, dir = fs::path("man-lang", lang)) {
-  cli_inform("Translating: {path}")
   rd_path <- path(dir, path_file(path))
   parsed <- roxygen2::parse_file(path)
   contents <- NULL
   for (roxy in parsed) {
+    tg <- NULL
+    cli_progress_message("Translating: {.emph {tg}}") 
     for (tag in roxy$tags) {
+      tg <- tag$tag
       raw <- tag$raw
-      if (tag$tag %in% c("title", "description", "param", "details", "returns")) {
+      if (tg %in% c("title", "description", "param", "details", "returns")) {
+        cli_progress_update()
+        Sys.sleep(0.01)
         raw <- llm_vec_translate(raw, language = lang)
       }
       raw <- gsub("\n", "\n#'", raw)
-      if (tag$tag == "title") {
+      if (tg == "title") {
         contents <- c(contents, glue("#' {raw}"))
       } else {
-        contents <- c(contents, glue("#' @{tag$tag} {raw}"))
+        contents <- c(contents, glue("#' @{tg} {raw}"))
       }
     }
     #contents <- c(contents, glue("{roxy$object$alias} <- function(...) NULL"))
     contents <- c(contents, "NULL")
+    
   }
   if (!is.null(contents)) {
     writeLines(contents, rd_path)
