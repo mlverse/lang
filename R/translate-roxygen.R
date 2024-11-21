@@ -1,5 +1,5 @@
 roxygen_translate <- function(path, lang = NULL, dir = fs::path("man-lang", lang)) {
-  path <- "~/Projects/mall/r/R/llm-classify.R"
+  path <- "~/Projects/mall/r/R/llm-custom.R"
   lang <- "fr"
   dir <- fs::path("man-lang", lang)
   dir_create(dir)
@@ -9,12 +9,15 @@ roxygen_translate <- function(path, lang = NULL, dir = fs::path("man-lang", lang
     contents <- NULL
     for (roxy in parsed) {
       for (tag in roxy$tags) {
-        translation <- llm_vec_translate(tag$raw, language = lang)
-        # translation <- tag$raw
-        if (tag$tag != "title") {
-          contents <- c(contents, glue("#' @{tag$tag} {translation}"))
+        raw <- tag$raw
+        if(tag$tag %in% c("title", "description", "param", "details", "returns")) {
+          raw <- llm_vec_translate(raw, language = lang)
+        }
+        raw <- gsub("\n", "\n#'", raw)
+        if (tag$tag == "title") {
+          contents <- c(contents, glue("#' {raw}"))
         } else {
-          contents <- c(contents, glue("#' {translation}"))
+          contents <- c(contents, glue("#' @{tag$tag} {raw}"))
         }
       }
       contents <- c(contents, glue("{roxy$object$alias} <- function(...) NULL"))
