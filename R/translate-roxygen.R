@@ -52,20 +52,22 @@ translate_roxygen_file <- function(path, lang = NULL, dir, no = 1, of = 1) {
     for (tag in roxy$tags) {
       tg <- tag$tag
       raw <- tag$raw
+      name <- NULL
       if (tg %in% c("title", "description", "param", "details", "returns")) {
         cli_progress_update()
-        Sys.sleep(0.01)
         raw <- llm_vec_translate(raw, language = lang)
+      }
+      if (tg == "param") {
+        name <- tag$val$name
       }
       raw <- gsub("\n", "\n#'", raw)
       if (tg == "title") {
         contents <- c(contents, glue("#' {raw}"))
       } else {
-        contents <- c(contents, glue("#' @{tg} {raw}"))
+        contents <- c(contents, glue("#' @{tg} {name} {raw}"))
       }
     }
-    # contents <- c(contents, glue("{roxy$object$alias} <- function(...) NULL"))
-    contents <- c(contents, "NULL")
+    contents <- c(contents, glue("{roxy$object$alias} <- function(...) NULL"))
   }
   if (!is.null(contents)) {
     writeLines(contents, rd_path)
