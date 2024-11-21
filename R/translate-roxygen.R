@@ -57,7 +57,7 @@ translate_roxygen_file <- function(path, lang = NULL, dir, no = 1, of = 1) {
         raw <- llm_vec_translate(raw, language = lang)
       }
       if (tg == "param") {
-        name <-  glue(" tag$val$name ")
+        name <-  glue(" {tag$val$name} ")
       } else {
         name <- ""
       }
