@@ -29,14 +29,13 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
     new_path = path(copy_path, "R"),
     overwrite = TRUE
   )
-  
+  #   Using callr to avoid the messages from roxygen2
   callr::r(
     func = function(x) roxygen2::roxygenize(x, roclets = "rd"), 
     args = list(copy_path)
     )
-  
   # Copies the new contents in 'man' from the temp copy 
-  # into target folder, under the language's subfolder
+  # into target folder, under the language's sub-folder
   target_path <- path(target, lang)
   if(dir_exists(target_path)) {
     dir_delete(target_path)

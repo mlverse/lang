@@ -2,9 +2,12 @@
 % Please edit documentation in R/process-roxygen.R
 \name{process_roxygen}
 \alias{process_roxygen}
+\alias{process_man_lang}
 \title{Creates the Rd files based on translated Roxygen scripts}
 \usage{
 process_roxygen(lang, source = "man-lang", target = "inst/man-lang")
+
+process_man_lang(source = "man-lang", target = "inst/man-lang")
 }
 \arguments{
 \item{lang}{2-letter language/source folder where the translated Roxygen
