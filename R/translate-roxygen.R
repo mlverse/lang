@@ -1,3 +1,20 @@
+#' Translates the Roxygen2 documentation 
+#' @description
+#' Reads the Roxygen2 tags in the package and translates them. The translations 
+#' are stored in R scripts. The default location of the new scripts is 'man-lang'.
+#' The will be in a sub-folder representing the language the are translated to.
+#'
+#' @details This approach makes it easier to edit the translations by hand after
+#' the LLM does a first pass. This way it is easier for others to collaborate
+#' with improving the translation
+#' 
+#' @param lang 2-letter target language to translate to
+#' @param path The source R scripts. This can be a folder or a single file. It
+#' defaults to the R folder.
+#' @param dir The target folder to save the new, translated, R scripts to. It
+#' defaults to 'man-lan/[2 letter target language]'
+#' 
+#' @export
 roxygen_translate <- function(lang = NULL, path = "R", dir = fs::path("man-lang", lang)) {
   dir <- fs::path("man-lang", lang)
   dir_create(dir)
