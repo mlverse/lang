@@ -15,30 +15,40 @@
 #' defaults to 'man-lan/[2 letter target language]'
 #'
 #' @export
-translate_roxygen <- function(lang = NULL, path = "R", dir = fs::path("man-lang", lang)) {
-  if(nchar(lang) != 2) {
+translate_roxygen <- function(
+    lang = NULL,
+    path = "R",
+    dir = fs::path("man-lang", lang)) {
+  if (nchar(lang) != 2) {
     cli_abort("Use an ISO 639 2 character language code for `lang`")
   }
   dir <- fs::path("man-lang", lang)
   dir_create(dir)
   if (is_dir(path)) {
+    cli_h3("`lang` translating Roxygen into '{lang}'")
     r_files <- dir_ls(path, glob = "*.R")
     for (i in seq_along(r_files)) {
-      cli_inform("[{i}/{length(r_files)}] {r_files[[i]]}")
-      translate_roxygen_file(path = r_files[[i]], lang = lang, dir = dir)
+      translate_roxygen_file(
+        path = r_files[[i]], 
+        lang = lang, 
+        dir = dir, 
+        no = i, 
+        of = length(r_files)
+        )
     }
   } else {
     translate_roxygen_file(path = path, lang = lang, dir = dir)
   }
 }
 
-translate_roxygen_file <- function(path, lang = NULL, dir = fs::path("man-lang", lang)) {
+translate_roxygen_file <- function(path, lang = NULL, dir, no = 1, of = 1) {
   rd_path <- path(dir, path_file(path))
+  cli_inform("[{no}/{of}] {path} --> {rd_path}")
   parsed <- roxygen2::parse_file(path)
   contents <- NULL
   for (roxy in parsed) {
     tg <- NULL
-    cli_progress_message("Translating: {.emph {tg}}") 
+    cli_progress_message("Translating: {.emph {tg}}")
     for (tag in roxy$tags) {
       tg <- tag$tag
       raw <- tag$raw
@@ -54,9 +64,8 @@ translate_roxygen_file <- function(path, lang = NULL, dir = fs::path("man-lang",
         contents <- c(contents, glue("#' @{tg} {raw}"))
       }
     }
-    #contents <- c(contents, glue("{roxy$object$alias} <- function(...) NULL"))
+    # contents <- c(contents, glue("{roxy$object$alias} <- function(...) NULL"))
     contents <- c(contents, "NULL")
-    
   }
   if (!is.null(contents)) {
     writeLines(contents, rd_path)
