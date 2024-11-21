@@ -30,7 +30,7 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
     overwrite = TRUE
   )
   # Runs documentation function against the temp copy
-  roxygen2::roxygenize(copy_path, roclets = "rd")
+  roxygenize(copy_path, roclets = "rd")
   # Copies the new contents in 'man' from the temp copy 
   # into target folder, under the language's subfolder
   target_path <- path(target, lang)

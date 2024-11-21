@@ -44,7 +44,7 @@ translate_roxygen <- function(
 translate_roxygen_file <- function(path, lang = NULL, dir, no = 1, of = 1) {
   rd_path <- path(dir, path_file(path))
   cli_inform("[{no}/{of}] {path} --> {rd_path}")
-  parsed <- roxygen2::parse_file(path)
+  parsed <- parse_file(path)
   contents <- NULL
   for (roxy in parsed) {
     tg <- NULL

@@ -4,7 +4,13 @@
 \alias{lang_help}
 \title{Translates help}
 \usage{
-lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
+lang_help(
+  topic,
+  package = NULL,
+  lang = NULL,
+  type = getOption("help_type"),
+  package_rds = "man-lang"
+)
 }
 \arguments{
 \item{topic}{The topic to search for}
