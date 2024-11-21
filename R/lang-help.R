@@ -4,9 +4,9 @@
 #' to determine which language to translate to. If not passed, this function will
 #' look for a target language in the LANG and LANGUAGE environment variables to
 #' determine the target language. If the target language is English, no translation
-#' will be processed, so the help returned will be the original package's 
-#' documentation. 
-#' 
+#' will be processed, so the help returned will be the original package's
+#' documentation.
+#'
 #' @param topic The topic to search for
 #' @param package The R package to look for the topic
 #' @param lang Language to translate the help to
