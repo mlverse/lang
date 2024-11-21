@@ -29,11 +29,18 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
     new_path = path(copy_path, "R"),
     overwrite = TRUE
   )
-  # Runs documentation function against the temp copy
-  roxygenize(copy_path, roclets = "rd")
+  
+  callr::r(
+    func = function(x) roxygen2::roxygenize(x, roclets = "rd"), 
+    args = list(copy_path)
+    )
+  
   # Copies the new contents in 'man' from the temp copy 
   # into target folder, under the language's subfolder
   target_path <- path(target, lang)
+  if(dir_exists(target_path)) {
+    dir_delete(target_path)
+  }
   dir_create(target_path)
   file_copy(
     path = dir_ls(path(copy_path, "man")),
@@ -42,4 +49,14 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
   )
   # Deletes the temporary folder
   dir_delete(temp_dir)
+  invisible()
+}
+
+#' @rdname process_roxygen
+#' @export
+process_man_lang <- function(source = "man-lang", target = "inst/man-lang") {
+  sub_folders <- dir_ls(source, type = "directory")
+  for(folder in sub_folders) {
+    process_roxygen(path_file(folder), source, target)
+  }
 }

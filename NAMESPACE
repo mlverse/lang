@@ -3,6 +3,7 @@
 S3method(print,lang_topic)
 export(lang_help)
 export(llm_use)
+export(process_man_lang)
 export(process_roxygen)
 export(translate_roxygen)
 import(cli)
