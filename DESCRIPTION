@@ -12,6 +12,7 @@ RoxygenNote: 7.3.2
 Imports: 
     cli,
     fs,
+    glue,
     mall,
     rlang,
     rstudioapi,

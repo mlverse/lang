@@ -29,12 +29,12 @@ translate_roxygen <- function(
     r_files <- dir_ls(path, glob = "*.R")
     for (i in seq_along(r_files)) {
       translate_roxygen_file(
-        path = r_files[[i]], 
-        lang = lang, 
-        dir = dir, 
-        no = i, 
+        path = r_files[[i]],
+        lang = lang,
+        dir = dir,
+        no = i,
         of = length(r_files)
-        )
+      )
     }
   } else {
     translate_roxygen_file(path = path, lang = lang, dir = dir)
