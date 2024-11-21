@@ -1,3 +1,12 @@
+#' Creates the Rd files based on translated Roxygen scripts
+#' @param lang 2-letter language/source folder where the translated Roxygen
+#' scripts are located
+#' @param source Root source folder where the different translations are located.
+#' Defaults to 'man-lang'.
+#' @param target Root target folder where the different translations will be
+#' located. Defaults to 'inst/man-lang'
+#' @returns Multiple Rd files based on the source R scripts
+#' @export
 process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang") {
   if (nchar(lang) != 2) {
     cli_abort("Use an ISO 639 2 character language code for `lang`")
