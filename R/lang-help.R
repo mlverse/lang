@@ -24,8 +24,7 @@
 lang_help <- function(topic,
                       package = NULL,
                       lang = NULL,
-                      type = getOption("help_type"),
-                      package_rds = "man-lang") {
+                      type = getOption("help_type")) {
   lang <- which_lang(lang)
   help_file <- utils::help(topic, help_type = "text")
   help_path <- as.character(help_file)
@@ -34,7 +33,7 @@ lang_help <- function(topic,
     help_pkg <- path_dir(help_folder)
     package <- path_file(help_pkg)
   }
-  pkg_rds_path <- system.file(package_rds, package = package)
+  pkg_rds_path <- system.file("man-lang", package = package)
   pkg_rd_lan <- path(pkg_rds_path, lang)
   pkg_rd_path <- path(pkg_rd_lan, topic, ext = "Rd")
   if(file_exists(pkg_rd_path)) {

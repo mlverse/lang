@@ -4,16 +4,25 @@
 \alias{translate_roxygen}
 \title{Translates the Roxygen2 documentation}
 \usage{
-translate_roxygen(lang = NULL, path = "R", dir = fs::path("man-lang", lang))
+translate_roxygen(
+  lang,
+  target_subfolder,
+  target = path("man-lang"),
+  source = path("R")
+)
 }
 \arguments{
-\item{lang}{2-letter target language to translate to}
+\item{lang}{The target language to translate help to}
 
-\item{path}{The source R scripts. This can be a folder or a single file. It
-defaults to the R folder.}
+\item{target_subfolder}{2-letter language/source folder to save the new
+Roxygen scripts to}
 
-\item{dir}{The target folder to save the new, translated, R scripts to. It
-defaults to 'man-lan/\link{2 letter target language}'}
+\item{target}{The target base folder to save the Roxygen files. It defaults
+to 'man-lang'. The final destination will be a combination of this and the
+folder from \code{target_subfolder}}
+
+\item{source}{The source R scripts. This can be a folder or a single file. It
+defaults to the 'R' folder.}
 }
 \description{
 Reads the Roxygen2 tags in the package and translates them. The translations

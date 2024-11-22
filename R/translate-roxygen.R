@@ -7,37 +7,40 @@
 #' @details This approach makes it easier to edit the translations by hand after
 #' the LLM does a first pass. This way it is easier for others to collaborate
 #' with improving the translation
-#'
-#' @param lang 2-letter target language to translate to
-#' @param path The source R scripts. This can be a folder or a single file. It
-#' defaults to the R folder.
-#' @param dir The target folder to save the new, translated, R scripts to. It
-#' defaults to 'man-lan/[2 letter target language]'
+#' @param lang The target language to translate help to
+#' @param target_subfolder 2-letter language/source folder to save the new 
+#' Roxygen scripts to
+#' @param target The target base folder to save the Roxygen files. It defaults 
+#' to 'man-lang'. The final destination will be a combination of this and the
+#' folder from `target_subfolder`
+#' @param source The source R scripts. This can be a folder or a single file. It
+#' defaults to the 'R' folder.
 #'
 #' @export
 translate_roxygen <- function(
-    lang = NULL,
-    path = "R",
-    dir = fs::path("man-lang", lang)) {
-  if (nchar(lang) != 2) {
-    cli_abort("Use an ISO 639 2 character language code for `lang`")
+    lang ,
+    target_subfolder,
+    target = path("man-lang"),
+    source = path("R")) {
+  if (nchar(target_subfolder) != 2) {
+    cli_abort("Use an ISO 639 2 character language code for `target_subfolder`")
   }
-  dir <- fs::path("man-lang", lang)
-  dir_create(dir)
-  if (is_dir(path)) {
+  target <- path(target, target_subfolder)
+  dir_create(target)
+  if (is_dir(source)) {
     cli_h3("`lang` translating Roxygen into '{lang}'")
-    r_files <- dir_ls(path, glob = "*.R")
+    r_files <- dir_ls(source, glob = "*.R")
     for (i in seq_along(r_files)) {
       translate_roxygen_file(
         path = r_files[[i]],
         lang = lang,
-        dir = dir,
+        dir = target,
         no = i,
         of = length(r_files)
       )
     }
   } else {
-    translate_roxygen_file(path = path, lang = lang, dir = dir)
+    translate_roxygen_file(path = source, lang = lang, dir = target)
   }
 }
 
