@@ -8,9 +8,9 @@
 #' the LLM does a first pass. This way it is easier for others to collaborate
 #' with improving the translation
 #' @param lang The target language to translate help to
-#' @param target_subfolder 2-letter language/source folder to save the new 
+#' @param target_subfolder 2-letter language/source folder to save the new
 #' Roxygen scripts to
-#' @param target The target base folder to save the Roxygen files. It defaults 
+#' @param target The target base folder to save the Roxygen files. It defaults
 #' to 'man-lang'. The final destination will be a combination of this and the
 #' folder from `target_subfolder`
 #' @param source The source R scripts. This can be a folder or a single file. It
@@ -18,7 +18,7 @@
 #'
 #' @export
 translate_roxygen <- function(
-    lang ,
+    lang,
     target_subfolder,
     target = path("man-lang"),
     source = path("R")) {
@@ -47,12 +47,12 @@ translate_roxygen <- function(
 }
 
 translate_roxygen_file <- function(path,
-                                   lang = NULL, 
+                                   lang = NULL,
                                    dir,
                                    no = 1,
                                    of = 1,
                                    pkg_env = NULL) {
-  if(is.null(pkg_env)) {
+  if (is.null(pkg_env)) {
     pkg_env <- roxygen2::env_package(path_file(path))
   }
   rd_path <- path(dir, path_file(path))
@@ -65,12 +65,16 @@ translate_roxygen_file <- function(path,
     for (tag in roxy$tags) {
       tg <- tag$tag
       raw <- tag$raw
-      if (tg %in% c("title", "description", "param", "details", "returns")) {
+      if (tg %in% c(
+        "title", "description", "param",
+        "details", "returns", "format"
+      )
+      ) {
         cli_progress_update()
         raw <- llm_vec_translate(raw, language = lang)
       }
       if (tg == "param") {
-        name <-  glue(" {tag$val$name} ")
+        name <- glue(" {tag$val$name} ")
       } else {
         name <- ""
       }
