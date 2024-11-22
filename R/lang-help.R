@@ -66,6 +66,18 @@ rstudioapi_available <- function() {
   is_installed("rstudioapi") && rstudioapi::isAvailable()
 }
 
+rd_inst <- function(topic, package, lang) {
+  pkg_rds_path <- system.file("man-lang", package = package)
+  pkg_rd_lan <- path(pkg_rds_path, lang)
+  rd_path <- path(pkg_rd_lan, topic, ext = "Rd")
+  if (file_exists(rd_path)) {
+    out <- rd_path
+  } else {
+    out <- NULL
+  }
+  out
+}
+
 rd_translate <- function(topic, package, lang) {
   db <- Rd_db(package)
   rd_content <- db[[path(topic, ext = "Rd")]]
@@ -96,17 +108,17 @@ rd_translate <- function(topic, package, lang) {
     }
     cli_progress_update()
     if (tag_name %in% standard_tags) {
-      rd_content[[i]] <- prep_translate(rd_i, lang)
+      rd_content[[i]] <- rd_prep_translate(rd_i, lang)
     }
     if (tag_name == "\\section") {
-      rd_content[[i]][[1]] <- prep_translate(rd_i[[1]], lang)
-      rd_content[[i]][[2]] <- prep_translate(rd_i[[2]], lang)
+      rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang)
+      rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang)
     }
     if (tag_name == "\\arguments") {
       for (k in seq_along(rd_i)) {
         rd_k <- rd_i[[k]]
         if (length(rd_k) > 1) {
-          rd_i[[k]][[2]] <- prep_translate(rd_k[[2]], lang)
+          rd_i[[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang)
         }
       }
       rd_content[[i]] <- rd_i
@@ -141,19 +153,35 @@ rd_translate <- function(topic, package, lang) {
   topic_path
 }
 
-rd_inst <- function(topic, package, lang) {
-  pkg_rds_path <- system.file("man-lang", package = package)
-  pkg_rd_lan <- path(pkg_rds_path, lang)
-  rd_path <- path(pkg_rd_lan, topic, ext = "Rd")
-  if (file_exists(rd_path)) {
-    out <- rd_path
-  } else {
-    out <- NULL
-  }
-  out
+rd_prep_translate <- function(x, lang) {
+  tag_text <- llm_vec_translate(rd_extract_text(x), lang)
+  tag_text <- rd_code_markers(tag_text)
+  attrs <- attributes(x[[1]])
+  attr(attrs, "Rd_tag") <- "TEXT"
+  attributes(tag_text) <- attrs
+  obj <- list(tag_text)
+  attributes(obj) <- attributes(x)
+  obj
 }
 
-code_markers <- function(x) {
+rd_extract_text <- function(x, collapse = TRUE) {
+  attributes(x) <- NULL
+  class(x) <- "Rd"
+  rd_text <- as.character(x)
+  if (collapse) {
+    rd_text <- paste0(as.character(x), collapse = "")
+  }
+  temp_rd <- tempfile(fileext = ".Rd")
+  writeLines(rd_text, temp_rd)
+  rd_txt <- capture.output(Rd2txt(temp_rd, fragment = TRUE))
+  if (collapse) {
+    rd_txt[rd_txt == ""] <- "\n\n"
+    rd_txt <- paste0(rd_txt, collapse = "")
+  }
+  rd_txt
+}
+
+rd_code_markers <- function(x) {
   split_out <- strsplit(x, "'")[[1]]
   split_out
   new_txt <- NULL
@@ -173,32 +201,4 @@ code_markers <- function(x) {
     new_txt <- c(new_txt, split_out[[i]], code_txt)
   }
   paste0(new_txt, collapse = "")
-}
-
-extract_text <- function(x, collapse = TRUE) {
-  attributes(x) <- NULL
-  class(x) <- "Rd"
-  rd_text <- as.character(x)
-  if (collapse) {
-    rd_text <- paste0(as.character(x), collapse = "")
-  }
-  temp_rd <- tempfile(fileext = ".Rd")
-  writeLines(rd_text, temp_rd)
-  rd_txt <- capture.output(Rd2txt(temp_rd, fragment = TRUE))
-  if (collapse) {
-    rd_txt[rd_txt == ""] <- "\n\n"
-    rd_txt <- paste0(rd_txt, collapse = "")
-  }
-  rd_txt
-}
-
-prep_translate <- function(x, lang) {
-  tag_text <- llm_vec_translate(extract_text(x), lang)
-  tag_text <- code_markers(tag_text)
-  attrs <- attributes(x[[1]])
-  attr(attrs, "Rd_tag") <- "TEXT"
-  attributes(tag_text) <- attrs
-  obj <- list(tag_text)
-  attributes(obj) <- attributes(x)
-  obj
 }
