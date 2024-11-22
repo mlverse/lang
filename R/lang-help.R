@@ -26,30 +26,47 @@ lang_help <- function(topic,
                       lang = NULL,
                       type = getOption("help_type")) {
   lang <- which_lang(lang)
-  help_file <- utils::help(topic, help_type = "text")
-  help_path <- as.character(help_file)
-  if (topic == path_file(help_path) && is.null(package)) {
-    help_folder <- path_dir(help_path)
-    help_pkg <- path_dir(help_folder)
+
+  if (is.null(package)) {
+    # Gets the path to installed help file
+    help_path <- as.character(utils::help(topic, help_type = "text"))
+    # Tracks back two levels to figure out package name: .../[pkg]/help/[topic]
+    help_pkg <- path_dir(path_dir(help_path))
+    # Extracts name of package by using the name of its source folder
     package <- path_file(help_pkg)
   }
-  pkg_rds_path <- system.file("man-lang", package = package)
-  pkg_rd_lan <- path(pkg_rds_path, lang)
-  pkg_rd_path <- path(pkg_rd_lan, topic, ext = "Rd")
-  if(file_exists(pkg_rd_path)) {
-    return(
-      structure(
-        list(
-          topic = topic,
-          pkg = package,
-          path = pkg_rd_path,
-          stage = "render",
-          type = type
-        ),
-        class = "lang_topic"
-      )
-    )
+  # Checks if package has a translated Rd in its installation files
+  inst_path <- rd_inst(topic, package, lang)
+  # Translates the Rd if there is nothing pre-installed
+  topic_path <- inst_path %||% rd_translate(topic, package, lang)
+  structure(
+    list(
+      topic = topic,
+      pkg = package,
+      path = topic_path,
+      stage = "render",
+      type = type
+    ),
+    class = "lang_topic"
+  )
+}
+
+#' @export
+print.lang_topic <- function(x, ...) {
+  type <- arg_match0(x$type %||% "text", c("text", "html"))
+  if (type == "html" && rstudioapi_available()) {
+    return(rstudioapi::callFun("previewRd", x$path))
   }
+  if (type == "text") {
+    Rd2txt(x$path)
+  }
+}
+
+rstudioapi_available <- function() {
+  is_installed("rstudioapi") && rstudioapi::isAvailable()
+}
+
+rd_translate <- function(topic, package, lang) {
   db <- Rd_db(package)
   rd_content <- db[[path(topic, ext = "Rd")]]
   tag_text <- NULL
@@ -121,31 +138,19 @@ lang_help <- function(topic,
   rd_text <- paste0(as.character(rd_content), collapse = "")
   topic_path <- fs::path(tempdir(), topic_name, ext = "Rd")
   writeLines(rd_text, topic_path)
-  structure(
-    list(
-      topic = topic,
-      pkg = package,
-      path = topic_path,
-      stage = "render",
-      type = type
-    ),
-    class = "lang_topic"
-  )
+  topic_path
 }
 
-#' @export
-print.lang_topic <- function(x, ...) {
-  type <- arg_match0(x$type %||% "text", c("text", "html"))
-  if (type == "html" && rstudioapi_available()) {
-    return(rstudioapi::callFun("previewRd", x$path))
+rd_inst <- function(topic, package, lang) {
+  pkg_rds_path <- system.file("man-lang", package = package)
+  pkg_rd_lan <- path(pkg_rds_path, lang)
+  rd_path <- path(pkg_rd_lan, topic, ext = "Rd")
+  if (file_exists(rd_path)) {
+    out <- rd_path
+  } else {
+    out <- NULL
   }
-  if (type == "text") {
-    Rd2txt(x$path)
-  }
-}
-
-rstudioapi_available <- function() {
-  is_installed("rstudioapi") && rstudioapi::isAvailable()
+  out
 }
 
 code_markers <- function(x) {
