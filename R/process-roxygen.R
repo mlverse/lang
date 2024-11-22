@@ -1,16 +1,12 @@
 #' Creates the Rd files based on translated Roxygen scripts
-#' @param lang 2-letter language/source folder where the translated Roxygen
-#' scripts are located
-#' @param source Root source folder where the different translations are located.
+#' @param folder Source sub-folder where the source Roxygen R scripts are 
+#' @param source Base source folder where the different translations are located.
 #' Defaults to 'man-lang'.
-#' @param target Root target folder where the different translations will be
+#' @param target Base target folder where the different translations will be
 #' located. Defaults to 'inst/man-lang'
 #' @returns Multiple Rd files based on the source R scripts
 #' @export
-process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang") {
-  if (nchar(lang) != 2) {
-    cli_abort("Use an ISO 639 2 character language code for `lang`")
-  }
+process_roxygen_folder <- function(folder, source = "man-lang", target = "inst/man-lang") {
   # Create temporary directory
   temp_dir <- tempfile()
   dir_create(temp_dir)
@@ -29,7 +25,7 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
     new_path = path(copy_path, "R"),
     overwrite = TRUE
   )
-  #   Using callr to avoid the messages from roxygen2
+  # Using callr to avoid the messages from roxygen2
   cli_h3("Creating Rd files for '{lang}'")
   callr::r(
     func = function(x) roxygen2::roxygenize(x, roclets = "rd"),
@@ -55,11 +51,11 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
   invisible()
 }
 
-#' @rdname process_roxygen
+#' @rdname process_roxygen_folder
 #' @export
-process_man_lang <- function(source = "man-lang", target = "inst/man-lang") {
+process_roxygen <- function(source = "man-lang", target = "inst/man-lang") {
   sub_folders <- dir_ls(source, type = "directory")
   for (folder in sub_folders) {
-    process_roxygen(path_file(folder), source, target)
+    process_roxygen_folder(path_file(folder), source, target)
   }
 }
