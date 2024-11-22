@@ -30,13 +30,15 @@ translate_roxygen <- function(
   if (is_dir(source)) {
     cli_h3("`lang` translating Roxygen into '{lang}'")
     r_files <- dir_ls(source, glob = "*.R")
+    pkg_env <- roxygen2::env_package(path_file(source))
     for (i in seq_along(r_files)) {
       translate_roxygen_file(
         path = r_files[[i]],
         lang = lang,
         dir = target,
         no = i,
-        of = length(r_files)
+        of = length(r_files),
+        pkg_env = pkg_env
       )
     }
   } else {
@@ -44,10 +46,18 @@ translate_roxygen <- function(
   }
 }
 
-translate_roxygen_file <- function(path, lang = NULL, dir, no = 1, of = 1) {
+translate_roxygen_file <- function(path,
+                                   lang = NULL, 
+                                   dir,
+                                   no = 1,
+                                   of = 1,
+                                   pkg_env = NULL) {
+  if(is.null(pkg_env)) {
+    pkg_env <- roxygen2::env_package(path_file(path))
+  }
   rd_path <- path(dir, path_file(path))
   cli_inform("[{no}/{of}] {path} --> {rd_path}")
-  parsed <- parse_file(path)
+  parsed <- parse_file(path, env = pkg_env)
   contents <- NULL
   for (roxy in parsed) {
     tg <- NULL
