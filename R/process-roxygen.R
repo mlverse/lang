@@ -10,7 +10,7 @@
 process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang") {
   if (nchar(lang) != 2) {
     cli_abort("Use an ISO 639 2 character language code for `lang`")
-  }  
+  }
   # Create temporary directory
   temp_dir <- tempfile()
   dir_create(temp_dir)
@@ -19,10 +19,10 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
   pkg_name <- path_file(pkg_dir)
   dir_copy(pkg_dir, temp_dir)
   copy_path <- path(temp_dir, pkg_name)
-  # Removes current content in 'man' of the temp copy of 
+  # Removes current content in 'man' of the temp copy of
   # the package
   dir_delete(path(copy_path, "man"))
-  # Copies content of the translated script to the R folder 
+  # Copies content of the translated script to the R folder
   # of the temp copy
   file_copy(
     path = dir_ls(path(copy_path, source, lang)),
@@ -30,14 +30,15 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
     overwrite = TRUE
   )
   #   Using callr to avoid the messages from roxygen2
+  cli_h3("Creating Rd files for '{lang}'")
   callr::r(
-    func = function(x) roxygen2::roxygenize(x, roclets = "rd"), 
+    func = function(x) roxygen2::roxygenize(x, roclets = "rd"),
     args = list(copy_path)
-    )
-  # Copies the new contents in 'man' from the temp copy 
+  )
+  # Copies the new contents in 'man' from the temp copy
   # into target folder, under the language's sub-folder
   target_path <- path(target, lang)
-  if(dir_exists(target_path)) {
+  if (dir_exists(target_path)) {
     dir_delete(target_path)
   }
   dir_create(target_path)
@@ -46,6 +47,9 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
     new_path = target_path,
     overwrite = TRUE
   )
+  for (files in dir_ls(target_path)) {
+    cli_inform(" - {path(files)}")
+  }
   # Deletes the temporary folder
   dir_delete(temp_dir)
   invisible()
@@ -55,7 +59,7 @@ process_roxygen <- function(lang, source = "man-lang", target = "inst/man-lang")
 #' @export
 process_man_lang <- function(source = "man-lang", target = "inst/man-lang") {
   sub_folders <- dir_ls(source, type = "directory")
-  for(folder in sub_folders) {
+  for (folder in sub_folders) {
     process_roxygen(path_file(folder), source, target)
   }
 }
