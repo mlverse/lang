@@ -67,13 +67,27 @@ rstudioapi_available <- function() {
 }
 
 rd_inst <- function(topic, package, lang) {
-  pkg_rds_path <- system.file("man-lang", package = package)
-  pkg_rd_lan <- path(pkg_rds_path, lang)
-  rd_path <- path(pkg_rd_lan, topic, ext = "Rd")
-  if (file_exists(rd_path)) {
-    out <- rd_path
+  folder <- NULL
+  out <- NULL
+  if(nchar(lang) == 2) {
+    folder <- lang
+  } else if (substr(lang, 3,3) == "_") {
+    folder <- substr(lang, 1, 2)
   } else {
-    out <- NULL
+    codes <- readRDS(system.file("iso/codes.rds", package = "lang"))
+    lang <- tolower(lang)  
+    match <- codes[codes$name == lang, "code"]
+    if(nrow(match) > 0) {
+      folder <- as.character(match)[[1]]      
+    }
+  }
+  if(!is.null(folder)) {
+    pkg_rds_path <- system.file("man-lang", package = package)
+    pkg_rd_lan <- path(pkg_rds_path, folder)
+    rd_path <- path(pkg_rd_lan, topic, ext = "Rd")
+    if (file_exists(rd_path)) {
+      out <- rd_path
+    }     
   }
   out
 }
