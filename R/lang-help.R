@@ -98,7 +98,9 @@ rd_translate <- function(topic, package, lang) {
   for (i in seq_along(rd_content)) {
     rd_i <- rd_content[[i]]
     tag_name <- attr(rd_i, "Rd_tag")
-    standard_tags <- c("\\title", "\\description", "\\value", "\\details", "\\seealso")
+    standard_tags <- c("\\title", "\\description", 
+                       "\\value", "\\details", "\\seealso"
+                       )
     tag_label <- tag_labels[[tag_name]]
     if (tag_name == "\\section") {
       tag_label <- paste0("Section: '", as.character(rd_i[[1]]), "'")
@@ -106,6 +108,7 @@ rd_translate <- function(topic, package, lang) {
     if (is.null(tag_label)) {
       tag_label <- substr(tag_name, 2, nchar(tag_name))
     }
+    tag_label <- to_title(tag_label)
     cli_progress_update()
     if (tag_name %in% standard_tags) {
       rd_content[[i]] <- rd_prep_translate(rd_i, lang)
