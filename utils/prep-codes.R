@@ -22,6 +22,9 @@ clean_codes <- codes |>
   arrange(code) |> 
   group_by(name, code) |> 
   summarise() |> 
-  ungroup() 
+  group_by(code) |> 
+  mutate(number = row_number()) |> 
+  ungroup() |> 
+  arrange(code)
 
-write_rds(codes, "inst/iso/clean_codes.rds")
+write_rds(clean_codes, "inst/iso/codes.rds")
