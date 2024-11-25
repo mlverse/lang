@@ -144,7 +144,7 @@ which_lang <- function(lang = NULL) {
       lang <- env_lang
     }
     if (!is.na(env_language)) {
-      lang <- env_lang
+      lang <- env_language
     }
   }
   lang

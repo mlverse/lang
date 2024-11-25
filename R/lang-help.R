@@ -16,7 +16,7 @@
 #' \donttest{
 #' library(lang)
 #' llm_use("ollama", "llama3.2", .silent = TRUE)
-#' lang_help("aes", "ggplot2", lang = "french")
+#' lang_help("llm_classify", "mall", lang = "french")
 #' }
 #' @returns Returns either a text or html version of the topic's help
 #' documentation
@@ -164,10 +164,12 @@ rd_translate <- function(topic, package, lang) {
 rd_prep_translate <- function(x, lang) {
   tag_text <- llm_vec_translate(rd_extract_text(x), lang)
   tag_text <- rd_code_markers(tag_text)
-  attrs <- attributes(x[[1]])
-  attr(attrs, "Rd_tag") <- "TEXT"
-  attributes(tag_text) <- attrs
   obj <- list(tag_text)
+  attrs <- attributes(x[[1]])
+  if(!is.null(attrs)) {
+    attr(attrs, "Rd_tag") <- "TEXT"
+    attributes(tag_text) <- attrs
+  }
   attributes(obj) <- attributes(x)
   obj
 }
