@@ -65,7 +65,7 @@ translate_roxygen_file <- function(path,
   contents <- NULL
   for (roxy in parsed) {
     tg <- NULL
-    cli_progress_message("Translating: {.emph {tg}}")
+    cli_progress_message("Translating: {.emph {tag_to_label(tg)}}")
     for (tag in roxy$tags) {
       tg <- tag$tag
       raw <- tag$raw

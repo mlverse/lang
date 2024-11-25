@@ -97,16 +97,6 @@ rd_translate <- function(topic, package, lang) {
   rd_content <- db[[path(topic, ext = "Rd")]]
   tag_text <- NULL
   tag_name <- NULL
-  tag_labels <- list(
-    "\\title" = "Title",
-    "\\description" = "Description",
-    "\\value" = "Value",
-    "\\details" = "Details",
-    "\\seealso" = "See Also",
-    "\\examples" = "Examples",
-    "\\arguments" = "Arguments",
-    "\\usage" = "Usage"
-  )
   tag_label <- NULL
   cli_progress_message("Translating: {.emph {tag_label}}")
   for (i in seq_along(rd_content)) {
@@ -116,12 +106,11 @@ rd_translate <- function(topic, package, lang) {
                        "\\value", "\\details", 
                        "\\seealso", "\\section"
                        )
-    tag_label <- tag_labels[[tag_name]]
     if (tag_name == "\\section") {
       tag_label <- paste0("Section: '", as.character(rd_i[[1]]), "'")
     }
     if (is.null(tag_label)) {
-      tag_label <- substr(tag_name, 2, nchar(tag_name))
+      tag_label <- tag_to_label(tag_name)
     }
     tag_label <- to_title(tag_label)
     cli_progress_update()
