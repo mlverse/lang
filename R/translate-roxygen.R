@@ -13,8 +13,7 @@
 #' @param target The target base folder to save the Roxygen files. It defaults
 #' to 'man-lang'. The final destination will be a combination of this and the
 #' folder from `target_subfolder`
-#' @param source The source R scripts. This can be a folder or a single file. It
-#' defaults to the 'R' folder.
+#' @param source The source R scripts. It defaults to the 'R' folder.
 #'
 #' @export
 translate_roxygen <- function(
@@ -42,7 +41,7 @@ translate_roxygen <- function(
       )
     }
   } else {
-    translate_roxygen_file(path = source, lang = lang, dir = target)
+    cli_abort("`source` needs to be a valid directory")
   }
 }
 

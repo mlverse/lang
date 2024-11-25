@@ -21,8 +21,7 @@ Roxygen scripts to}
 to 'man-lang'. The final destination will be a combination of this and the
 folder from \code{target_subfolder}}
 
-\item{source}{The source R scripts. This can be a folder or a single file. It
-defaults to the 'R' folder.}
+\item{source}{The source R scripts. It defaults to the 'R' folder.}
 }
 \description{
 Reads the Roxygen2 tags in the package and translates them. The translations

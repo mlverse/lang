@@ -113,7 +113,8 @@ rd_translate <- function(topic, package, lang) {
     rd_i <- rd_content[[i]]
     tag_name <- attr(rd_i, "Rd_tag")
     standard_tags <- c("\\title", "\\description", 
-                       "\\value", "\\details", "\\seealso"
+                       "\\value", "\\details", 
+                       "\\seealso", "\\section"
                        )
     tag_label <- tag_labels[[tag_name]]
     if (tag_name == "\\section") {
