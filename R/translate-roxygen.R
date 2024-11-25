@@ -76,25 +76,25 @@ translate_roxygen_file <- function(path,
       } else {
         name <- ""
         tg_label <- tag_to_label(tg)
-      }      
+      }
+      if (tg == "section") {
+        split_raw <- unlist(strsplit(raw, "\\:"))
+        section_title <- split_raw[[1]]
+        section_content <- substr(raw, nchar(section_title) + 2, nchar(raw))
+        raw <- c(section_title, section_content)
+        tg_label <- glue("Section: {section_title}")
+      }
       cli_progress_update()
-      if (tg %in% c("title", "description", "param", "seealso",
-                    "details", "returns", "format", "section", "return")) {
-        if(tg == "section") {
-          split_raw <- unlist(strsplit(raw, "\\:"))
-          section_title <- split_raw[[1]]
-          section_content <- substr(raw, nchar(section_title) + 2, nchar(raw))
-          raw <- c(section_title, section_content)  
-        }        
+      if (tg %in% c(
+        "title", "description", "param", "seealso",
+        "details", "returns", "format", "section", "return"
+      )) {
         raw <- llm_vec_translate(raw, language = lang)
       }
-      if(tg == "section") {
+      if (tg == "section") {
         raw <- glue("{raw[1]}:\n{raw[2]}")
       }
       raw <- gsub("\n", "\n#'", raw)
-      if (tg == "section") {
-        x <- 1
-      }
       if (tg == "title") {
         contents <- c(contents, glue("#' {raw}"))
       } else {
