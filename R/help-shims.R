@@ -61,6 +61,8 @@ shim_help <- function(topic, package = NULL, ...) {
 
   if (!en_lang()) {
     lang_help(topic_str, package_str)
+  } else if ("pkgload" %||% loadedNamespaces()) {
+    exec("pkgload::dev_help", topic_name, package_name)
   } else {
     inject(utils::help(
       !!maybe_missing(topic_name),
@@ -108,25 +110,27 @@ shim_question <- function(e1, e2) {
 
   if (!en_lang()) {
     lang_help(topic, pkg)
+  } else if ("pkgload" %in% loadedNamespaces()) {
+    do.call("pkgload::dev_help", list(topic, pkg))
   } else {
     eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
   }
 }
 
 insert_global_shims <- function(force = FALSE) {
-  if ("devtools_shims" %in% search()) {
+  if ("lang_shims" %in% search()) {
     if (!force) {
       # If shims already present, just return
       return()
     }
-    base::detach("devtools_shims")
+    base::detach("lang_shims")
   }
   e <- new.env()
   e$help <- shim_help
   e$`?` <- shim_question
   base::attach(
     what = e,
-    name = "devtools_shims",
+    name = "lang_shims",
     warn.conflicts = FALSE
   )
 }
