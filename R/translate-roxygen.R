@@ -29,7 +29,7 @@ translate_roxygen <- function(
   if (is_dir(source)) {
     cli_h3("`lang` translating Roxygen into '{lang}'")
     r_files <- dir_ls(source, glob = "*.R")
-    pkg_env <- roxygen2::env_package(path_file(source))
+    pkg_env <- env_package(path_file(source))
     for (i in seq_along(r_files)) {
       translate_roxygen_file(
         path = r_files[[i]],
@@ -52,7 +52,7 @@ translate_roxygen_file <- function(path,
                                    of = 1,
                                    pkg_env = NULL) {
   if (is.null(pkg_env)) {
-    pkg_env <- roxygen2::env_package(path_file(path))
+    pkg_env <- env_package(path_file(path))
   }
   rd_path <- path(dir, path_file(path))
   cli_inform("[{no}/{of}] {path} --> {rd_path}")

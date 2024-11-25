@@ -1,4 +1,4 @@
-#' @importFrom roxygen2 parse_file roxygenize
+#' @importFrom roxygen2 parse_file roxygenize env_package
 #' @importFrom utils capture.output
 #' @import tools
 #' @import tools

@@ -62,7 +62,7 @@ shim_help <- function(topic, package = NULL, ...) {
   if (!en_lang()) {
     lang_help(topic_str, package_str)
   } else if ("pkgload" %||% loadedNamespaces()) {
-    exec("pkgload::dev_help", topic_name, package_name)
+    exec(getExportedValue("pkgload", "dev_help"), topic_name, package_name)
   } else {
     inject(utils::help(
       !!maybe_missing(topic_name),
@@ -111,7 +111,7 @@ shim_question <- function(e1, e2) {
   if (!en_lang()) {
     lang_help(topic, pkg)
   } else if ("pkgload" %in% loadedNamespaces()) {
-    do.call("pkgload::dev_help", list(topic, pkg))
+    exec(getExportedValue("pkgload", "dev_help"), topic, pkg)
   } else {
     eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
   }
