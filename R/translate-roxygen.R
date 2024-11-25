@@ -52,7 +52,12 @@ translate_roxygen_file <- function(path,
                                    of = 1,
                                    pkg_env = NULL) {
   if (is.null(pkg_env)) {
-    pkg_env <- env_package(path_file(path))
+    if(is_dir(path)) {
+      pkg_path <- path_dir(path)
+    } else {
+      pkg_path <- path_dir(path_dir(path))
+    }
+    pkg_env <- env_package(pkg_path)
   }
   rd_path <- path(dir, path_file(path))
   cli_inform("[{no}/{of}] {path} --> {rd_path}")
@@ -65,8 +70,8 @@ translate_roxygen_file <- function(path,
       tg <- tag$tag
       raw <- tag$raw
       if (tg %in% c(
-        "title", "description", "param",
-        "details", "returns", "format"
+        "title", "description", "param","seealso", 
+        "details", "returns", "format", "section", "return"
       )
       ) {
         cli_progress_update()

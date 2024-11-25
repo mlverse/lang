@@ -61,7 +61,7 @@ shim_help <- function(topic, package = NULL, ...) {
 
   if (!en_lang()) {
     lang_help(topic_str, package_str)
-  } else if ("pkgload" %||% loadedNamespaces()) {
+  } else if ("pkgload" %in% loadedNamespaces()) {
     exec(getExportedValue("pkgload", "dev_help"), topic_name, package_name)
   } else {
     inject(utils::help(
