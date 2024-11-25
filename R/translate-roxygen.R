@@ -5,52 +5,66 @@
 #' The will be in a sub-folder representing the language the are translated to.
 #'
 #' @details This approach makes it easier to edit the translations by hand after
-#' the LLM does a first pass. This way it is easier for others to collaborate
-#' with improving the translation
+#' the LLM does a first pass. It also allows for others to collaborate
+#' with improving the translation.
 #' @param lang The target language to translate help to
-#' @param target_subfolder 2-letter language/source folder to save the new
+#' @param folder 2-letter language/source folder to save the new
 #' Roxygen scripts to
 #' @param target The target base folder to save the Roxygen files. It defaults
 #' to 'man-lang'. The final destination will be a combination of this and the
-#' folder from `target_subfolder`
+#' folder from `folder`
 #' @param source The source R scripts. It defaults to the 'R' folder.
 #'
 #' @export
 translate_roxygen <- function(
     lang,
-    target_subfolder,
+    folder,
     target = path("man-lang"),
     source = path("R")) {
-  if (nchar(target_subfolder) != 2) {
-    cli_abort("Use an ISO 639 2 character language code for `target_subfolder`")
+  if (nchar(folder) != 2) {
+    cli_abort("Use an ISO 639 2 character language code for `folder`")
   }
-  target <- path(target, target_subfolder)
-  dir_create(target)
-  if (is_dir(source)) {
-    cli_h3("`lang` translating Roxygen into '{lang}'")
-    r_files <- dir_ls(source, glob = "*.R")
-    pkg_env <- env_package(path_file(source))
-    for (i in seq_along(r_files)) {
-      translate_roxygen_file(
-        path = r_files[[i]],
-        lang = lang,
-        dir = target,
-        no = i,
-        of = length(r_files),
-        pkg_env = pkg_env
-      )
-    }
-  } else {
+  if (!is_dir(source)) {
     cli_abort("`source` needs to be a valid directory")
+  }
+  target <- path(target, folder)
+  dir_create(target)
+  cli_h3("`lang` translating Roxygen into '{lang}'")
+  r_files <- dir_ls(source, glob = "*.R")
+  pkg_env <- env_package(path_file(source))
+  for (i in seq_along(r_files)) {
+    translate_roxygen_imp(
+      path = r_files[[i]],
+      lang = lang,
+      dir = target,
+      no = i,
+      of = length(r_files),
+      pkg_env = pkg_env
+    )
   }
 }
 
-translate_roxygen_file <- function(path,
-                                   lang = NULL,
-                                   dir,
-                                   no = 1,
-                                   of = 1,
-                                   pkg_env = NULL) {
+
+#' @rdname translate_roxygen
+#' @param path The path to the R script containing the Roxygen help 
+#' documentation
+#' @param target_path The path to write the new, translated, R script to. The
+#' name of the file will match that of the original R script. 
+#' @export
+translate_roxygen_file <- function(path, lang, target_path) {
+  translate_roxygen_imp(
+    path = path,
+    lang = lang,
+    dir = target_path
+  )
+}
+
+translate_roxygen_imp <- function(path,
+                                  lang = NULL,
+                                  dir,
+                                  no = 1,
+                                  of = 1,
+                                  pkg_env = NULL) {
   if (is.null(pkg_env)) {
     if (is_dir(path)) {
       pkg_path <- path_dir(path)

@@ -28,7 +28,7 @@ process_roxygen_folder <- function(folder, source = "man-lang", target = "inst/m
   # Using callr to avoid the messages from roxygen2
   cli_h3("Creating Rd files for '{folder}'")
   callr::r(
-    func = function(x) roxygenize(x, roclets = "rd"),
+    func = function(x) roxygen2::roxygenize(x, roclets = "rd"),
     args = list(copy_path)
   )
   # Copies the new contents in 'man' from the temp copy

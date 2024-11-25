@@ -2,26 +2,30 @@
 % Please edit documentation in R/translate-roxygen.R
 \name{translate_roxygen}
 \alias{translate_roxygen}
+\alias{translate_roxygen_file}
 \title{Translates the Roxygen2 documentation}
 \usage{
-translate_roxygen(
-  lang,
-  target_subfolder,
-  target = path("man-lang"),
-  source = path("R")
-)
+translate_roxygen(lang, folder, target = path("man-lang"), source = path("R"))
+
+translate_roxygen_file(path, lang, target_path)
 }
 \arguments{
 \item{lang}{The target language to translate help to}
 
-\item{target_subfolder}{2-letter language/source folder to save the new
+\item{folder}{2-letter language/source folder to save the new
 Roxygen scripts to}
 
 \item{target}{The target base folder to save the Roxygen files. It defaults
 to 'man-lang'. The final destination will be a combination of this and the
-folder from \code{target_subfolder}}
+folder from \code{folder}}
 
 \item{source}{The source R scripts. It defaults to the 'R' folder.}
+
+\item{path}{The path to the R script containing the Roxygen help
+documentation}
+
+\item{target_path}{The path to write the new, translated, R script to. The
+name of the file will match that of the original R script.}
 }
 \description{
 Reads the Roxygen2 tags in the package and translates them. The translations
@@ -30,6 +34,6 @@ The will be in a sub-folder representing the language the are translated to.
 }
 \details{
 This approach makes it easier to edit the translations by hand after
-the LLM does a first pass. This way it is easier for others to collaborate
-with improving the translation
+the LLM does a first pass. It also allows for others to collaborate
+with improving the translation.
 }
