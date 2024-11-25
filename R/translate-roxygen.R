@@ -52,7 +52,7 @@ translate_roxygen_file <- function(path,
                                    of = 1,
                                    pkg_env = NULL) {
   if (is.null(pkg_env)) {
-    if(is_dir(path)) {
+    if (is_dir(path)) {
       pkg_path <- path_dir(path)
     } else {
       pkg_path <- path_dir(path_dir(path))
@@ -70,7 +70,7 @@ translate_roxygen_file <- function(path,
       tg <- tag$tag
       raw <- tag$raw
       if (tg %in% c(
-        "title", "description", "param","seealso", 
+        "title", "description", "param", "seealso",
         "details", "returns", "format", "section", "return"
       )
       ) {

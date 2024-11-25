@@ -69,25 +69,25 @@ rstudioapi_available <- function() {
 rd_inst <- function(topic, package, lang) {
   folder <- NULL
   out <- NULL
-  if(nchar(lang) == 2) {
+  if (nchar(lang) == 2) {
     folder <- lang
-  } else if (substr(lang, 3,3) == "_") {
+  } else if (substr(lang, 3, 3) == "_") {
     folder <- substr(lang, 1, 2)
   } else {
     codes <- readRDS(system.file("iso/codes.rds", package = "lang"))
-    lang <- tolower(lang)  
+    lang <- tolower(lang)
     match <- codes[codes$name == lang, "code"]
-    if(nrow(match) > 0) {
-      folder <- as.character(match)[[1]]      
+    if (nrow(match) > 0) {
+      folder <- as.character(match)[[1]]
     }
   }
-  if(!is.null(folder)) {
+  if (!is.null(folder)) {
     pkg_rds_path <- system.file("man-lang", package = package)
     pkg_rd_lan <- path(pkg_rds_path, folder)
     rd_path <- path(pkg_rd_lan, topic, ext = "Rd")
     if (file_exists(rd_path)) {
       out <- rd_path
-    }     
+    }
   }
   out
 }
@@ -102,10 +102,11 @@ rd_translate <- function(topic, package, lang) {
   for (i in seq_along(rd_content)) {
     rd_i <- rd_content[[i]]
     tag_name <- attr(rd_i, "Rd_tag")
-    standard_tags <- c("\\title", "\\description", 
-                       "\\value", "\\details", 
-                       "\\seealso", "\\section"
-                       )
+    standard_tags <- c(
+      "\\title", "\\description",
+      "\\value", "\\details",
+      "\\seealso", "\\section"
+    )
     if (tag_name == "\\section") {
       tag_label <- paste0("Section: '", as.character(rd_i[[1]]), "'")
     }
