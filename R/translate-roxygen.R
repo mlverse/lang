@@ -63,26 +63,38 @@ translate_roxygen_file <- function(path,
   cli_inform("[{no}/{of}] {path} --> {rd_path}")
   parsed <- parse_file(path, env = pkg_env)
   contents <- NULL
+  tg_label <- NULL
+  cli_progress_message("Translating: {.emph {tg_label}}")
   for (roxy in parsed) {
     tg <- NULL
-    cli_progress_message("Translating: {.emph {tag_to_label(tg)}}")
     for (tag in roxy$tags) {
       tg <- tag$tag
       raw <- tag$raw
-      if (tg %in% c(
-        "title", "description", "param", "seealso",
-        "details", "returns", "format", "section", "return"
-      )
-      ) {
-        cli_progress_update()
-        raw <- llm_vec_translate(raw, language = lang)
-      }
       if (tg == "param") {
         name <- glue(" {tag$val$name} ")
+        tg_label <- glue("Argument: {name}")
       } else {
         name <- ""
+        tg_label <- tag_to_label(tg)
+      }      
+      cli_progress_update()
+      if (tg %in% c("title", "description", "param", "seealso",
+                    "details", "returns", "format", "section", "return")) {
+        if(tg == "section") {
+          split_raw <- unlist(strsplit(raw, "\\:"))
+          section_title <- split_raw[[1]]
+          section_content <- substr(raw, nchar(section_title) + 2, nchar(raw))
+          raw <- c(section_title, section_content)  
+        }        
+        raw <- llm_vec_translate(raw, language = lang)
+      }
+      if(tg == "section") {
+        raw <- glue("{raw[1]}:\n{raw[2]}")
       }
       raw <- gsub("\n", "\n#'", raw)
+      if (tg == "section") {
+        x <- 1
+      }
       if (tg == "title") {
         contents <- c(contents, glue("#' {raw}"))
       } else {
