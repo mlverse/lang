@@ -32,3 +32,25 @@ tag_to_label <- function(x) {
   }
   x
 }
+
+split_lines <- function(x, size = 55) {
+  out <- NULL
+  ln <- NULL
+  ln_length <- 0 
+  split_x <- unlist(strsplit(x, " "))
+  for(word in split_x) {
+    word_length <- nchar(word) 
+    ln_length <- ln_length + word_length
+    if(ln_length < size) {
+      ln <- paste(ln, word)
+    } else {
+      out <- c(out, trimws(ln))
+      ln <- word
+      ln_length <- 0
+    }
+  }
+  if(ln_length != 0) {
+    out <- c(out, trimws(ln))
+  }
+  out  
+}

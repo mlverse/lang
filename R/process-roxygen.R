@@ -25,7 +25,7 @@ process_roxygen_folder <- function(folder, source = "man-lang", target = "inst/m
     new_path = path(copy_path, "R"),
     overwrite = TRUE
   )
-  # Using callr to avoid the messages from roxygen2
+  # Uses `callr` to run roxygenize, mainly to avoid the messages from roxygen2
   cli_h3("Creating Rd files for '{folder}'")
   callr::r(
     func = function(x) roxygen2::roxygenize(x, roclets = "rd"),
