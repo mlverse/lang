@@ -33,10 +33,10 @@ tag_to_label <- function(x) {
   x
 }
 
-split_lines <- function(x, size = 55) {
+split_lines <- function(x, size = 55, start_length = 0) {
   out <- NULL
   ln <- NULL
-  ln_length <- 0 
+  ln_length <- start_length
   split_x <- unlist(strsplit(x, " "))
   for(word in split_x) {
     word_length <- nchar(word) 

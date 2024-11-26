@@ -88,7 +88,7 @@ translate_roxygen_imp <- function(path,
         name <- glue(" {tag$val$name} ")
         tg_label <- glue("Argument: {name}")
       } else {
-        name <- ""
+        name <- NULL
         tg_label <- tag_to_label(tg)
       }
       if (tg == "section") {
@@ -112,7 +112,14 @@ translate_roxygen_imp <- function(path,
       if (tg == "title") {
         contents <- c(contents, glue("#' {raw}"))
       } else {
-        contents <- c(contents, glue("#' @{tg} {name} {raw}"))
+        if(length(raw) != 0 &&  raw != "") {
+          pre_raw <- paste0(tg, name, collapse = " ")
+          pre_raw <- paste0("@", pre_raw)
+          raw <- split_lines(raw, start_length = nchar(pre_raw))
+          raw[[1]] <- paste(pre_raw, raw[[1]])
+          raw <- paste("#'", raw)
+          contents <- c(contents, raw)          
+        }
       }
     }
     contents <- c(contents, glue("{roxy$object$alias} <- function(...) NULL"))
