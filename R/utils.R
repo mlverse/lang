@@ -38,33 +38,33 @@ split_lines <- function(x, size = 55, start_length = 0) {
   ln <- NULL
   ln_length <- start_length
   split_x <- unlist(strsplit(x, " "))
-  for(word in split_x) {
-    word_length <- nchar(word) 
+  for (word in split_x) {
+    word_length <- nchar(word)
     ln_length <- ln_length + word_length
-    if(ln_length < size) {
+    if (ln_length < size) {
       ln <- paste(ln, word)
     } else {
       out <- c(out, trimws(ln))
       ln <- word
-      ln_length <- 0
+      ln_length <- word_length
     }
   }
-  if(ln_length != 0) {
+  if (ln_length != 0) {
     out <- c(out, trimws(ln))
   }
-  out  
+  out
 }
 
 split_paragraphs <- function(x, size = 55) {
   x_lines <- trimws(unlist(strsplit(x, "\n")))
   out <- NULL
-  for(x_line in x_lines) {
-    if(x_line != "") {
+  for (x_line in x_lines) {
+    if (x_line != "") {
       x_prep <- split_lines(x_line, size)
     } else {
       x_prep <- ""
     }
     out <- c(out, x_prep)
   }
-  out  
+  out
 }

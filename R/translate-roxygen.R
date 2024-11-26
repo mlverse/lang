@@ -9,7 +9,7 @@
 #' with improving the translation.
 #' @param lang The target language to translate help to
 #' @param folder 2-letter language/source folder to save the new
-#' Roxygen scripts to
+#' Roxygen scripts to.
 #' @param target The target base folder to save the Roxygen files. It defaults
 #' to 'man-lang'. The final destination will be a combination of this and the
 #' folder from `folder`
@@ -46,10 +46,10 @@ translate_roxygen <- function(
 
 
 #' @rdname translate_roxygen
-#' @param path The path to the R script containing the Roxygen help 
+#' @param path The path to the R script containing the Roxygen help
 #' documentation
 #' @param target_path The path to write the new, translated, R script to. The
-#' name of the file will match that of the original R script. 
+#' name of the file will match that of the original R script.
 #' @export
 translate_roxygen_file <- function(path, lang, target_path) {
   translate_roxygen_imp(
@@ -73,6 +73,7 @@ translate_roxygen_imp <- function(path,
     }
     pkg_env <- env_package(pkg_path)
   }
+  dir_create(dir)
   rd_path <- path(dir, path_file(path))
   cli_inform("[{no}/{of}] {path} --> {rd_path}")
   parsed <- parse_file(path, env = pkg_env)
@@ -107,19 +108,19 @@ translate_roxygen_imp <- function(path,
         if (tg == "section") {
           raw <- glue("{raw[1]}:\n{raw[2]}")
         }
-        raw <- gsub("\n", "\n#'", raw)
-        if (tg == "title") {
-          contents <- c(contents, glue("#' {raw}"))
-        } else {
-          if(length(raw) != 0 &&  raw != "") {
+        # raw <- gsub("\n", "\n#'", raw)
+        if (tg != "title") {
+          if (length(raw) != 0 && raw != "") {
             pre_raw <- paste0(tg, name, collapse = " ")
             raw <- glue("@{pre_raw} {raw}")
-            raw <- split_paragraphs(raw)          }
+            raw <- split_paragraphs(raw, 65)
+          }
         }
       } else {
         raw <- glue("@{tg} {raw}")
-      } 
-      raw <- paste("#'", raw)
+      }
+      raw <- glue("#' {raw}")
+      raw <- gsub("\n", "\n#' ", raw)
       contents <- c(contents, raw)
     }
     contents <- c(contents, glue("{roxy$object$alias} <- function(...) NULL"))

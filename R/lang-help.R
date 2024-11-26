@@ -166,7 +166,7 @@ rd_prep_translate <- function(x, lang) {
   tag_text <- rd_code_markers(tag_text)
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])
-  if(!is.null(attrs)) {
+  if (!is.null(attrs)) {
     attr(attrs, "Rd_tag") <- "TEXT"
     attributes(tag_text) <- attrs
   }

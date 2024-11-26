@@ -13,7 +13,7 @@ translate_roxygen_file(path, lang, target_path)
 \item{lang}{The target language to translate help to}
 
 \item{folder}{2-letter language/source folder to save the new
-Roxygen scripts to}
+Roxygen scripts to.}
 
 \item{target}{The target base folder to save the Roxygen files. It defaults
 to 'man-lang'. The final destination will be a combination of this and the
