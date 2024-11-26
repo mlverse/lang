@@ -104,23 +104,23 @@ translate_roxygen_imp <- function(path,
         "details", "returns", "format", "section", "return"
       )) {
         raw <- llm_vec_translate(raw, language = lang)
-      }
-      if (tg == "section") {
-        raw <- glue("{raw[1]}:\n{raw[2]}")
-      }
-      raw <- gsub("\n", "\n#'", raw)
-      if (tg == "title") {
-        contents <- c(contents, glue("#' {raw}"))
-      } else {
-        if(length(raw) != 0 &&  raw != "") {
-          pre_raw <- paste0(tg, name, collapse = " ")
-          pre_raw <- paste0("@", pre_raw)
-          raw <- split_lines(raw, start_length = nchar(pre_raw))
-          raw[[1]] <- paste(pre_raw, raw[[1]])
-          raw <- paste("#'", raw)
-          contents <- c(contents, raw)          
+        if (tg == "section") {
+          raw <- glue("{raw[1]}:\n{raw[2]}")
         }
-      }
+        raw <- gsub("\n", "\n#'", raw)
+        if (tg == "title") {
+          contents <- c(contents, glue("#' {raw}"))
+        } else {
+          if(length(raw) != 0 &&  raw != "") {
+            pre_raw <- paste0(tg, name, collapse = " ")
+            raw <- glue("@{pre_raw} {raw}")
+            raw <- split_paragraphs(raw)          }
+        }
+      } else {
+        raw <- glue("@{tg} {raw}")
+      } 
+      raw <- paste("#'", raw)
+      contents <- c(contents, raw)
     }
     contents <- c(contents, glue("{roxy$object$alias} <- function(...) NULL"))
   }

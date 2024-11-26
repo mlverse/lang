@@ -54,3 +54,17 @@ split_lines <- function(x, size = 55, start_length = 0) {
   }
   out  
 }
+
+split_paragraphs <- function(x, size = 55) {
+  x_lines <- trimws(unlist(strsplit(x, "\n")))
+  out <- NULL
+  for(x_line in x_lines) {
+    if(x_line != "") {
+      x_prep <- split_lines(x_line, size)
+    } else {
+      x_prep <- ""
+    }
+    out <- c(out, x_prep)
+  }
+  out  
+}
