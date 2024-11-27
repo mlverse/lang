@@ -46,8 +46,13 @@ pak::pak("edgararuiz/lang")
 
 ## Using `lang`
 
-Start by setting up telling `lang` which LLM you wish to use. To do
-this, use `llm_use()`:
+If you have not used `mall` yet, then the first step is to set it up.
+Feel free to follow the instructions in that package’s [Get
+Started](https://mlverse.github.io/mall/#get-started) page. Setting up
+your LLM and `mall` should be a one time process.
+
+On an every day R session, you’ll just need to load `lang` and then tell
+it which model to run using `llm_use()`:
 
     library(lang)
 
@@ -59,6 +64,12 @@ showing which section of the documentation is currently translating:
 
     > ?lm
     Translating: Title
+
+If your environment is set to use the Spanish language, the help pane
+should display this:
+
+<img src="man/figures/lm-spanish.png" align="center" 
+alt="Screenshot of the lm function's help page in Spanish"/>
 
 ### If it doesn’t translate
 
