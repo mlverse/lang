@@ -66,7 +66,9 @@ library(lang)
 llm_use("ollama", "llama3.2", seed = 100)
 ```
 
-After that, simply use `?` to trigger and display the translated documentation:
+After that, simply use `?` to trigger and display the translated documentation.
+During translation, `lang` will display its progress by showing which section
+of the documentation is currently translating: 
 
 ```
 > ?lm
@@ -82,5 +84,12 @@ Sys.getenv("LANG")
 Sys.getenv("LANGUAGE")
 ```
 
-In this case, `lang` recognizes that the environment is set to English, because
-of the `en` code in the variable.
+In my case, `lang` recognizes that the environment is set to English, because
+of the `en` code in the variable. If your `LANG` variable is set to `en_...` 
+then no translation will occur.
+
+If this is your case, set the `LANGUAGE` variable to your preference. You can
+use the full language name, such as 'spanish', or 'french', etc.  You can use
+`Sys.setenv(LANGUAGE = "[my language]")`, or, for a more permanent solution, 
+add the entry to your your .Renviron file (`usethis::edit_r_environ()`). 
+
