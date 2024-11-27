@@ -18,10 +18,12 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-Using an LLM, **translate a function's help documentation on-the-fly**. `lang` 
-"overrides" the `?` and `help()` functions in your R session. This makes it very 
-easy to run and access the translation. If you are using RStudio or Positron,
-the resulting translated help page will display in the usual help pane. 
+Use an **LLM to translate a function's help documentation on-the-fly**. `lang` 
+overrides the `?` and `help()` functions in your R session. If you are using 
+RStudio or Positron, the translated help page will appear in the usual help 
+pane.
+
+## How it works
 
 The language that the help documentation will be translated to, is determined by
 one of the following two environment variables. In order of priority, the 
@@ -30,31 +32,55 @@ variables are:
 1. `LANGUAGE`
 1. `LANG`
 
-The idea is that your R session will already have either one of these 
-environment variables already set. Most likely, the `LANG` variable  already  
-defaults to your locale. For example, mine is set to: `en_US.UTF-8`
-(That means English, United States). For someone in France, the locale would be 
-something such as `fr_FR.UTF-8`. Llama3.2, recognizes these UTF locales, and
-using `lang`, calling `?` will result in translating the function's help
-documentation into French. 
+It is likely that your `LANG` variable  already defaults to your locale. 
+For example, mine is set to: `en_US.UTF-8` (That means English, United States). 
+For someone in France, the locale would be  something such as `fr_FR.UTF-8`. 
+Llama3.2, recognizes these UTF locales, and using `lang`, calling `?` will 
+result in translating the function's help documentation into French. 
 
-```r
-Sys.setenv(LANG = "fr_FR.UTF-8")
-
-library(lang)
-
-?lm
-```
-
-This package uses `mall` as the integration point with the LLM. Under the hood,
+It uses the `mall` package as the integration point with the LLM. Under the hood,
 it runs `llm_vec_translate()` multiple times to translate the most common 
 sections of the help documentation (e.g.: Title, Description, Details,
 Arguments, etc.). 
 
+If `lang` determines that your environment is set to use English, it will simply
+display the original documentation. 
 
+## Installation
 
+To install the GitHub vesion of `lang`, use:
 
+```r
+install.packages("pak")
+pak::pak("edgararuiz/lang")
+```
 
+## Using `lang`
 
+Start by setting up telling `lang` which LLM you wish to use. To do this, use
+`llm_use()`:
 
+```
+library(lang)
 
+llm_use("ollama", "llama3.2", seed = 100)
+```
+
+After that, simply use `?` to trigger and display the translated documentation:
+
+```
+> ?lm
+Translating: Title
+```
+
+### If it doesn't translate
+
+If the original help page displays, check your environment variables:
+
+```{r}
+Sys.getenv("LANG")
+Sys.getenv("LANGUAGE")
+```
+
+In this case, `lang` recognizes that the environment is set to English, because
+of the `en` code in the variable.
