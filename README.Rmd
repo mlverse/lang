@@ -139,8 +139,6 @@ files to:
 translate_roxygen("spanish", "es")
 ```
 
-
-
 That function call will iterate through your **'R/'** folder and translate all of
 your [`roxygen2`](https://roxygen2.r-lib.org/index.html) documentation. The 
 new Roxygen documents will be saved, by default, to a new **'man-lang/'** folder. 
@@ -205,6 +203,46 @@ And this is what the translation in **'man-lang/es/lang.R'** looks like:
 #' @param type  Utilice "html" o "texto" como salida para la ayuda, de lo
 #' contrario se utilizará el valor por defecto de `getOption("help_type")`.
 ...
+```
+
+Editing an R scripts Roxygen comments is a lot easier than editing an Rd file,
+additionally, this solution integrates better with the usual package development
+process.
+
+It also opens the possibility to have collaborators to submit PRs to your package's
+repository with edits to the translation, or even submit brand new translations.
+
+### Include translations in your package
+
+The Rd help files are still the best way for R to process and display your 
+help files. The second, and final step, will be to have `lang` create the
+Rd files based on the translated Roxygen comments, simply run:
+
+```r
+process_roxygen()
+```
+
+That function will iterate through all the language sub-folders in 
+**'man-lang/'** to process the Rd files. 
+
+Under the hood, `lang` creates temporary copies of your package, replaces the 
+scripts in the 'R' folder with your translations, and then runs the 
+`roxygen2::roxygenize()` function. This ensures that the Rd creation is as 
+close as possible to if you were running `devtools::document()` during your
+package development. As as separate note, please keep in mind that this step
+does not need an LLM to work. It is only creating the Rd files, and putting 
+them in the correct location. 
+
+For this package, the console output of making that function call looks like this:
+
+```r
+> process_roxygen()
+
+── Creating Rd files for 'es' 
+- inst/man-lang/es/help.Rd
+- inst/man-lang/es/lang_help.Rd
+- inst/man-lang/es/process_roxygen_folder.Rd
+- inst/man-lang/es/translate_roxygen.Rd
 ```
 
 
