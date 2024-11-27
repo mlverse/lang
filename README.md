@@ -1,4 +1,5 @@
 
+<!-- TODO: Add clarification regarding using the two letter language designation ISO 639 -->
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # lang
@@ -70,7 +71,7 @@ variables:
 Sys.getenv("LANG")
 #> [1] "en_US.UTF-8"
 Sys.getenv("LANGUAGE")
-#> [1] ""
+#> [1] "spanish"
 ```
 
 In my case, `lang` recognizes that the environment is set to English,
@@ -136,8 +137,7 @@ new Roxygen documents will be saved, by default, to a new
 **‘man-lang/’** folder. Make sure to add the new folder to your project
 **‘.Rbuildignore’** file (`^man-lang$`)
 
-For this package, the console output of making that function call looks
-like this:
+For this package, making that function call creates this console output:
 
 ``` r
 > translate_roxygen("spanish", "es")
@@ -217,19 +217,18 @@ process_roxygen()
 ```
 
 That function will iterate through all the language sub-folders in
-**‘man-lang/’** to process the Rd files.
+**‘man-lang/’** to process the Rd files. The resulting Rd files will be
+saved to **‘inst/man-lang/’**. Please keep in mind that this step does
+not need an LLM to work. It is only creating the Rd files, and putting
+them in the correct location.
 
 Under the hood, `lang` creates temporary copies of your package,
 replaces the scripts in the ‘R’ folder with your translations, and then
 runs the `roxygen2::roxygenize()` function. This ensures that the Rd
-creation is as close as possible to if you were running
-`devtools::document()` during your package development. As as separate
-note, please keep in mind that this step does not need an LLM to work.
-It is only creating the Rd files, and putting them in the correct
-location.
+creation is as close as possible as if you were running
+`devtools::document()` during your package development.
 
-For this package, the console output of making that function call looks
-like this:
+For this package, making that function call creates this console output:
 
 ``` r
 > process_roxygen()
@@ -240,3 +239,26 @@ like this:
 - inst/man-lang/es/process_roxygen_folder.Rd
 - inst/man-lang/es/translate_roxygen.Rd
 ```
+
+### Using your package’s translations
+
+The end-user can easily access your translations by making sure that
+`lang` is loaded to their R session:
+
+``` r
+library(lang)
+
+Sys.setenv(LANGUAGE = "spanish")
+
+?lang_help
+```
+
+`lang` always looks first in the **‘inst/man-lan’** folder of your
+package to see if there is a folder matching the end-user’s language. If
+it does not find one, it will then trigger a live translation of the
+function. This would be the case if the user expect a French
+translation, but you only included a Spanish one.
+
+Instead of having the user wait for the LLM to complete the translation,
+if `lang` finds a matching translation in your package, the help page
+will appear almost instantly.
