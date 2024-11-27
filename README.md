@@ -112,7 +112,7 @@ the following:
 - Include the translated Rd files as part of your package
 - Have `?` and `help()` pull from your translated documents
 
-### First pass
+### LLM First pass
 
 While inside your package’s project, use `translate_roxygen()` to have
 `lang` translate all of your documentation to the desired language. The
@@ -122,3 +122,10 @@ save the translated files to:
 ``` r
 translate_roxygen("spanish", "es")
 ```
+
+That function call will iterate through your **‘R/’** folder and
+translate all of your
+[`roxygen2`](https://roxygen2.r-lib.org/index.html) documentation. The
+new Roxygen documents will be saved, by default, to a new
+**‘man-lang/’** folder. Make sure to add the new folder to your project
+**‘.Rbuildignore’** file (`^man-lang$`)
