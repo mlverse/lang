@@ -47,18 +47,24 @@ should display this:
 <img src="man/figures/lm-spanish.png" align="center" 
 alt="Screenshot of the lm function's help page in Spanish"/>
 
+R enforces the printed name of each section, so they cannot be
+translated. So titles such as Description, Usage and Arguments will
+always remain untranslated.
+
+### Translation is not perfect
+
 As you can imagine, the quality of translation will mostly depend on the
 LLM being used. This solution is meant to be as helpful as possible, but
 acknowledging that at this stage of LLMs, only a human curated
-translation will be the best solution.
+translation will be the best solution. Having said that, I believe that
+even an imperfect translation could go a long way with someone who is
+struggling to understand how to use a specific function in a package,
+and may also struggle with the English language.
 
-Additionally, R enforces the printed name of each section, so they
-cannot be translated. So titles such as Description, Usage and Arguments
-will always remain untranslated.
+### Debug
 
-### If it doesn’t translate
-
-If the original help page displays, check your environment variables:
+If the original English help page displays, check your environment
+variables:
 
 ``` r
 Sys.getenv("LANG")
@@ -100,7 +106,7 @@ Description, Details, Arguments, etc.). If `lang` determines that your
 environment is set to use English, it will simply display the original
 documentation.
 
-## Developers
+## Package Developers
 
 You may want to provide translations of your documentation as part of
 your package.`lang` includes an entire infrastructure to help you to do
@@ -129,3 +135,64 @@ translate all of your
 new Roxygen documents will be saved, by default, to a new
 **‘man-lang/’** folder. Make sure to add the new folder to your project
 **‘.Rbuildignore’** file (`^man-lang$`)
+
+For this package, the console output of making that function call looks
+like this:
+
+``` r
+> translate_roxygen("spanish", "es")
+
+── `lang` translating Roxygen into 'spanish' 
+ℹ Loading lang
+[1/7] R/help-shims.R --> man-lang/es/help-shims.R
+[2/7] R/lang-help.R --> man-lang/es/lang-help.R
+[3/7] R/lang.R --> man-lang/es/lang.R
+[4/7] R/mall-reexports.R --> man-lang/es/mall-reexports.R
+[5/7] R/process-roxygen.R --> man-lang/es/process-roxygen.R
+[6/7] R/translate-roxygen.R --> man-lang/es/translate-roxygen.R
+[7/7] R/utils.R --> man-lang/es/utils.R
+```
+
+### Edit the translations
+
+As mentioned in the previous section, `lang` translates the functions’
+Roxygen comments. This approach allows you as the developer to easily
+edit the output.
+
+For the `lang_help()` function, in the **‘R/lang-help.R’** script, the
+top of the documentation looks like this:
+
+``` r
+#' Translates help
+#' @description
+#' Translates a given topic into a target language. It uses the `lang` argument
+#' to determine which language to translate to. If not passed, this function will
+#' look for a target language in the LANG and LANGUAGE environment variables to
+#' determine the target language. If the target language is English, no translation
+#' will be processed, so the help returned will be the original package's
+#' documentation.
+#'
+#' @param topic The topic to search for
+#' @param package The R package to look for the topic
+#' @param lang Language to translate the help to
+#' @param type Produce "html" or "text" output for the help. It default to
+#' `getOption("help_type")`
+...
+```
+
+And this is what the translation in **‘man-lang/es/lang.R’** looks like:
+
+``` r
+#' Ayuda en traducción
+#' @description La función traduce un tema dado a un idioma objetivo. Utiliza
+#' el argumento `lang` para determinar qué idioma traducir. Si no se pasa, esta
+#' función busca un idioma objetivo en las variables de entorno LANG y LANGUAGE
+#' para determinarlo. Si el idioma objetivo es inglés, no se procesa la
+#' traducción, por lo que se devuelve la documentación original del paquete.
+#' @param topic  El tema de búsqueda principal.
+#' @param package  Paquete R para buscar el tema.
+#' @param lang  Please provide the text you'd like me to translate.
+#' @param type  Utilice "html" o "texto" como salida para la ayuda, de lo
+#' contrario se utilizará el valor por defecto de `getOption("help_type")`.
+...
+```
