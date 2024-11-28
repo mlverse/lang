@@ -2,8 +2,6 @@
 output: github_document
 ---
 
-<!-- TODO: Add clarification regarding using the two letter language designation ISO 639 -->
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
@@ -147,6 +145,11 @@ new Roxygen documents will be saved, by default, to a new **'man-lang/'** folder
 Make sure to add the new folder to your project **'.Rbuildignore'** file 
 (`^man-lang$`)
 
+**ISO 639 codes** - The name of the sub-folder to use needs to be the two letter
+designation of the target language you are using. That is why we used **es** for
+Spanish. For the list of codes, you can refer to the 
+[Wikipedia page here](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes).
+
 For this package, making that function call creates this console output:
 
 ```r
@@ -270,6 +273,15 @@ Spanish one.
 Instead of having the user wait for the LLM to complete the translation, if 
 `lang` finds a matching translation in your package, the help page will appear
 almost instantly. 
+
+Under the hood, `lang` will use the value of your environment variables to 
+determine which sub-folder to check. If the value of `LANG` is a full locale
+value (`en_US.UTF8`), then it will check in the folder matching the variables
+first two characters exist. If the value is not a locale, `lang` will attempt to
+translate the value into an ISO 639 code. This package contains a small 
+conversion table to do its best to infer the language you are using, and thus
+to know which sub-folder to look for. 
+
 
 
 
