@@ -1,0 +1,37 @@
+---
+title: "Drop-in replacements for help and ? functions"
+execute:
+  eval: true
+  freeze: true
+---
+
+## help
+
+## Description
+ The `?` and `help` functions are replacements for functions of the same name in the utils package. If the LANG environment variable is not set to English, it will activate the translation to whatever language LANG is set to. 
+
+
+## Usage
+```r
+ 
+# help(topic, package = NULL, ...) 
+ 
+# ?e2 
+# e1?e2 
+```
+
+## Arguments
+|Arguments|Description|
+|---|---|
+| topic | A name or character string specifying the help topic. |
+| package | A name or character string specifying the package in which to search for the help topic. If NULL, search all packages. |
+| ... | Additional arguments to pass to `utils::help()`. |
+| e1 | First argument to pass along to `utils::`?``. |
+| e2 | Second argument to pass along to `utils::`?``. |
+
+
+
+
+
+
+

@@ -1,0 +1,36 @@
+---
+title: "Creates the Rd files based on translated Roxygen scripts"
+execute:
+  eval: true
+  freeze: true
+---
+
+## process_roxygen_folder
+
+## Description
+ Creates the Rd files based on translated Roxygen scripts 
+
+
+## Usage
+```r
+ 
+process_roxygen_folder(folder, source = "man-lang", target = "inst/man-lang") 
+ 
+process_roxygen(source = "man-lang", target = "inst/man-lang") 
+```
+
+## Arguments
+|Arguments|Description|
+|---|---|
+| folder | Source sub-folder where the source Roxygen R scripts are |
+| source | Base source folder where the different translations are located. Defaults to 'man-lang'. |
+| target | Base target folder where the different translations will be located. Defaults to 'inst/man-lang' |
+
+
+
+## Value
+ Multiple Rd files based on the source R scripts 
+
+
+
+

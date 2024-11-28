@@ -1,0 +1,47 @@
+project:
+  type: website
+  output-dir: docs
+  
+execute: 
+  freeze: true 
+  eval: true
+  
+website:
+  title: lang
+  navbar:
+    left:
+      - href: reference/index.qmd
+        text: Reference   
+    right:
+      - icon: github
+        href: https://github.com/edgararuiz/lang
+      
+format:
+  html:
+    toc: true
+    toc-expand: true
+    code-copy: true
+    code-overflow: wrap
+    code-toos: true
+    eval: true
+    freeze: true
+    css: site/styles.css
+    theme:
+      light: [cosmo, site/theme.scss]
+      dark: [cosmo, site/theme-dark.scss]
+        
+pkgsite: 
+    dir: "."
+    reference:
+      dir: reference
+      index:
+        file: index.qmd
+        contents:
+          sections:
+            - title: Live translation
+              contents: 
+              - lang_help
+            - title: Package developers
+              contents:
+              - translate_roxygen
+              - process_roxygen_folder
