@@ -37,11 +37,10 @@ pkgsite:
       index:
         file: index.qmd
         contents:
-          sections:
-            - title: Live translation
-              contents: 
-              - lang_help
-            - title: Package developers
-              contents:
-              - translate_roxygen
-              - process_roxygen_folder
+        - section: Live translation
+          contents: 
+          - lang_help.qmd
+        - section: Package developers
+          contents:
+          - translate_roxygen.qmd
+          - process_roxygen_folder.qmd

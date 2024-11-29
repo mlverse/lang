@@ -30,16 +30,20 @@ your LLM and `mall` should be a one time process.
 On an every day R session, you’ll just need to load `lang` and then tell
 it which model to run using `llm_use()`:
 
-    library(lang)
+``` r
+library(lang)
 
-    llm_use("ollama", "llama3.2", seed = 100)
+llm_use("ollama", "llama3.2", seed = 100)
+```
 
 After that, simply use `?` to trigger and display the translated
 documentation. During translation, `lang` will display its progress by
 showing which section of the documentation is currently translating:
 
-    > ?lm
-    Translating: Title
+``` r
+> ?lm
+Translating: Title
+```
 
 If your environment is set to use the Spanish language, the help pane
 should display this:

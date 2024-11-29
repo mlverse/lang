@@ -1,0 +1,39 @@
+---
+title: "Translates the Roxygen2 documentation"
+execute:
+  eval: true
+  freeze: true
+---
+
+## translate_roxygen
+
+## Description
+Reads the Roxygen2 tags in the package and translates them. The translations are stored in R scripts. The default location of the new scripts is 'man-lang'. The will be in a sub-folder representing the language the are translated to.
+
+
+## Usage
+```r
+
+translate_roxygen(lang, folder, target = path("man-lang"), source = path("R"))
+
+translate_roxygen_file(path, lang, target_path)
+```
+
+## Arguments
+|Arguments|Description|
+|---|---|
+| lang | The target language to translate help to |
+| folder | 2-letter language/source folder to save the new Roxygen scripts to. |
+| target | The target base folder to save the Roxygen files. It defaults to 'man-lang'. The final destination will be a combination of this and the folder from `folder` |
+| source | The source R scripts. It defaults to the 'R' folder. |
+| path | The path to the R script containing the Roxygen help documentation |
+| target_path | The path to write the new, translated, R script to. The name of the file will match that of the original R script. |
+
+## Details
+This approach makes it easier to edit the translations by hand after the LLM does a first pass. It also allows for others to collaborate with improving the translation.
+
+
+
+
+
+

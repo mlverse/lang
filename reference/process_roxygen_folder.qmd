@@ -8,15 +8,15 @@ execute:
 ## process_roxygen_folder
 
 ## Description
- Creates the Rd files based on translated Roxygen scripts 
+Creates the Rd files based on translated Roxygen scripts
 
 
 ## Usage
 ```r
- 
-process_roxygen_folder(folder, source = "man-lang", target = "inst/man-lang") 
- 
-process_roxygen(source = "man-lang", target = "inst/man-lang") 
+
+process_roxygen_folder(folder, source = "man-lang", target = "inst/man-lang")
+
+process_roxygen(source = "man-lang", target = "inst/man-lang")
 ```
 
 ## Arguments
@@ -29,7 +29,7 @@ process_roxygen(source = "man-lang", target = "inst/man-lang")
 
 
 ## Value
- Multiple Rd files based on the source R scripts 
+Multiple Rd files based on the source R scripts
 
 
 

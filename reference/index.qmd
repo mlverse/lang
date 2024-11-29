@@ -3,27 +3,21 @@ title: Package index
 toc: false
 ---
 
+## Live translation
 
-
-### Live translation
-
-
-[lang_help()](lang_help.html)
+[lang_help()](lang_help.qmd)
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates help
 
+## Package developers
 
-
-### Package developers
-
-
-[translate_roxygen()](translate_roxygen.html) [translate_roxygen_file()](translate_roxygen.html)
+[translate_roxygen()](translate_roxygen.qmd) [translate_roxygen_file()](translate_roxygen.qmd)
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates the Roxygen2 documentation
 
-[process_roxygen_folder()](process_roxygen_folder.html) [process_roxygen()](process_roxygen_folder.html)
+[process_roxygen_folder()](process_roxygen_folder.qmd) [process_roxygen()](process_roxygen_folder.qmd)
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creates the Rd files based on translated Roxygen scripts
