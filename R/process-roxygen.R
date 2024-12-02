@@ -1,12 +1,18 @@
 #' Creates the Rd files based on translated Roxygen scripts
 #' @param folder Source sub-folder where the source Roxygen R scripts are
-#' @param source Base source folder where the different translations are located.
+#' @param source_folder Base source folder where the different translations are located.
 #' Defaults to 'man-lang'.
-#' @param target Base target folder where the different translations will be
+#' @param target_folder Base target folder where the different translations will be
 #' located. Defaults to 'inst/man-lang'
+#' @param pkg_path The path to the package 
 #' @returns Multiple Rd files based on the source R scripts
 #' @export
-process_roxygen_folder <- function(folder, source = "man-lang", target = "inst/man-lang") {
+process_roxygen_folder <- function(
+    folder,
+    source_folder = "man-lang",
+    target_folder = "inst/man-lang", 
+    pkg_path = "."
+    ) {
   # Create temporary directory
   temp_dir <- tempfile()
   dir_create(temp_dir)
@@ -21,7 +27,7 @@ process_roxygen_folder <- function(folder, source = "man-lang", target = "inst/m
   # Copies content of the translated script to the R folder
   # of the temp copy
   file_copy(
-    path = dir_ls(path(copy_path, source, folder)),
+    path = dir_ls(path(pkg_path, source_folder, folder)),
     new_path = path(copy_path, "R"),
     overwrite = TRUE
   )
@@ -33,7 +39,7 @@ process_roxygen_folder <- function(folder, source = "man-lang", target = "inst/m
   )
   # Copies the new contents in 'man' from the temp copy
   # into target folder, under the language's sub-folder
-  target_path <- path(target, folder)
+  target_path <- path(pkg_path, target_folder, folder)
   if (dir_exists(target_path)) {
     dir_delete(target_path)
   }
@@ -53,9 +59,18 @@ process_roxygen_folder <- function(folder, source = "man-lang", target = "inst/m
 
 #' @rdname process_roxygen_folder
 #' @export
-process_roxygen <- function(source = "man-lang", target = "inst/man-lang") {
-  sub_folders <- dir_ls(source, type = "directory")
+process_roxygen <- function(
+    source_folder = "man-lang", 
+    target_folder = "inst/man-lang",
+    pkg_path = "."
+    ) {
+  sub_folders <- dir_ls(source_folder, type = "directory")
   for (folder in sub_folders) {
-    process_roxygen_folder(path_file(folder), source, target)
+    process_roxygen_folder(
+      folder = path_file(folder),
+      source =  source_folder,
+      target = target_folder, 
+      pkg_path = pkg_path
+      )
   }
 }
