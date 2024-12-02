@@ -31,7 +31,7 @@ translate_roxygen <- function(
   dir_create(target)
   cli_h3("`lang` translating Roxygen into '{lang}'")
   r_files <- dir_ls(source, glob = "*.R")
-  pkg_env <- env_package(path_file(source))
+  pkg_env <- env_package(source)
   for (i in seq_along(r_files)) {
     translate_roxygen_imp(
       path = r_files[[i]],
