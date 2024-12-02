@@ -11,9 +11,13 @@ Use an **LLM to translate a function’s help documentation on-the-fly**.
 you are using RStudio or Positron, the translated help page will appear
 in the usual help pane.
 
+If you are a package developer, `lang` helps you translate your
+documentation, and to include it as part of your package. `lang` will
+use the same `?` override to display your translated help documents.
+
 ## Installation
 
-To install the GitHub vesion of `lang`, use:
+To install the GitHub version of `lang`, use:
 
 ``` r
 install.packages("pak")
