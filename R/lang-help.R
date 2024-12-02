@@ -162,7 +162,11 @@ rd_translate <- function(topic, package, lang) {
 }
 
 rd_prep_translate <- function(x, lang) {
-  tag_text <- llm_vec_translate(rd_extract_text(x), lang)
+  tag_text <- llm_vec_translate(
+    x = rd_extract_text(x),
+    language =  lang, 
+    additional_prompt = "Do not translate anything between single quotes."
+    )
   tag_text <- rd_code_markers(tag_text)
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])
