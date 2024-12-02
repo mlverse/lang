@@ -137,18 +137,16 @@ rd_translate <- function(topic, package, lang) {
     if (tag_name == "\\examples") {
       for (k in seq_along(rd_i)) {
         rd_k <- rd_i[[k]]
-        rd_char <- as.character(rd_k)
-        if (length(rd_char) == 1) {
-          if (substr(rd_char, 1, 2) == "# ") {
-            last_char <- substr(rd_char, nchar(rd_char), nchar(rd_char))
-            n_char <- ifelse(last_char == "\n", 1, 0)
-            rd_char <- substr(rd_char, 3, nchar(rd_char) - n_char)
-            rd_char <- llm_vec_translate(rd_char, lang)
-            rd_char <- paste0("# ", rd_char, "\n")
-            attributes(rd_char) <- attributes(rd_k)
-            rd_i[[k]] <- rd_char
-          }
+        k_attrs <- attributes(rd_k) 
+        rd_char <- as.character(rd_k) 
+        if(inherits(rd_k, "list")) {
+          rd_k <- lapply(rd_char, rd_comment_translate, lang)
         }
+        if(inherits(rd_k, "character")) {
+          rd_k <- rd_comment_translate(rd_char, lang)
+        }    
+        attributes(rd_k) <- k_attrs
+        rd_i[[k]] <- rd_k
       }
       rd_content[[i]] <- rd_i
     }
@@ -159,6 +157,22 @@ rd_translate <- function(topic, package, lang) {
   topic_path <- fs::path(tempdir(), topic_name, ext = "Rd")
   writeLines(rd_text, topic_path)
   topic_path
+}
+
+rd_comment_translate <- function(x, lang) {
+  rd_char <- as.character(x)
+  if (length(rd_char) == 1) {
+    if (substr(rd_char, 1, 2) == "# ") {
+      last_char <- substr(rd_char, nchar(rd_char), nchar(rd_char))
+      n_char <- ifelse(last_char == "\n", 1, 0)
+      rd_char <- substr(rd_char, 3, nchar(rd_char) - n_char)
+      rd_char <- llm_vec_translate(rd_char, lang)
+      rd_char <- paste0("# ", rd_char, "\n")
+      attributes(rd_char) <- attributes(x)
+      x <- rd_char
+    }
+  } 
+  x
 }
 
 rd_prep_translate <- function(x, lang) {
