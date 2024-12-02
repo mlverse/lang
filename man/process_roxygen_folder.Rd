@@ -5,18 +5,29 @@
 \alias{process_roxygen}
 \title{Creates the Rd files based on translated Roxygen scripts}
 \usage{
-process_roxygen_folder(folder, source = "man-lang", target = "inst/man-lang")
+process_roxygen_folder(
+  folder,
+  source_folder = "man-lang",
+  target_folder = "inst/man-lang",
+  pkg_path = "."
+)
 
-process_roxygen(source = "man-lang", target = "inst/man-lang")
+process_roxygen(
+  source_folder = "man-lang",
+  target_folder = "inst/man-lang",
+  pkg_path = "."
+)
 }
 \arguments{
 \item{folder}{Source sub-folder where the source Roxygen R scripts are}
 
-\item{source}{Base source folder where the different translations are located.
+\item{source_folder}{Base source folder where the different translations are located.
 Defaults to 'man-lang'.}
 
-\item{target}{Base target folder where the different translations will be
+\item{target_folder}{Base target folder where the different translations will be
 located. Defaults to 'inst/man-lang'}
+
+\item{pkg_path}{The path to the package}
 }
 \value{
 Multiple Rd files based on the source R scripts

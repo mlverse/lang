@@ -123,11 +123,13 @@ translate_roxygen_imp <- function(path,
       raw <- gsub("\n", "\n#' ", raw)
       contents <- c(contents, raw)
     }
-    fn_str <- capture.output(args(roxy$object$value))[[1]]
-    if(fn_str == "NULL") {
-      fn_str <- ""
+    roxy_call <- as.character(roxy$call)
+    if(length(roxy_call) == 3) {
+      fn_str <- paste(roxy_call[[2]], roxy_call[[1]], roxy_call[[3]])
+    } else {
+      fn_str <- roxy_call
     }
-    contents <- c(contents, glue("{roxy$object$alias} <- {fn_str} NULL"))
+    contents <- c(contents, fn_str)
   }
   if (!is.null(contents)) {
     writeLines(contents, rd_path)
