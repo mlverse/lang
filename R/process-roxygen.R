@@ -17,13 +17,16 @@ process_roxygen_folder <- function(
   temp_dir <- tempfile()
   dir_create(temp_dir)
   # Copies root contents to temp directory
-  pkg_dir <- path_abs(".")
+  pkg_dir <- path_abs(pkg_path)
   pkg_name <- path_file(pkg_dir)
   dir_copy(pkg_dir, temp_dir)
   copy_path <- path(temp_dir, pkg_name)
   # Removes current content in 'man' of the temp copy of
   # the package
-  dir_delete(path(copy_path, "man"))
+  man_path <- path(copy_path, "man")
+  if(dir_exists(man_path)) {
+    dir_delete(path(copy_path, "man"))  
+  }
   # Copies content of the translated script to the R folder
   # of the temp copy
   file_copy(
@@ -33,7 +36,7 @@ process_roxygen_folder <- function(
   )
   # Uses `callr` to run roxygenize, mainly to avoid the messages from roxygen2
   cli_h3("Creating Rd files for '{folder}'")
-  callr::r(
+  callr::r_safe(
     func = function(x) roxygen2::roxygenize(x, roclets = "rd"),
     args = list(copy_path)
   )
@@ -64,7 +67,7 @@ process_roxygen <- function(
     target_folder = "inst/man-lang",
     pkg_path = "."
     ) {
-  sub_folders <- dir_ls(source_folder, type = "directory")
+  sub_folders <- dir_ls(path(pkg_path, source_folder), type = "directory")
   for (folder in sub_folders) {
     process_roxygen_folder(
       folder = path_file(folder),
