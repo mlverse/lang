@@ -4,3 +4,12 @@
 ^man-lang$
 ^utils$
 ^README\.Rmd$
+^_quarto\.yml$
+^index\.qmd$
+^.*docs$
+^.*reference$
+^.*\.quarto$
+^.*site$
+^\.github$
+^.*articles$
+^codecov\.yml$

@@ -16,7 +16,7 @@
 #' \donttest{
 #' library(lang)
 #' llm_use("ollama", "llama3.2", .silent = TRUE)
-#' lang_help("llm_classify", "mall", lang = "french")
+#' lang_help("llm_classify", "mall", lang = "french", type = "text")
 #' }
 #' @returns Returns either a text or html version of the topic's help
 #' documentation

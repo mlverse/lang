@@ -32,6 +32,6 @@ documentation.
 \donttest{
 library(lang)
 llm_use("ollama", "llama3.2", .silent = TRUE)
-lang_help("llm_classify", "mall", lang = "french")
+lang_help("llm_classify", "mall", lang = "french", type = "text")
 }
 }
