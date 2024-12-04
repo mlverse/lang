@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/edgararuiz/lang/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/edgararuiz/lang/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/edgararuiz/lang/branch/main/graph/badge.svg)](https://app.codecov.io/gh/edgararuiz/lang?branch=main)
 <!-- badges: end -->
 
 Use an **LLM to translate a function’s help documentation on-the-fly**.
