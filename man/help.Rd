@@ -2,9 +2,9 @@
 % Please edit documentation in R/help-shims.R
 \name{help}
 \alias{help}
-\alias{shim_help}
+\alias{shim_lang_help}
 \alias{?}
-\alias{shim_question}
+\alias{shim_lang_question}
 \title{Drop-in replacements for help and ? functions}
 \usage{
 # help(topic, package = NULL, ...)

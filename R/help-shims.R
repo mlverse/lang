@@ -20,7 +20,7 @@
 #' @rdname help
 #' @name help
 #' @usage # help(topic, package = NULL, ...)
-shim_help <- function(topic, package = NULL, ...) {
+shim_lang_help <- function(topic, package = NULL, ...) {
   # Reproduce help's NSE for topic - try to eval it and see if it's a string
   topic_name <- substitute(topic)
 
@@ -60,9 +60,7 @@ shim_help <- function(topic, package = NULL, ...) {
   }
 
   if (!en_lang()) {
-    lang_help(topic_str, package_str)
-  } else if ("pkgload" %in% loadedNamespaces()) {
-    exec(getExportedValue("pkgload", "dev_help"), topic_name, package_name)
+    lang_help(topic_str, package_str, ...)
   } else {
     inject(utils::help(
       !!maybe_missing(topic_name),
@@ -79,7 +77,7 @@ shim_help <- function(topic, package = NULL, ...) {
 #'
 #' @rdname help
 #' @name ?
-shim_question <- function(e1, e2) {
+shim_lang_question <- function(e1, e2) {
   pkg <- NULL
   # Get string version of e1, for find_topic
   e1_expr <- substitute(e1)
@@ -110,8 +108,6 @@ shim_question <- function(e1, e2) {
 
   if (!en_lang()) {
     lang_help(topic, pkg)
-  } else if ("pkgload" %in% loadedNamespaces()) {
-    exec(getExportedValue("pkgload", "dev_help"), topic, pkg)
   } else {
     eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
   }
@@ -126,8 +122,8 @@ insert_global_shims <- function(force = FALSE) {
     base::detach("lang_shims")
   }
   e <- new.env()
-  e$help <- shim_help
-  e$`?` <- shim_question
+  e$help <- shim_lang_help
+  e$`?` <- shim_lang_question
   base::attach(
     what = e,
     name = "lang_shims",
