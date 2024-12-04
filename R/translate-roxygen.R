@@ -127,7 +127,7 @@ translate_roxygen_imp <- function(path,
     if(length(roxy_call) == 3) {
       fn_str <- paste(roxy_call[[2]], roxy_call[[1]], roxy_call[[3]])
     } else {
-      fn_str <- roxy_call
+      fn_str <- paste0("\"", roxy_call, "\"")
     }
     contents <- c(contents, fn_str)
   }

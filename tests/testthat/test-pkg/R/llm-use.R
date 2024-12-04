@@ -16,7 +16,29 @@
 #' character: `""`. It defaults to a temp folder. If this argument is left
 #' `NULL` when calling this function, no changes to the path will be made.
 #' @examples
-#' print(mtcars)
+#' \donttest{
+#' library(mall)
+#'
+#' llm_use("ollama", "llama3.2")
+#'
+#' # Additional arguments will be passed 'as-is' to the
+#' # downstream R function in this example, to ollama::chat()
+#' llm_use("ollama", "llama3.2", seed = 100, temperature = 0.1)
+#'
+#' # During the R session, you can change any argument
+#' # individually and it will retain all of previous
+#' # arguments used
+#' llm_use(temperature = 0.3)
+#'
+#' # Use .cache to modify the target folder for caching
+#' llm_use(.cache = "_my_cache")
+#'
+#' # Leave .cache empty to turn off this functionality
+#' llm_use(.cache = "")
+#'
+#' # Use .silent to avoid the print out
+#' llm_use(.silent = TRUE)
+#' }
 #' @returns A `mall_session` object
 #'
 #' @export
@@ -27,11 +49,33 @@ llm_use <- function(
     .silent = FALSE,
     .cache = NULL,
     .force = FALSE) {
+  elmer_obj <- NULL
   models <- list()
   supplied <- sum(!is.null(backend), !is.null(model))
   not_init <- inherits(m_defaults_get(), "list")
   if (supplied == 2) {
     not_init <- FALSE
+  }
+  if (inherits(backend, "Chat")) {
+    if (!is.null(model)) {
+      cli_abort(
+        c(
+          "Elmer objects already have the 'model' selected.",
+          "Please try again leaving `model` NULL"
+        )
+      )
+    }
+    not_init <- FALSE
+    elmer_obj <- backend
+    backend <- "elmer"
+    model <- "chat"
+  }
+  if (is.null(backend) && !is.null(m_defaults_backend())) {
+    if (m_defaults_backend() == "elmer") {
+      args <- m_defaults_args()
+      elmer_obj <- args[["elmer_obj"]]
+      not_init <- FALSE
+    }
   }
   if (not_init) {
     if (is.null(backend)) {
@@ -70,6 +114,7 @@ llm_use <- function(
     backend = backend,
     model = model,
     .cache = cache,
+    elmer_obj = elmer_obj,
     ...
   )
   if (!.silent || not_init) {
