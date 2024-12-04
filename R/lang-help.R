@@ -137,14 +137,14 @@ rd_translate <- function(topic, package, lang) {
     if (tag_name == "\\examples") {
       for (k in seq_along(rd_i)) {
         rd_k <- rd_i[[k]]
-        k_attrs <- attributes(rd_k) 
-        rd_char <- as.character(rd_k) 
-        if(inherits(rd_k, "list")) {
+        k_attrs <- attributes(rd_k)
+        rd_char <- as.character(rd_k)
+        if (inherits(rd_k, "list")) {
           rd_k <- lapply(rd_char, rd_comment_translate, lang)
         }
-        if(inherits(rd_k, "character")) {
+        if (inherits(rd_k, "character")) {
           rd_k <- rd_comment_translate(rd_char, lang)
-        }    
+        }
         attributes(rd_k) <- k_attrs
         rd_i[[k]] <- rd_k
       }
@@ -171,16 +171,16 @@ rd_comment_translate <- function(x, lang) {
       attributes(rd_char) <- attributes(x)
       x <- rd_char
     }
-  } 
+  }
   x
 }
 
 rd_prep_translate <- function(x, lang) {
   tag_text <- llm_vec_translate(
     x = rd_extract_text(x),
-    language =  lang, 
+    language = lang,
     additional_prompt = "Do not translate anything between single quotes."
-    )
+  )
   tag_text <- rd_code_markers(tag_text)
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])

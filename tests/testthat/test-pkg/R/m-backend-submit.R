@@ -73,7 +73,7 @@ m_backend_submit.mall_elmer <- function(backend, x, prompt, preview = FALSE) {
       if (is.null(res)) {
         args <- m_defaults_args()
         arg_chat <- args$elmer_obj$chat
-        res <- exec("arg_chat", !!! .args)
+        res <- exec("arg_chat", !!!.args)
         m_cache_record(.args, res, hash_args)
       }
       res

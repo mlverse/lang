@@ -4,15 +4,14 @@
 #' Defaults to 'man-lang'.
 #' @param target_folder Base target folder where the different translations will be
 #' located. Defaults to 'inst/man-lang'
-#' @param pkg_path The path to the package 
+#' @param pkg_path The path to the package
 #' @returns Multiple Rd files based on the source R scripts
 #' @export
 process_roxygen_folder <- function(
     folder,
     source_folder = "man-lang",
-    target_folder = "inst/man-lang", 
-    pkg_path = "."
-    ) {
+    target_folder = "inst/man-lang",
+    pkg_path = ".") {
   # Create temporary directory
   temp_dir <- tempfile()
   dir_create(temp_dir)
@@ -24,8 +23,8 @@ process_roxygen_folder <- function(
   # Removes current content in 'man' of the temp copy of
   # the package
   man_path <- path(copy_path, "man")
-  if(dir_exists(man_path)) {
-    dir_delete(path(copy_path, "man"))  
+  if (dir_exists(man_path)) {
+    dir_delete(path(copy_path, "man"))
   }
   # Copies content of the translated script to the R folder
   # of the temp copy
@@ -63,17 +62,16 @@ process_roxygen_folder <- function(
 #' @rdname process_roxygen_folder
 #' @export
 process_roxygen <- function(
-    source_folder = "man-lang", 
+    source_folder = "man-lang",
     target_folder = "inst/man-lang",
-    pkg_path = "."
-    ) {
+    pkg_path = ".") {
   sub_folders <- dir_ls(path(pkg_path, source_folder), type = "directory")
   for (folder in sub_folders) {
     process_roxygen_folder(
       folder = path_file(folder),
-      source =  source_folder,
-      target = target_folder, 
+      source = source_folder,
+      target = target_folder,
       pkg_path = pkg_path
-      )
+    )
   }
 }
