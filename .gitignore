@@ -48,8 +48,4 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-man-lang/
-inst/man-lang/
-
-
 /.quarto/
