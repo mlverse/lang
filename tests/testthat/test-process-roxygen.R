@@ -4,7 +4,7 @@ test_that("Process Roxygen works", {
   dir_copy(test_path(pkg_name), temp_path)
   local_pkg <- path(temp_path, pkg_name)
   expect_message(
-    withr::with_dir(local_pkg, process_roxygen())
+    process_roxygen(pkg_path = local_pkg)
   )
   lang_folder <- path(local_pkg, "inst", "man-lang", "es")
   expect_snapshot_file(path(lang_folder, "llm_classify.Rd"))
