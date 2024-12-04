@@ -1,0 +1,226 @@
+[
+  {
+    "objectID": "reference/translate_roxygen.html#description",
+    "href": "reference/translate_roxygen.html#description",
+    "title": "Translates the Roxygen2 documentation",
+    "section": "Description",
+    "text": "Description\nReads the Roxygen2 tags in the package and translates them. The translations are stored in R scripts. The default location of the new scripts is ‘man-lang’. The will be in a sub-folder representing the language the are translated to."
+  },
+  {
+    "objectID": "reference/translate_roxygen.html#usage",
+    "href": "reference/translate_roxygen.html#usage",
+    "title": "Translates the Roxygen2 documentation",
+    "section": "Usage",
+    "text": "Usage\n\ntranslate_roxygen(lang, folder, target = path(\"man-lang\"), source = path(\"R\"))\n\ntranslate_roxygen_file(path, lang, target_path)"
+  },
+  {
+    "objectID": "reference/translate_roxygen.html#arguments",
+    "href": "reference/translate_roxygen.html#arguments",
+    "title": "Translates the Roxygen2 documentation",
+    "section": "Arguments",
+    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\nlang\nThe target language to translate help to\n\n\nfolder\n2-letter language/source folder to save the new Roxygen scripts to.\n\n\ntarget\nThe target base folder to save the Roxygen files. It defaults to ‘man-lang’. The final destination will be a combination of this and the folder from folder\n\n\nsource\nThe source R scripts. It defaults to the ‘R’ folder.\n\n\npath\nThe path to the R script containing the Roxygen help documentation\n\n\ntarget_path\nThe path to write the new, translated, R script to. The name of the file will match that of the original R script."
+  },
+  {
+    "objectID": "reference/translate_roxygen.html#details",
+    "href": "reference/translate_roxygen.html#details",
+    "title": "Translates the Roxygen2 documentation",
+    "section": "Details",
+    "text": "Details\nThis approach makes it easier to edit the translations by hand after the LLM does a first pass. It also allows for others to collaborate with improving the translation."
+  },
+  {
+    "objectID": "reference/index.html",
+    "href": "reference/index.html",
+    "title": "Package index",
+    "section": "",
+    "text": "lang_help()\n      Translates help"
+  },
+  {
+    "objectID": "reference/index.html#live-translation",
+    "href": "reference/index.html#live-translation",
+    "title": "Package index",
+    "section": "",
+    "text": "lang_help()\n      Translates help"
+  },
+  {
+    "objectID": "reference/index.html#package-developers",
+    "href": "reference/index.html#package-developers",
+    "title": "Package index",
+    "section": "Package developers",
+    "text": "Package developers\ntranslate_roxygen() translate_roxygen_file()\n      Translates the Roxygen2 documentation\nprocess_roxygen_folder() process_roxygen()\n      Creates the Rd files based on translated Roxygen scripts"
+  },
+  {
+    "objectID": "reference/reexports.html#description",
+    "href": "reference/reexports.html#description",
+    "title": "Objects exported from other packages",
+    "section": "Description",
+    "text": "Description\nThese objects are imported from other packages. Follow the links below to see their documentation. mall llm_use"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "lang",
+    "section": "",
+    "text": "Use an LLM to translate a function’s help documentation on-the-fly. lang overrides the ? and help() functions in your R session. If you are using RStudio or Positron, the translated help page will appear in the usual help pane.\nIf you are a package developer, lang helps you translate your documentation, and to include it as part of your package. lang will use the same ? override to display your translated help documents.\n\n\nTo install the GitHub version of lang, use:\ninstall.packages(\"pak\")\npak::pak(\"edgararuiz/lang\")\n\n\n\nIf you have not used mall yet, then the first step is to set it up. Feel free to follow the instructions in that package’s Get Started page. Setting up your LLM and mall should be a one time process.\nOn an every day R session, you’ll just need to load lang and then tell it which model to run using llm_use():\nlibrary(lang)\n\nllm_use(\"ollama\", \"llama3.2\", seed = 100)\nAfter that, simply use ? to trigger and display the translated documentation. During translation, lang will display its progress by showing which section of the documentation is currently translating:\n&gt; ?lm\nTranslating: Title\nIf your environment is set to use the Spanish language, the help pane should display this:\n\nR enforces the printed name of each section, so they cannot be translated. So titles such as Description, Usage and Arguments will always remain untranslated.\n\n\nAs you can imagine, the quality of translation will mostly depend on the LLM being used. This solution is meant to be as helpful as possible, but acknowledging that at this stage of LLMs, only a human curated translation will be the best solution. Having said that, I believe that even an imperfect translation could go a long way with someone who is struggling to understand how to use a specific function in a package, and may also struggle with the English language.\n\n\n\nIf the original English help page displays, check your environment variables:\nSys.getenv(\"LANG\")\n#&gt; [1] \"en_US.UTF-8\"\nSys.getenv(\"LANGUAGE\")\n#&gt; [1] \"\"\nIn my case, lang recognizes that the environment is set to English, because of the en code in the variable. If your LANG variable is set to en_... then no translation will occur.\nIf this is your case, set the LANGUAGE variable to your preference. You can use the full language name, such as ‘spanish’, or ‘french’, etc. You can use Sys.setenv(LANGUAGE = \"[my language]\"), or, for a more permanent solution, add the entry to your your .Renviron file (usethis::edit_r_environ()).\n\n\n\n\nThe language that the help documentation will be translated to, is determined by one of the following two environment variables. In order of priority, the variables are:\n\nLANGUAGE\nLANG\n\nIt is likely that your LANG variable already defaults to your locale. For example, mine is set to: en_US.UTF-8 (That means English, United States). For someone in France, the locale would be something such as fr_FR.UTF-8. Llama3.2, recognizes these UTF locales, and using lang, calling ? will result in translating the function’s help documentation into French.\nIt uses the mall package as the integration point with the LLM. Under the hood, it runs llm_vec_translate() multiple times to translate the most common sections of the help documentation (e.g.: Title, Description, Details, Arguments, etc.). If lang determines that your environment is set to use English, it will simply display the original documentation.\n\n\n\nYou may want to provide translations of your documentation as part of your package.lang includes an entire infrastructure to help you to do the following:\n\nLet the LLM take the first pass at translating your documentation\nEasily edit the translations. This means, either you, or a collaborator, can fine tune the new files\nInclude the translated Rd files as part of your package\nHave ? and help() pull from your translated documents\n\n\n\nWhile inside your package’s project, use translate_roxygen() to have lang translate all of your documentation to the desired language. The function call must include the target language, and the sub-folder to save the translated files to:\ntranslate_roxygen(\"spanish\", \"es\")\nThat function call will iterate through your ‘R/’ folder and translate all of your roxygen2 documentation. The new Roxygen documents will be saved, by default, to a new ‘man-lang/’ folder. Make sure to add the new folder to your project ‘.Rbuildignore’ file (^man-lang$)\nISO 639 codes - The name of the sub-folder to use needs to be the two letter designation of the target language you are using. That is why we used es for Spanish. For the list of codes, you can refer to the Wikipedia page here.\nFor this package, making that function call creates this console output:\n&gt; translate_roxygen(\"spanish\", \"es\")\n\n── `lang` translating Roxygen into 'spanish' \nℹ Loading lang\n[1/7] R/help-shims.R --&gt; man-lang/es/help-shims.R\n[2/7] R/lang-help.R --&gt; man-lang/es/lang-help.R\n[3/7] R/lang.R --&gt; man-lang/es/lang.R\n[4/7] R/mall-reexports.R --&gt; man-lang/es/mall-reexports.R\n[5/7] R/process-roxygen.R --&gt; man-lang/es/process-roxygen.R\n[6/7] R/translate-roxygen.R --&gt; man-lang/es/translate-roxygen.R\n[7/7] R/utils.R --&gt; man-lang/es/utils.R\n\n\n\nAs mentioned in the previous section, lang translates the functions’ Roxygen comments. This approach allows you as the developer to easily edit the output.\nFor the lang_help() function, in the ‘R/lang-help.R’ script, the top of the documentation looks like this:\n#' Translates help\n#' @description\n#' Translates a given topic into a target language. It uses the `lang` argument\n#' to determine which language to translate to. If not passed, this function will\n#' look for a target language in the LANG and LANGUAGE environment variables to\n#' determine the target language. If the target language is English, no translation\n#' will be processed, so the help returned will be the original package's\n#' documentation.\n#'\n#' @param topic The topic to search for\n#' @param package The R package to look for the topic\n#' @param lang Language to translate the help to\n#' @param type Produce \"html\" or \"text\" output for the help. It default to\n#' `getOption(\"help_type\")`\n...\nAnd this is what the translation in ‘man-lang/es/lang.R’ looks like:\n#' Ayuda en traducción\n#' @description La función traduce un tema dado a un idioma objetivo. Utiliza\n#' el argumento `lang` para determinar qué idioma traducir. Si no se pasa, esta\n#' función busca un idioma objetivo en las variables de entorno LANG y LANGUAGE\n#' para determinarlo. Si el idioma objetivo es inglés, no se procesa la\n#' traducción, por lo que se devuelve la documentación original del paquete.\n#' @param topic  El tema de búsqueda principal.\n#' @param package  Paquete R para buscar el tema.\n#' @param lang  Please provide the text you'd like me to translate.\n#' @param type  Utilice \"html\" o \"texto\" como salida para la ayuda, de lo\n#' contrario se utilizará el valor por defecto de `getOption(\"help_type\")`.\n...\nEditing an R scripts Roxygen comments is a lot easier than editing an Rd file, additionally, this solution integrates better with the usual package development process.\nIt also opens the possibility to have collaborators to submit PRs to your package’s repository with edits to the translation, or even submit brand new translations.\n\n\n\nThe Rd help files are still the best way for R to process and display your help files. The second, and final step, will be to have lang create the Rd files based on the translated Roxygen comments, simply run:\nprocess_roxygen()\nThat function will iterate through all the language sub-folders in ‘man-lang/’ to process the Rd files. The resulting Rd files will be saved to ‘inst/man-lang/’. Please keep in mind that this step does not need an LLM to work. It is only creating the Rd files, and putting them in the correct location.\nUnder the hood, lang creates temporary copies of your package, replaces the scripts in the ‘R’ folder with your translations, and then runs the roxygen2::roxygenize() function. This ensures that the Rd creation is as close as possible as if you were running devtools::document() during your package development.\nFor this package, making that function call creates this console output:\n&gt; process_roxygen()\n\n── Creating Rd files for 'es' \n- inst/man-lang/es/help.Rd\n- inst/man-lang/es/lang_help.Rd\n- inst/man-lang/es/process_roxygen_folder.Rd\n- inst/man-lang/es/translate_roxygen.Rd\n\n\n\nThe end-user can easily access your translations by making sure that lang is loaded to their R session:\nlibrary(lang)\n\nSys.setenv(LANGUAGE = \"spanish\")\n\n?lang_help\nlang always looks first in the ‘inst/man-lan’ folder of your package to see if there is a folder matching the end-user’s language. If it does not find one, it will then trigger a live translation of the function. This would be the case if the user expect a French translation, but you only included a Spanish one.\nInstead of having the user wait for the LLM to complete the translation, if lang finds a matching translation in your package, the help page will appear almost instantly.\nUnder the hood, lang will use the value of your environment variables to determine which sub-folder to check. If the value of LANG is a full locale value (en_US.UTF8), then it will check in the folder matching the variables first two characters exist. If the value is not a locale, lang will attempt to translate the value into an ISO 639 code. This package contains a small conversion table to do its best to infer the language you are using, and thus to know which sub-folder to look for."
+  },
+  {
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "lang",
+    "section": "",
+    "text": "To install the GitHub version of lang, use:\ninstall.packages(\"pak\")\npak::pak(\"edgararuiz/lang\")"
+  },
+  {
+    "objectID": "index.html#using-lang",
+    "href": "index.html#using-lang",
+    "title": "lang",
+    "section": "",
+    "text": "If you have not used mall yet, then the first step is to set it up. Feel free to follow the instructions in that package’s Get Started page. Setting up your LLM and mall should be a one time process.\nOn an every day R session, you’ll just need to load lang and then tell it which model to run using llm_use():\nlibrary(lang)\n\nllm_use(\"ollama\", \"llama3.2\", seed = 100)\nAfter that, simply use ? to trigger and display the translated documentation. During translation, lang will display its progress by showing which section of the documentation is currently translating:\n&gt; ?lm\nTranslating: Title\nIf your environment is set to use the Spanish language, the help pane should display this:\n\nR enforces the printed name of each section, so they cannot be translated. So titles such as Description, Usage and Arguments will always remain untranslated.\n\n\nAs you can imagine, the quality of translation will mostly depend on the LLM being used. This solution is meant to be as helpful as possible, but acknowledging that at this stage of LLMs, only a human curated translation will be the best solution. Having said that, I believe that even an imperfect translation could go a long way with someone who is struggling to understand how to use a specific function in a package, and may also struggle with the English language.\n\n\n\nIf the original English help page displays, check your environment variables:\nSys.getenv(\"LANG\")\n#&gt; [1] \"en_US.UTF-8\"\nSys.getenv(\"LANGUAGE\")\n#&gt; [1] \"\"\nIn my case, lang recognizes that the environment is set to English, because of the en code in the variable. If your LANG variable is set to en_... then no translation will occur.\nIf this is your case, set the LANGUAGE variable to your preference. You can use the full language name, such as ‘spanish’, or ‘french’, etc. You can use Sys.setenv(LANGUAGE = \"[my language]\"), or, for a more permanent solution, add the entry to your your .Renviron file (usethis::edit_r_environ())."
+  },
+  {
+    "objectID": "index.html#how-it-works",
+    "href": "index.html#how-it-works",
+    "title": "lang",
+    "section": "",
+    "text": "The language that the help documentation will be translated to, is determined by one of the following two environment variables. In order of priority, the variables are:\n\nLANGUAGE\nLANG\n\nIt is likely that your LANG variable already defaults to your locale. For example, mine is set to: en_US.UTF-8 (That means English, United States). For someone in France, the locale would be something such as fr_FR.UTF-8. Llama3.2, recognizes these UTF locales, and using lang, calling ? will result in translating the function’s help documentation into French.\nIt uses the mall package as the integration point with the LLM. Under the hood, it runs llm_vec_translate() multiple times to translate the most common sections of the help documentation (e.g.: Title, Description, Details, Arguments, etc.). If lang determines that your environment is set to use English, it will simply display the original documentation."
+  },
+  {
+    "objectID": "index.html#package-developers",
+    "href": "index.html#package-developers",
+    "title": "lang",
+    "section": "",
+    "text": "You may want to provide translations of your documentation as part of your package.lang includes an entire infrastructure to help you to do the following:\n\nLet the LLM take the first pass at translating your documentation\nEasily edit the translations. This means, either you, or a collaborator, can fine tune the new files\nInclude the translated Rd files as part of your package\nHave ? and help() pull from your translated documents\n\n\n\nWhile inside your package’s project, use translate_roxygen() to have lang translate all of your documentation to the desired language. The function call must include the target language, and the sub-folder to save the translated files to:\ntranslate_roxygen(\"spanish\", \"es\")\nThat function call will iterate through your ‘R/’ folder and translate all of your roxygen2 documentation. The new Roxygen documents will be saved, by default, to a new ‘man-lang/’ folder. Make sure to add the new folder to your project ‘.Rbuildignore’ file (^man-lang$)\nISO 639 codes - The name of the sub-folder to use needs to be the two letter designation of the target language you are using. That is why we used es for Spanish. For the list of codes, you can refer to the Wikipedia page here.\nFor this package, making that function call creates this console output:\n&gt; translate_roxygen(\"spanish\", \"es\")\n\n── `lang` translating Roxygen into 'spanish' \nℹ Loading lang\n[1/7] R/help-shims.R --&gt; man-lang/es/help-shims.R\n[2/7] R/lang-help.R --&gt; man-lang/es/lang-help.R\n[3/7] R/lang.R --&gt; man-lang/es/lang.R\n[4/7] R/mall-reexports.R --&gt; man-lang/es/mall-reexports.R\n[5/7] R/process-roxygen.R --&gt; man-lang/es/process-roxygen.R\n[6/7] R/translate-roxygen.R --&gt; man-lang/es/translate-roxygen.R\n[7/7] R/utils.R --&gt; man-lang/es/utils.R\n\n\n\nAs mentioned in the previous section, lang translates the functions’ Roxygen comments. This approach allows you as the developer to easily edit the output.\nFor the lang_help() function, in the ‘R/lang-help.R’ script, the top of the documentation looks like this:\n#' Translates help\n#' @description\n#' Translates a given topic into a target language. It uses the `lang` argument\n#' to determine which language to translate to. If not passed, this function will\n#' look for a target language in the LANG and LANGUAGE environment variables to\n#' determine the target language. If the target language is English, no translation\n#' will be processed, so the help returned will be the original package's\n#' documentation.\n#'\n#' @param topic The topic to search for\n#' @param package The R package to look for the topic\n#' @param lang Language to translate the help to\n#' @param type Produce \"html\" or \"text\" output for the help. It default to\n#' `getOption(\"help_type\")`\n...\nAnd this is what the translation in ‘man-lang/es/lang.R’ looks like:\n#' Ayuda en traducción\n#' @description La función traduce un tema dado a un idioma objetivo. Utiliza\n#' el argumento `lang` para determinar qué idioma traducir. Si no se pasa, esta\n#' función busca un idioma objetivo en las variables de entorno LANG y LANGUAGE\n#' para determinarlo. Si el idioma objetivo es inglés, no se procesa la\n#' traducción, por lo que se devuelve la documentación original del paquete.\n#' @param topic  El tema de búsqueda principal.\n#' @param package  Paquete R para buscar el tema.\n#' @param lang  Please provide the text you'd like me to translate.\n#' @param type  Utilice \"html\" o \"texto\" como salida para la ayuda, de lo\n#' contrario se utilizará el valor por defecto de `getOption(\"help_type\")`.\n...\nEditing an R scripts Roxygen comments is a lot easier than editing an Rd file, additionally, this solution integrates better with the usual package development process.\nIt also opens the possibility to have collaborators to submit PRs to your package’s repository with edits to the translation, or even submit brand new translations.\n\n\n\nThe Rd help files are still the best way for R to process and display your help files. The second, and final step, will be to have lang create the Rd files based on the translated Roxygen comments, simply run:\nprocess_roxygen()\nThat function will iterate through all the language sub-folders in ‘man-lang/’ to process the Rd files. The resulting Rd files will be saved to ‘inst/man-lang/’. Please keep in mind that this step does not need an LLM to work. It is only creating the Rd files, and putting them in the correct location.\nUnder the hood, lang creates temporary copies of your package, replaces the scripts in the ‘R’ folder with your translations, and then runs the roxygen2::roxygenize() function. This ensures that the Rd creation is as close as possible as if you were running devtools::document() during your package development.\nFor this package, making that function call creates this console output:\n&gt; process_roxygen()\n\n── Creating Rd files for 'es' \n- inst/man-lang/es/help.Rd\n- inst/man-lang/es/lang_help.Rd\n- inst/man-lang/es/process_roxygen_folder.Rd\n- inst/man-lang/es/translate_roxygen.Rd\n\n\n\nThe end-user can easily access your translations by making sure that lang is loaded to their R session:\nlibrary(lang)\n\nSys.setenv(LANGUAGE = \"spanish\")\n\n?lang_help\nlang always looks first in the ‘inst/man-lan’ folder of your package to see if there is a folder matching the end-user’s language. If it does not find one, it will then trigger a live translation of the function. This would be the case if the user expect a French translation, but you only included a Spanish one.\nInstead of having the user wait for the LLM to complete the translation, if lang finds a matching translation in your package, the help page will appear almost instantly.\nUnder the hood, lang will use the value of your environment variables to determine which sub-folder to check. If the value of LANG is a full locale value (en_US.UTF8), then it will check in the folder matching the variables first two characters exist. If the value is not a locale, lang will attempt to translate the value into an ISO 639 code. This package contains a small conversion table to do its best to infer the language you are using, and thus to know which sub-folder to look for."
+  },
+  {
+    "objectID": "tests/testthat/test-pkg/NEWS.html",
+    "href": "tests/testthat/test-pkg/NEWS.html",
+    "title": "mall (dev)",
+    "section": "",
+    "text": "mall (dev)\n\nAdds support for {elmer}\n\n\n\nmall 0.1.0\n\nInitial CRAN submission."
+  },
+  {
+    "objectID": "tests/testthat/test-pkg/LICENSE.html",
+    "href": "tests/testthat/test-pkg/LICENSE.html",
+    "title": "MIT License",
+    "section": "",
+    "text": "MIT License\nCopyright (c) 2024 mall authors\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+  },
+  {
+    "objectID": "tests/testthat/test-pkg/cran-comments.html",
+    "href": "tests/testthat/test-pkg/cran-comments.html",
+    "title": "lang",
+    "section": "",
+    "text": "Thank you for the feedback and instructions, I have made the following changes:\n\nUpdated the Title field to title case\nChanged all to \nChanged default location in llm_use() to use a temp folder\nChanged the tests to use a temp folder location\n\n\n\nThis is a new package submission. Run multiple ‘Large Language Model’ predictions against a table. The predictions run row-wise over a specified column. It works using a one-shot prompt, along with the current row’s content. The prompt that is used will depend of the type of analysis needed.\nThe README file is very short because all the information about how to use it is this website: https://mlverse.github.io/mall/."
+  },
+  {
+    "objectID": "tests/testthat/test-pkg/cran-comments.html#resubmission",
+    "href": "tests/testthat/test-pkg/cran-comments.html#resubmission",
+    "title": "lang",
+    "section": "",
+    "text": "Thank you for the feedback and instructions, I have made the following changes:\n\nUpdated the Title field to title case\nChanged all to \nChanged default location in llm_use() to use a temp folder\nChanged the tests to use a temp folder location\n\n\n\nThis is a new package submission. Run multiple ‘Large Language Model’ predictions against a table. The predictions run row-wise over a specified column. It works using a one-shot prompt, along with the current row’s content. The prompt that is used will depend of the type of analysis needed.\nThe README file is very short because all the information about how to use it is this website: https://mlverse.github.io/mall/."
+  },
+  {
+    "objectID": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-environments",
+    "href": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-environments",
+    "title": "lang",
+    "section": "R CMD check environments",
+    "text": "R CMD check environments\n\nMac OS M3 (aarch64-apple-darwin23), R 4.4.1 (Local)\nMac OS x86_64-apple-darwin20.0 (64-bit), R 4.4.1 (GH Actions)\nWindows x86_64-w64-mingw32 (64-bit), R 4.4.1 (GH Actions)\nLinux x86_64-pc-linux-gnu (64-bit), R 4.4.1 (GH Actions)\nLinux x86_64-pc-linux-gnu (64-bit), R 4.5.0 (dev) (GH Actions)\nLinux x86_64-pc-linux-gnu (64-bit), R 4.3.3 (old release) (GH Actions)"
+  },
+  {
+    "objectID": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-results",
+    "href": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-results",
+    "title": "lang",
+    "section": "R CMD check results",
+    "text": "R CMD check results\n0 errors ✔ | 0 warnings ✔ | 0 notes ✔"
+  },
+  {
+    "objectID": "LICENSE.html",
+    "href": "LICENSE.html",
+    "title": "MIT License",
+    "section": "",
+    "text": "MIT License\nCopyright (c) 2024 lang authors\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+  },
+  {
+    "objectID": "reference/help.html#description",
+    "href": "reference/help.html#description",
+    "title": "Drop-in replacements for help and ? functions",
+    "section": "Description",
+    "text": "Description\nThe ? and help functions are replacements for functions of the same name in the utils package. If the LANG environment variable is not set to English, it will activate the translation to whatever language LANG is set to."
+  },
+  {
+    "objectID": "reference/help.html#usage",
+    "href": "reference/help.html#usage",
+    "title": "Drop-in replacements for help and ? functions",
+    "section": "Usage",
+    "text": "Usage\n\n# help(topic, package = NULL, ...)\n\n# ?e2\n# e1?e2"
+  },
+  {
+    "objectID": "reference/help.html#arguments",
+    "href": "reference/help.html#arguments",
+    "title": "Drop-in replacements for help and ? functions",
+    "section": "Arguments",
+    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\ntopic\nA name or character string specifying the help topic.\n\n\npackage\nA name or character string specifying the package in which to search for the help topic. If NULL, search all packages.\n\n\n…\nAdditional arguments to pass to utils::help().\n\n\ne1\nFirst argument to pass along to utils::?. | | e2 | Second argument to pass along to utils::?."
+  },
+  {
+    "objectID": "reference/process_roxygen_folder.html#description",
+    "href": "reference/process_roxygen_folder.html#description",
+    "title": "Creates the Rd files based on translated Roxygen scripts",
+    "section": "Description",
+    "text": "Description\nCreates the Rd files based on translated Roxygen scripts"
+  },
+  {
+    "objectID": "reference/process_roxygen_folder.html#usage",
+    "href": "reference/process_roxygen_folder.html#usage",
+    "title": "Creates the Rd files based on translated Roxygen scripts",
+    "section": "Usage",
+    "text": "Usage\n\nprocess_roxygen_folder(folder, source = \"man-lang\", target = \"inst/man-lang\")\n\nprocess_roxygen(source = \"man-lang\", target = \"inst/man-lang\")"
+  },
+  {
+    "objectID": "reference/process_roxygen_folder.html#arguments",
+    "href": "reference/process_roxygen_folder.html#arguments",
+    "title": "Creates the Rd files based on translated Roxygen scripts",
+    "section": "Arguments",
+    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\nfolder\nSource sub-folder where the source Roxygen R scripts are\n\n\nsource\nBase source folder where the different translations are located. Defaults to ‘man-lang’.\n\n\ntarget\nBase target folder where the different translations will be located. Defaults to ‘inst/man-lang’"
+  },
+  {
+    "objectID": "reference/process_roxygen_folder.html#value",
+    "href": "reference/process_roxygen_folder.html#value",
+    "title": "Creates the Rd files based on translated Roxygen scripts",
+    "section": "Value",
+    "text": "Value\nMultiple Rd files based on the source R scripts"
+  },
+  {
+    "objectID": "reference/lang_help.html#description",
+    "href": "reference/lang_help.html#description",
+    "title": "Translates help",
+    "section": "Description",
+    "text": "Description\nTranslates a given topic into a target language. It uses the lang argument to determine which language to translate to. If not passed, this function will look for a target language in the LANG and LANGUAGE environment variables to determine the target language. If the target language is English, no translation will be processed, so the help returned will be the original package’s documentation."
+  },
+  {
+    "objectID": "reference/lang_help.html#usage",
+    "href": "reference/lang_help.html#usage",
+    "title": "Translates help",
+    "section": "Usage",
+    "text": "Usage\n\nlang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))"
+  },
+  {
+    "objectID": "reference/lang_help.html#arguments",
+    "href": "reference/lang_help.html#arguments",
+    "title": "Translates help",
+    "section": "Arguments",
+    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\ntopic\nThe topic to search for\n\n\npackage\nThe R package to look for the topic\n\n\nlang\nLanguage to translate the help to\n\n\ntype\nProduce “html” or “text” output for the help. It default to getOption(\"help_type\")"
+  },
+  {
+    "objectID": "reference/lang_help.html#value",
+    "href": "reference/lang_help.html#value",
+    "title": "Translates help",
+    "section": "Value",
+    "text": "Value\nReturns either a text or html version of the topic’s help documentation"
+  },
+  {
+    "objectID": "reference/lang_help.html#examples",
+    "href": "reference/lang_help.html#examples",
+    "title": "Translates help",
+    "section": "Examples",
+    "text": "Examples\n\n\nlibrary(lang)\nllm_use(\"ollama\", \"llama3.2\", .silent = TRUE)\nlang_help(\"llm_classify\", \"mall\", lang = \"french\")"
+  }
+]
