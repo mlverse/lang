@@ -4,6 +4,8 @@
 # lang
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/edgararuiz/lang/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/edgararuiz/lang/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Use an **LLM to translate a function’s help documentation on-the-fly**.
