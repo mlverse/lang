@@ -1,3 +1,5 @@
+skip_on_os("windows")
+
 test_that("Process Roxygen works", {
   temp_path <- withr::local_tempdir(.local_envir = caller_env())
   pkg_name <- "test-pkg"
