@@ -3,6 +3,7 @@ test_that("Process Roxygen works", {
   pkg_name <- "test-pkg"
   dir_copy(test_path(pkg_name), temp_path)
   local_pkg <- path(temp_path, pkg_name)
+  print(dir_ls(local_pkg))
   expect_message(
     process_roxygen(pkg_path = local_pkg)
   )
