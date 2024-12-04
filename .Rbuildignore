@@ -13,3 +13,4 @@
 ^\.github$
 ^.*articles$
 ^codecov\.yml$
+^_freeze$

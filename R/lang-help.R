@@ -12,14 +12,6 @@
 #' @param lang Language to translate the help to
 #' @param type Produce "html" or "text" output for the help. It default to
 #' `getOption("help_type")`
-#' @examples
-#' \donttest{
-#' library(lang)
-#' llm_use("ollama", "llama3.2", .silent = TRUE)
-#' lang_help("llm_classify", "mall", lang = "french", type = "text")
-#' }
-#' @returns Returns either a text or html version of the topic's help
-#' documentation
 #' @export
 lang_help <- function(topic,
                       package = NULL,

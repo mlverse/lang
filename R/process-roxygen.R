@@ -69,8 +69,8 @@ process_roxygen <- function(
   for (folder in sub_folders) {
     process_roxygen_folder(
       folder = path_file(folder),
-      source = source_folder,
-      target = target_folder,
+      source_folder = source_folder,
+      target_folder = target_folder,
       pkg_path = pkg_path
     )
   }
