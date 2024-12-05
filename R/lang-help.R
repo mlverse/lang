@@ -160,9 +160,12 @@ rd_comment_translate <- function(x, lang) {
       rd_char <- substr(rd_char, 3, nchar(rd_char) - n_char)
       rd_char <- llm_vec_translate(rd_char, lang)
       rd_char <- paste0("# ", rd_char, "\n")
-      attributes(rd_char) <- attributes(x)
-      x <- rd_char
+    } else {
+      
     }
+    rd_char <- gsub("%", "\\\\%", rd_char)
+    attributes(rd_char) <- attributes(x)
+    x <- rd_char
   }
   x
 }
@@ -174,6 +177,7 @@ rd_prep_translate <- function(x, lang) {
     additional_prompt = "Do not translate anything between single quotes."
   )
   tag_text <- rd_code_markers(tag_text)
+  tag_text <- gsub("`", "", tag_text)
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])
   if (!is.null(attrs)) {
@@ -198,6 +202,8 @@ rd_extract_text <- function(x, collapse = TRUE) {
     rd_txt[rd_txt == ""] <- "\n\n"
     rd_txt <- paste0(rd_txt, collapse = "")
   }
+  rd_txt <- gsub("\U2018", "'", rd_txt)
+  rd_txt <- gsub("\U2019", "'", rd_txt)  
   rd_txt
 }
 
