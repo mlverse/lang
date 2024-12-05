@@ -177,6 +177,7 @@ rd_prep_translate <- function(x, lang) {
     additional_prompt = "Do not translate anything between single quotes."
   )
   tag_text <- rd_code_markers(tag_text)
+  tag_text <- gsub("`", "", tag_text)
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])
   if (!is.null(attrs)) {
