@@ -160,9 +160,12 @@ rd_comment_translate <- function(x, lang) {
       rd_char <- substr(rd_char, 3, nchar(rd_char) - n_char)
       rd_char <- llm_vec_translate(rd_char, lang)
       rd_char <- paste0("# ", rd_char, "\n")
-      attributes(rd_char) <- attributes(x)
-      x <- rd_char
+    } else {
+      
     }
+    rd_char <- gsub("%", "\\\\%", rd_char)
+    attributes(rd_char) <- attributes(x)
+    x <- rd_char
   }
   x
 }
