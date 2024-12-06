@@ -73,8 +73,21 @@ translate_roxygen_imp <- function(path,
     }
     pkg_env <- env_package(pkg_path)
   }
+  
+  current_roxy <- roxy_comments(path)
+
   dir_create(dir)
   rd_path <- path(dir, path_file(path))
+  if(file_exists(rd_path)) {
+    script_contents <- readLines(rd_path)
+    roxy_comment <- substr(script_contents, 1, 4) == "#-#'"
+    tr_roxy <- script_contents[roxy_comment]
+    if(all(tr_roxy == current_roxy)) {
+      cli_inform("[{no}/{of}] {path} --> [Skipping, no changes]")
+      return(invisible())
+    }
+  }
+    
   parsed <- parse_file(path, env = pkg_env)
   contents <- NULL
   tg_label <- NULL
@@ -131,14 +144,17 @@ translate_roxygen_imp <- function(path,
   }
   if (!is.null(contents)) {
     cli_inform("[{no}/{of}] {path} --> {rd_path}")
-    script_contents <- readLines(path)
-    roxy_comment <- substr(script_contents, 1, 2) == "#'"
-    just_roxy <- script_contents[roxy_comment]
-    just_roxy <- just_roxy[just_roxy != "#'"]
-    current_roxy <- paste0("#-", just_roxy)
     contents <- c(contents, current_roxy)
     writeLines(contents, rd_path)
   } else {
     cli_inform("[{no}/{of}] {path} --> [No content]")
   }
+}
+
+roxy_comments <- function(x) {
+  script_contents <- readLines(x)
+  roxy_comment <- substr(script_contents, 1, 2) == "#'"
+  just_roxy <- script_contents[roxy_comment]
+  just_roxy <- just_roxy[just_roxy != "#'"]
+  paste0("#-", just_roxy)
 }
