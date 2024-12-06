@@ -73,9 +73,16 @@ translate_roxygen_imp <- function(path,
     }
     pkg_env <- env_package(pkg_path)
   }
+  current_roxy <- roxy_comments(path)
   dir_create(dir)
   rd_path <- path(dir, path_file(path))
-  cli_inform("[{no}/{of}] {path} --> {rd_path}")
+  if (file_exists(rd_path)) {
+    tr_roxy <- roxy_existing(rd_path)
+    if (paste0(tr_roxy, collapse = " ") == paste0(current_roxy, collapse = " ")) {
+      cli_inform("[{no}/{of}] {path} --> [Skipping, no changes]")
+      return(invisible())
+    }
+  }
   parsed <- parse_file(path, env = pkg_env)
   contents <- NULL
   tg_label <- NULL
@@ -108,7 +115,6 @@ translate_roxygen_imp <- function(path,
         if (tg == "section") {
           raw <- glue("{raw[1]}:\n{raw[2]}")
         }
-        # raw <- gsub("\n", "\n#'", raw)
         if (tg != "title") {
           if (length(raw) != 0 && raw != "") {
             pre_raw <- paste0(tg, name, collapse = " ")
@@ -132,6 +138,39 @@ translate_roxygen_imp <- function(path,
     contents <- c(contents, fn_str)
   }
   if (!is.null(contents)) {
+    cli_inform("[{no}/{of}] {path} --> {rd_path}")
+    contents <- c(
+      contents,
+      "# --- Created by `lang` do not edit by hand ---",
+      current_roxy
+    )
     writeLines(contents, rd_path)
+  } else {
+    cli_inform("[{no}/{of}] {path} --> [Skipping, no content]")
   }
+}
+
+roxy_comments <- function(x) {
+  script_contents <- readLines(x)
+  roxy_comment <- substr(script_contents, 1, 2) == "#'"
+  just_roxy <- script_contents[roxy_comment]
+  just_roxy <- just_roxy[just_roxy != "#'"]
+
+  if (length(just_roxy) == 0) {
+    return(NULL)
+  } else {
+    just_roxy <- paste0("#-", just_roxy)
+    no_exports <- !any(grepl("#' @export", just_roxy))
+    no_name <- !any(grepl("#' @name", just_roxy))
+    if (no_exports && no_name) {
+      return(NULL)
+    }
+  }
+  just_roxy
+}
+
+roxy_existing <- function(x) {
+  script_contents <- readLines(x)
+  roxy_comment <- substr(script_contents, 1, 4) == "#-#'"
+  script_contents[roxy_comment]
 }

@@ -1,10 +1,13 @@
 Package: lang
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Using an Large Language Model of your choice, it translates the R
+    help documentation to a specific language
+Version: 0.0.0.9001
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Edgar", "Ruiz", , "edgar@posit.co", role = c("aut", "cre"))
+Description: Use an 'LLM' to translate a function's help documentation on-the-fly.
+    It  overrides the `?` and `help()` functions in your R session. If you are 
+    using RStudio or Positron, the translated help page will appear in the usual
+    help pane.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
