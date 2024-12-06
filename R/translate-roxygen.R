@@ -76,9 +76,9 @@ translate_roxygen_imp <- function(path,
   current_roxy <- roxy_comments(path)
   dir_create(dir)
   rd_path <- path(dir, path_file(path))
-  if(file_exists(rd_path)) {
+  if (file_exists(rd_path)) {
     tr_roxy <- roxy_existing(rd_path)
-    if(paste0(tr_roxy, collapse = " ") == paste0(current_roxy, collapse = " ")) {
+    if (paste0(tr_roxy, collapse = " ") == paste0(current_roxy, collapse = " ")) {
       cli_inform("[{no}/{of}] {path} --> [Skipping, no changes]")
       return(invisible())
     }
@@ -140,10 +140,10 @@ translate_roxygen_imp <- function(path,
   if (!is.null(contents)) {
     cli_inform("[{no}/{of}] {path} --> {rd_path}")
     contents <- c(
-      contents, 
+      contents,
       "# --- Created by `lang` do not edit by hand ---",
       current_roxy
-      )
+    )
     writeLines(contents, rd_path)
   } else {
     cli_inform("[{no}/{of}] {path} --> [Skipping, no content]")
@@ -156,15 +156,15 @@ roxy_comments <- function(x) {
   just_roxy <- script_contents[roxy_comment]
   just_roxy <- just_roxy[just_roxy != "#'"]
 
-  if(length(just_roxy) == 0) {
+  if (length(just_roxy) == 0) {
     return(NULL)
   } else {
     just_roxy <- paste0("#-", just_roxy)
     no_exports <- !any(grepl("#' @export", just_roxy))
     no_name <- !any(grepl("#' @name", just_roxy))
-    if(no_exports && no_name) {
+    if (no_exports && no_name) {
       return(NULL)
-    }    
+    }
   }
   just_roxy
 }

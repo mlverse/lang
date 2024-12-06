@@ -161,7 +161,7 @@ rd_comment_translate <- function(x, lang) {
       rd_char <- llm_vec_translate(rd_char, lang)
       rd_char <- paste0("# ", rd_char, "\n")
     } else {
-      
+
     }
     rd_char <- gsub("%", "\\\\%", rd_char)
     attributes(rd_char) <- attributes(x)
@@ -203,7 +203,7 @@ rd_extract_text <- function(x, collapse = TRUE) {
     rd_txt <- paste0(rd_txt, collapse = "")
   }
   rd_txt <- gsub("\U2018", "'", rd_txt)
-  rd_txt <- gsub("\U2019", "'", rd_txt)  
+  rd_txt <- gsub("\U2019", "'", rd_txt)
   rd_txt
 }
 
