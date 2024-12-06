@@ -16,37 +16,11 @@ process_roxygen_folder <- function(
     target_folder = "inst/man-lang",
     pkg_path = ".") {
   
-  pkg_dir <- path_abs(pkg_path)
-  r_scripts <- dir_ls(path(pkg_dir, r_folder), glob = "*.R")
-  r_comments <- lapply(r_scripts, roxy_comments)
-  full_source <- dir_ls(path(pkg_path, source_folder, folder))
-  man_comments <- lapply(full_source, roxy_existing)
-  
-  man_diff <- NULL
-  found_diff <- FALSE
-  for(script in r_scripts) {
-    r_curr <- r_comments[names(r_comments) == script]
-    if(!is.null(r_curr[[1]])) {
-      man_curr <- man_comments[path_file(names(man_comments)) == path_file(script)]
-      is_same <- paste0(r_curr, collapse = "") == paste0(man_curr, collapse = "")
-      if(!is_same) {
-        if(!found_diff) {
-          cli_alert_warning(
-            c("The following R documentation has changed, ",
-              "translation may need to be revised:")
-            )
-          found_diff <- TRUE
-        }
-        cli_inform("|- {path_rel(script)} -x-> {path_rel(names(man_curr))}")
-      }
-    }
-  }  
-  
   # Create temporary directory
   temp_dir <- tempfile()
   dir_create(temp_dir)
   # Copies root contents to temp directory
-  
+  pkg_dir <- path_abs(pkg_path)
   pkg_name <- path_file(pkg_dir)
   dir_copy(pkg_dir, temp_dir)
   copy_path <- path(temp_dir, pkg_name)
@@ -58,6 +32,8 @@ process_roxygen_folder <- function(
   }
   # Copies content of the translated script to the R folder
   # of the temp copy
+  source_path <- path(pkg_path, source_folder, folder)
+  full_source <- dir_ls(path(source_path), recurse = TRUE, glob = "*.R")
   file_copy(
     path = full_source,
     new_path = path(copy_path, "R"),
@@ -94,8 +70,15 @@ process_roxygen_folder <- function(
 process_roxygen <- function(
     source_folder = "man-lang",
     target_folder = "inst/man-lang",
+    r_folder = "R", 
     pkg_path = ".") {
   sub_folders <- dir_ls(path(pkg_path, source_folder), type = "directory")
+  compare_man_lang(
+    r_folder = r_folder, 
+    source_folder = source_folder,
+    target_folder = target_folder,
+    pkg_path = pkg_path
+  )
   for (folder in sub_folders) {
     process_roxygen_folder(
       folder = path_file(folder),
@@ -104,4 +87,41 @@ process_roxygen <- function(
       pkg_path = pkg_path
     )
   }
+}
+
+compare_man_lang <- function(
+    folder = NULL,
+    r_folder = "R", 
+    source_folder = "man-lang",
+    target_folder = "inst/man-lang",
+    pkg_path = ".") {
+  
+  pkg_dir <- path_abs(pkg_path)
+  r_scripts <- dir_ls(path(pkg_dir, r_folder), glob = "*.R")
+  r_comments <- lapply(r_scripts, roxy_comments)
+  source_path <- path(pkg_path, source_folder)
+  if(!is.null(folder)) {
+    source_path <- path(source_path, folder)
+  }
+  full_source <- dir_ls(path(source_path), recurse = TRUE, glob = "*.R")
+  man_comments <- lapply(full_source, roxy_existing)
+  man_diff <- NULL
+  found_diff <- FALSE
+  for(script in r_scripts) {
+    r_curr <- r_comments[names(r_comments) == script]
+    if(!is.null(r_curr[[1]])) {
+      man_curr <- man_comments[path_file(names(man_comments)) == path_file(script)]
+      is_same <- paste0(r_curr, collapse = "") == paste0(man_curr, collapse = "")
+      if(!is_same) {
+        if(!found_diff) {
+          cli_alert_warning(
+            c("The following R documentation has changed, ",
+              "translation may need to be revised:")
+          )
+          found_diff <- TRUE
+        }
+        cli_inform("|- {path_rel(script)} -x-> {path_rel(names(man_curr))}")
+      }
+    }
+  }  
 }
