@@ -76,7 +76,6 @@ process_roxygen <- function(
   compare_man_lang(
     r_folder = r_folder, 
     source_folder = source_folder,
-    target_folder = target_folder,
     pkg_path = pkg_path
   )
   for (folder in sub_folders) {
@@ -93,7 +92,6 @@ compare_man_lang <- function(
     folder = NULL,
     r_folder = "R", 
     source_folder = "man-lang",
-    target_folder = "inst/man-lang",
     pkg_path = ".") {
   
   pkg_dir <- path_abs(pkg_path)

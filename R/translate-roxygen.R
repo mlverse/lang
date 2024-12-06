@@ -1,4 +1,4 @@
-#' Translates the Roxygen2 documentation TEST
+#' Translates the Roxygen2 documentation
 #' @description
 #' Reads the Roxygen2 tags in the package and translates them. The translations
 #' are stored in R scripts. The default location of the new scripts is 'man-lang'.
@@ -83,15 +83,6 @@ translate_roxygen_imp <- function(path,
       return(invisible())
     }
   }
-    
-  has_exports <- any(grepl("#-#' @export", current_roxy))
-  has_name <- any(grepl("#-#' @name", current_roxy))
-  
-  if(!has_exports && !has_name){
-    cli_inform("[{no}/{of}] {path} --> [Skipping, no exports]")
-    return(invisible())
-  }
-  
   parsed <- parse_file(path, env = pkg_env)
   contents <- NULL
   tg_label <- NULL
@@ -164,10 +155,18 @@ roxy_comments <- function(x) {
   roxy_comment <- substr(script_contents, 1, 2) == "#'"
   just_roxy <- script_contents[roxy_comment]
   just_roxy <- just_roxy[just_roxy != "#'"]
+
   if(length(just_roxy) == 0) {
     return(NULL)
+  } else {
+    just_roxy <- paste0("#-", just_roxy)
+    no_exports <- !any(grepl("#' @export", just_roxy))
+    no_name <- !any(grepl("#' @name", just_roxy))
+    if(no_exports && no_name) {
+      return(NULL)
+    }    
   }
-  paste0("#-", just_roxy)
+  just_roxy
 }
 
 roxy_existing <- function(x) {
