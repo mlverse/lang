@@ -73,16 +73,12 @@ translate_roxygen_imp <- function(path,
     }
     pkg_env <- env_package(pkg_path)
   }
-  
   current_roxy <- roxy_comments(path)
-
   dir_create(dir)
   rd_path <- path(dir, path_file(path))
   if(file_exists(rd_path)) {
-    script_contents <- readLines(rd_path)
-    roxy_comment <- substr(script_contents, 1, 4) == "#-#'"
-    tr_roxy <- script_contents[roxy_comment]
-    if(all(tr_roxy == current_roxy)) {
+    tr_roxy <- roxy_existing(rd_path)
+    if(paste0(tr_roxy, collapse = " ") == paste0(current_roxy, collapse = " ")) {
       cli_inform("[{no}/{of}] {path} --> [Skipping, no changes]")
       return(invisible())
     }
@@ -144,10 +140,14 @@ translate_roxygen_imp <- function(path,
   }
   if (!is.null(contents)) {
     cli_inform("[{no}/{of}] {path} --> {rd_path}")
-    contents <- c(contents, current_roxy)
+    contents <- c(
+      contents, 
+      "# --- Created by `lang` do not edit by hand ---",
+      current_roxy
+      )
     writeLines(contents, rd_path)
   } else {
-    cli_inform("[{no}/{of}] {path} --> [No content]")
+    cli_inform("[{no}/{of}] {path} --> [Skipping, no content]")
   }
 }
 
@@ -156,5 +156,14 @@ roxy_comments <- function(x) {
   roxy_comment <- substr(script_contents, 1, 2) == "#'"
   just_roxy <- script_contents[roxy_comment]
   just_roxy <- just_roxy[just_roxy != "#'"]
+  if(length(just_roxy) == 0) {
+    return(NULL)
+  }
   paste0("#-", just_roxy)
+}
+
+roxy_existing <- function(x) {
+  script_contents <- readLines(x)
+  roxy_comment <- substr(script_contents, 1, 4) == "#-#'"
+  script_contents[roxy_comment]
 }

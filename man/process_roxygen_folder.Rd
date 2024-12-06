@@ -7,6 +7,7 @@
 \usage{
 process_roxygen_folder(
   folder,
+  r_folder = "R",
   source_folder = "man-lang",
   target_folder = "inst/man-lang",
   pkg_path = "."
@@ -20,6 +21,9 @@ process_roxygen(
 }
 \arguments{
 \item{folder}{Source sub-folder where the source Roxygen R scripts are}
+
+\item{r_folder}{Source of the original R scripts. Only used to see if the
+Roxygen documentation is different from what is capture in the \code{source_folder}}
 
 \item{source_folder}{Base source folder where the different translations are located.
 Defaults to 'man-lang'.}
