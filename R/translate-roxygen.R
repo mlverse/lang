@@ -75,7 +75,6 @@ translate_roxygen_imp <- function(path,
   }
   dir_create(dir)
   rd_path <- path(dir, path_file(path))
-  cli_inform("[{no}/{of}] {path} --> {rd_path}")
   parsed <- parse_file(path, env = pkg_env)
   contents <- NULL
   tg_label <- NULL
@@ -108,7 +107,6 @@ translate_roxygen_imp <- function(path,
         if (tg == "section") {
           raw <- glue("{raw[1]}:\n{raw[2]}")
         }
-        # raw <- gsub("\n", "\n#'", raw)
         if (tg != "title") {
           if (length(raw) != 0 && raw != "") {
             pre_raw <- paste0(tg, name, collapse = " ")
@@ -132,6 +130,15 @@ translate_roxygen_imp <- function(path,
     contents <- c(contents, fn_str)
   }
   if (!is.null(contents)) {
+    cli_inform("[{no}/{of}] {path} --> {rd_path}")
+    script_contents <- readLines(path)
+    roxy_comment <- substr(script_contents, 1, 2) == "#'"
+    just_roxy <- script_contents[roxy_comment]
+    just_roxy <- just_roxy[just_roxy != "#'"]
+    current_roxy <- paste0("#-", just_roxy)
+    contents <- c(contents, current_roxy)
     writeLines(contents, rd_path)
+  } else {
+    cli_inform("[{no}/{of}] {path} --> [No content]")
   }
 }
