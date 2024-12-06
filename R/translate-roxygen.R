@@ -124,6 +124,9 @@ translate_roxygen_imp <- function(path,
       contents <- c(contents, raw)
     }
     roxy_call <- roxy$call
+    if(is.null(roxy_call)) {
+      roxy_call <- "NULL"  
+    } 
     if (length(roxy_call) == 3) {
       args <- call_args(roxy_call[[3]])[[1]]
       
@@ -139,11 +142,11 @@ translate_roxygen_imp <- function(path,
       fn_str <- paste(
         as.character(roxy_call[[2]]), 
         as.character(roxy_call[[1]]), 
-        str_args, 
+        paste0("function(", str_args, ")"), 
         "{ NULL }"
         )
     } else {
-      fn_str <- paste0("\"", as.character(roxy_call), "\"")
+      fn_str <- paste0("\"", capture.output(roxy_call), "\"")
     }
     contents <- c(contents, fn_str)
   }
