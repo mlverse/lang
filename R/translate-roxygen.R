@@ -123,47 +123,15 @@ translate_roxygen_imp <- function(path,
       raw <- gsub("\n", "\n#' ", raw)
       contents <- c(contents, raw)
     }
-    roxy_call <- roxy$call
-    fn_str <- NULL
-    
-    if(is.null(roxy_call)) {
-      fn_str <- "NULL"  
-    } 
-
+    roxy_call <- as.character(roxy$call)
     if (length(roxy_call) == 3) {
-      call_name <- as.character(roxy_call[[2]])
-      call_mid <- as.character(roxy_call[[1]])
-      call_last <- roxy_call[[3]]
-      if(inherits(call_last, "call")) {
-        call_last <- roxy_is_call(call_last)
-      }
-      fn_str <- paste0(call_name, call_mid, call_last)
-    } 
-    if(is.null(fn_str)) {
-      fn_str <- paste0("\"", as.character(roxy_call), "\"")
+      fn_str <- paste(roxy_call[[2]], roxy_call[[1]], roxy_call[[3]])
+    } else {
+      fn_str <- paste0("\"", roxy_call, "\"")
     }
     contents <- c(contents, fn_str)
   }
   if (!is.null(contents)) {
     writeLines(contents, rd_path)
   }
-}
-
-roxy_is_call <- function(x) {
-  args <- call_args(x)[[1]]
-  
-  str_args <- NULL
-  for(i in seq_along(args)) {
-    arg_val <- capture.output(args[[i]])
-    print(arg_val)
-    arg_text <- names(args[i])
-    if(arg_val != ""){
-      arg_text <- paste(arg_text, "=", arg_val) 
-    }
-    str_args <- paste0(c(str_args, arg_text), collapse = ", ")
-  }
-  paste0(
-    paste0("function(", str_args, ")"), 
-    "{ NULL }"
-  )
 }
