@@ -16,6 +16,7 @@ process_roxygen_folder(
 process_roxygen(
   source_folder = "man-lang",
   target_folder = "inst/man-lang",
+  r_folder = "R",
   pkg_path = "."
 )
 }
