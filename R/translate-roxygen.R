@@ -123,11 +123,27 @@ translate_roxygen_imp <- function(path,
       raw <- gsub("\n", "\n#' ", raw)
       contents <- c(contents, raw)
     }
-    roxy_call <- as.character(roxy$call)
+    roxy_call <- roxy$call
     if (length(roxy_call) == 3) {
-      fn_str <- paste(roxy_call[[2]], roxy_call[[1]], roxy_call[[3]])
+      args <- call_args(roxy_call[[3]])[[1]]
+      
+      str_args <- NULL
+      for(i in seq_along(args)) {
+        arg_val <- capture.output(args[[i]])
+        arg_text <- names(args[i])
+        if(arg_val != ""){
+          arg_text <- paste(arg_text, "=", arg_val) 
+        }
+        str_args <- paste0(c(str_args, arg_text), collapse = ", ")
+      }
+      fn_str <- paste(
+        as.character(roxy_call[[2]]), 
+        as.character(roxy_call[[1]]), 
+        str_args, 
+        "{ NULL }"
+        )
     } else {
-      fn_str <- paste0("\"", roxy_call, "\"")
+      fn_str <- paste0("\"", as.character(roxy_call), "\"")
     }
     contents <- c(contents, fn_str)
   }
