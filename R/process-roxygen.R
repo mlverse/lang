@@ -22,6 +22,25 @@ process_roxygen_folder <- function(
   full_source <- dir_ls(path(pkg_path, source_folder, folder))
   man_comments <- lapply(full_source, roxy_existing)
   
+  man_diff <- NULL
+  found_diff <- FALSE
+  for(script in r_scripts) {
+    r_curr <- r_comments[names(r_comments) == script]
+    if(!is.null(r_curr[[1]])) {
+      man_curr <- man_comments[path_file(names(man_comments)) == path_file(script)]
+      is_same <- paste0(r_curr, collapse = "") == paste0(man_curr, collapse = "")
+      if(!is_same) {
+        if(!found_diff) {
+          cli_alert_warning(
+            c("The following R documentation has changed, ",
+              "translation may need to be revised:")
+            )
+          found_diff <- TRUE
+        }
+        cli_inform("|- {path_rel(script)} -x-> {path_rel(names(man_curr))}")
+      }
+    }
+  }  
   
   # Create temporary directory
   temp_dir <- tempfile()
