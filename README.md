@@ -5,9 +5,9 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/edgararuiz/lang/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/edgararuiz/lang/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/edgararuiz/lang/branch/main/graph/badge.svg)](https://app.codecov.io/gh/edgararuiz/lang?branch=main)
+coverage](https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang?branch=main)
 <!-- badges: end -->
 
 Use an **LLM to translate a function’s help documentation on-the-fly**.
@@ -25,7 +25,7 @@ To install the GitHub version of `lang`, use:
 
 ``` r
 install.packages("pak")
-pak::pak("edgararuiz/lang")
+pak::pak("mlverse/lang")
 ```
 
 ## Using `lang`

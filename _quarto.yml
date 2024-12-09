@@ -14,7 +14,7 @@ website:
         text: Reference   
     right:
       - icon: github
-        href: https://github.com/edgararuiz/lang
+        href: https://github.com/mlverse/lang
       
 format:
   html:
