@@ -74,7 +74,7 @@ translate_roxygen_imp <- function(path,
     pkg_env <- env_package(pkg_path)
   }
   current_roxy <- roxy_comments(path)
-  if(is.null(current_roxy)) {
+  if (is.null(current_roxy)) {
     cli_inform("[{no}/{of}] {path} --> [Skipping, no content]")
     return(invisible())
   }
@@ -133,11 +133,11 @@ translate_roxygen_imp <- function(path,
       raw <- gsub("\n", "\n#' ", raw)
       contents <- c(contents, raw)
     }
-    roxy_call <- as.character(roxy$call)
-    if (length(roxy_call) == 3) {
-      fn_str <- paste(roxy_call[[2]], roxy_call[[1]], roxy_call[[3]])
-    } else {
-      fn_str <- paste0("\"", roxy_call, "\"")
+    roxy_call <- capture.output(roxy$call)
+    fn_str <- paste0(roxy_call, collapse = "")
+    if (grepl("[{]", fn_str) && grepl("[}]", fn_str)) {
+      fn_str <- unlist(strsplit(fn_str, "[{]"))[[1]]
+      fn_str <- paste0(fn_str, "{ NULL }")
     }
     contents <- c(contents, fn_str)
   }
