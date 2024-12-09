@@ -74,6 +74,10 @@ translate_roxygen_imp <- function(path,
     pkg_env <- env_package(pkg_path)
   }
   current_roxy <- roxy_comments(path)
+  if(is.null(current_roxy)) {
+    cli_inform("[{no}/{of}] {path} --> [Skipping, no content]")
+    return(invisible())
+  }
   dir_create(dir)
   rd_path <- path(dir, path_file(path))
   if (file_exists(rd_path)) {
