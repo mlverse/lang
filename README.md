@@ -163,11 +163,29 @@ For this package, making that function call creates this console output:
 ℹ Loading lang
 [1/7] R/help-shims.R --> man-lang/es/help-shims.R
 [2/7] R/lang-help.R --> man-lang/es/lang-help.R
-[3/7] R/lang.R --> man-lang/es/lang.R
+[3/7] R/lang.R --> [Skipping, no content]
 [4/7] R/mall-reexports.R --> man-lang/es/mall-reexports.R
 [5/7] R/process-roxygen.R --> man-lang/es/process-roxygen.R
 [6/7] R/translate-roxygen.R --> man-lang/es/translate-roxygen.R
-[7/7] R/utils.R --> man-lang/es/utils.R
+[7/7] R/utils.R --> [Skipping, no content]
+```
+
+`lang` ties the resulting translated R scripts to the source R scripts
+by adding a copy of the original Roxygen documentation. This way, it
+avoids re-translating the content if nothing has changed:
+
+``` r
+> translate_roxygen("spanish", "es")
+
+── `lang` translating Roxygen into 'spanish' 
+ℹ Loading lang
+[1/7] R/help-shims.R --> [Skipping, no changes]
+[2/7] R/lang-help.R --> [Skipping, no changes]
+[3/7] R/lang.R --> [Skipping, no content]
+[4/7] R/mall-reexports.R --> [Skipping, no changes]
+[5/7] R/process-roxygen.R --> [Skipping, no changes]
+[6/7] R/translate-roxygen.R --> [Skipping, no changes]
+[7/7] R/utils.R --> [Skipping, no content]
 ```
 
 ### Edit the translations
@@ -251,10 +269,29 @@ For this package, making that function call creates this console output:
 > process_roxygen()
 
 ── Creating Rd files for 'es' 
-- inst/man-lang/es/help.Rd
-- inst/man-lang/es/lang_help.Rd
-- inst/man-lang/es/process_roxygen_folder.Rd
-- inst/man-lang/es/translate_roxygen.Rd
+- ./inst/man-lang/es/help.Rd
+- ./inst/man-lang/es/lang_help.Rd
+- ./inst/man-lang/es/process_roxygen_folder.Rd
+- ./inst/man-lang/es/reexports.Rd
+- ./inst/man-lang/es/translate_roxygen.Rd
+```
+
+As an additional aid, `lang` will compare the Roxygen documentation in
+your current **‘R/’** folder, with the copy of the documentation made at
+the time of translation. If there are differences, `lang` will show you
+a warning indicating that a given translation may be out of date:
+
+``` r
+> process_roxygen()
+! The following R documentation has changed, translation may need to be revised:
+|- R/translate-roxygen.R -x-> man-lang/es/translate-roxygen.R
+
+── Creating Rd files for 'es' 
+- ./inst/man-lang/es/help.Rd
+- ./inst/man-lang/es/lang_help.Rd
+- ./inst/man-lang/es/process_roxygen_folder.Rd
+- ./inst/man-lang/es/reexports.Rd
+- ./inst/man-lang/es/translate_roxygen.Rd
 ```
 
 ### Using your package’s translations
