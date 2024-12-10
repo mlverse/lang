@@ -10,11 +10,11 @@ to_iso639 <- function(lang, silent = TRUE) {
   match <- codes[codes$name == lang, "code"]
   if (nrow(match) > 0) {
     out <- as.character(match)[[1]]
-    if(!silent) {
+    if (!silent) {
       cli_alert_success("'{lang}' converted to ISO 639 code: '{out}'")
     }
   } else {
-    if(!silent) {
+    if (!silent) {
       cli_abort("'{lang}' could not be matched to an ISO 639 code")
     }
     out <- NULL
@@ -27,7 +27,7 @@ to_iso639 <- function(lang, silent = TRUE) {
 from_iso639 <- function(iso) {
   codes <- readRDS(system.file("iso/codes.rds", package = "lang"))
   iso <- tolower(iso)
-  match <- codes[codes$code == iso,]
+  match <- codes[codes$code == iso, ]
   if (nrow(match) > 0) {
     out <- match$name
   } else {
