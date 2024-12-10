@@ -74,84 +74,87 @@ translate_roxygen_imp <- function(path,
     pkg_env <- env_package(pkg_path)
   }
   current_roxy <- roxy_comments(path)
+  result_msg <- ""
   if (is.null(current_roxy)) {
-    cli_inform("[{no}/{of}] {path} --> [Skipping, no content]")
-    return(invisible())
+    result_msg <- "[Skipping, no Roxygen content found]"
   }
   dir_create(dir)
   rd_path <- path(dir, path_file(path))
   if (file_exists(rd_path)) {
     tr_roxy <- roxy_existing(rd_path)
-    if (paste0(tr_roxy, collapse = " ") == paste0(current_roxy, collapse = " ")) {
-      cli_inform("[{no}/{of}] {path} --> [Skipping, no changes]")
-      return(invisible())
+    tr_string <- paste0(tr_roxy, collapse = " ")
+    cr_string <- paste0(current_roxy, collapse = " ")
+    if (tr_string == cr_string) {
+      result_msg <- "[Skipping, no changes detected]"
     }
   }
-  parsed <- parse_file(path, env = pkg_env)
-  contents <- NULL
-  tg_label <- NULL
-  cli_progress_message("Translating: {.emph {tg_label}}")
-  for (roxy in parsed) {
-    tg <- NULL
-    for (tag in roxy$tags) {
-      tg <- tag$tag
-      raw <- tag$raw
-      if (tg == "param") {
-        name <- glue(" {tag$val$name} ")
-        tg_label <- glue("Argument: {name}")
-      } else {
-        name <- NULL
-        tg_label <- tag_to_label(tg)
-      }
-      if (tg == "section") {
-        split_raw <- unlist(strsplit(raw, "\\:"))
-        section_title <- split_raw[[1]]
-        section_content <- substr(raw, nchar(section_title) + 2, nchar(raw))
-        raw <- c(section_title, section_content)
-        tg_label <- glue("Section: {section_title}")
-      }
-      cli_progress_update()
-      if (tg %in% c(
-        "title", "description", "param", "seealso",
-        "details", "returns", "format", "section", "return"
-      )) {
-        raw <- llm_vec_translate(raw, language = lang)
+  if(result_msg == "") {
+    parsed <- parse_file(path, env = pkg_env)
+    contents <- NULL
+    tg_label <- NULL
+    cli_progress_message("Translating: {.emph {tg_label}}")
+    for (roxy in parsed) {
+      tg <- NULL
+      for (tag in roxy$tags) {
+        tg <- tag$tag
+        raw <- tag$raw
+        if (tg == "param") {
+          name <- glue(" {tag$val$name} ")
+          tg_label <- glue("Argument: {name}")
+        } else {
+          name <- NULL
+          tg_label <- tag_to_label(tg)
+        }
         if (tg == "section") {
-          raw <- glue("{raw[1]}:\n{raw[2]}")
+          split_raw <- unlist(strsplit(raw, "\\:"))
+          section_title <- split_raw[[1]]
+          section_content <- substr(raw, nchar(section_title) + 2, nchar(raw))
+          raw <- c(section_title, section_content)
+          tg_label <- glue("Section: {section_title}")
         }
-        if (tg != "title") {
-          if (length(raw) != 0 && raw != "") {
-            pre_raw <- paste0(tg, name, collapse = " ")
-            raw <- glue("@{pre_raw} {raw}")
-            raw <- split_paragraphs(raw, 65)
+        cli_progress_update()
+        if (tg %in% c(
+          "title", "description", "param", "seealso",
+          "details", "returns", "format", "section", "return"
+        )) {
+          raw <- llm_vec_translate(raw, language = lang)
+          if (tg == "section") {
+            raw <- glue("{raw[1]}:\n{raw[2]}")
           }
+          if (tg != "title") {
+            if (length(raw) != 0 && raw != "") {
+              pre_raw <- paste0(tg, name, collapse = " ")
+              raw <- glue("@{pre_raw} {raw}")
+              raw <- split_paragraphs(raw, 65)
+            }
+          }
+        } else {
+          raw <- glue("@{tg} {raw}")
         }
-      } else {
-        raw <- glue("@{tg} {raw}")
+        raw <- glue("#' {raw}")
+        raw <- gsub("\n", "\n#' ", raw)
+        contents <- c(contents, raw)
       }
-      raw <- glue("#' {raw}")
-      raw <- gsub("\n", "\n#' ", raw)
-      contents <- c(contents, raw)
+      roxy_call <- capture.output(roxy$call)
+      fn_str <- paste0(roxy_call, collapse = "")
+      if (grepl("[{]", fn_str) && grepl("[}]", fn_str)) {
+        fn_str <- unlist(strsplit(fn_str, "[{]"))[[1]]
+        fn_str <- paste0(fn_str, "{ NULL }")
+      }
+      contents <- c(contents, fn_str)
     }
-    roxy_call <- capture.output(roxy$call)
-    fn_str <- paste0(roxy_call, collapse = "")
-    if (grepl("[{]", fn_str) && grepl("[}]", fn_str)) {
-      fn_str <- unlist(strsplit(fn_str, "[{]"))[[1]]
-      fn_str <- paste0(fn_str, "{ NULL }")
-    }
-    contents <- c(contents, fn_str)
+    if (!is.null(contents)) {
+      result_msg <- rd_path
+      contents <- c(
+        contents,
+        "# --- Created by `lang` do not edit by hand ---",
+        current_roxy
+      )
+      writeLines(contents, rd_path)
+    } 
   }
-  if (!is.null(contents)) {
-    cli_inform("[{no}/{of}] {path} --> {rd_path}")
-    contents <- c(
-      contents,
-      "# --- Created by `lang` do not edit by hand ---",
-      current_roxy
-    )
-    writeLines(contents, rd_path)
-  } else {
-    cli_inform("[{no}/{of}] {path} --> [Skipping, no content]")
-  }
+  cli_inform("[{no}/{of}] {path} --> {result_msg}")
+  invisible()
 }
 
 roxy_comments <- function(x) {
