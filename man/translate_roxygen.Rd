@@ -6,7 +6,7 @@
 \usage{
 translate_roxygen(
   lang,
-  lang_sub_folder = to_iso639(lang, message = TRUE),
+  lang_sub_folder = to_iso639(lang, silent = FALSE),
   lang_folder = path("man-lang"),
   r_script = NULL,
   r_folder = path("R")
