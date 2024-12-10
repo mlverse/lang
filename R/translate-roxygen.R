@@ -9,7 +9,8 @@
 #' with improving the translation.
 #' @param lang The target language to translate help to
 #' @param lang_sub_folder 2-letter language/source folder to save the new
-#' Roxygen scripts to.
+#' Roxygen scripts to. It defaults to taking the value from `lang`, and attempts
+#' to convert it into an ISO 639 two-letter designation
 #' @param lang_folder The target base folder to save the Roxygen files. It defaults
 #' to 'man-lang'. The final destination will be a combination of this and the
 #' folder from `folder`
@@ -20,7 +21,7 @@
 #' @export
 translate_roxygen <- function(
     lang,
-    lang_sub_folder,
+    lang_sub_folder = to_iso639(lang, silent = FALSE),
     lang_folder = path("man-lang"),
     r_script = NULL,
     r_folder = path("R")) {
@@ -33,7 +34,6 @@ translate_roxygen <- function(
   lang_folder <- path(lang_folder, lang_sub_folder)
   dir_create(lang_folder)
   if (is.null(r_script)) {
-    cli_h3("`lang` translating Roxygen into '{lang}'")
     r_script <- dir_ls(r_folder, glob = "*.R")
   }
   pkg_env <- env_package(r_folder)

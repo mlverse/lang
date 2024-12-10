@@ -6,7 +6,7 @@
 \usage{
 translate_roxygen(
   lang,
-  lang_sub_folder,
+  lang_sub_folder = to_iso639(lang, message = TRUE),
   lang_folder = path("man-lang"),
   r_script = NULL,
   r_folder = path("R")
@@ -16,7 +16,8 @@ translate_roxygen(
 \item{lang}{The target language to translate help to}
 
 \item{lang_sub_folder}{2-letter language/source folder to save the new
-Roxygen scripts to.}
+Roxygen scripts to. It defaults to taking the value from \code{lang}, and attempts
+to convert it into an ISO 639 two-letter designation}
 
 \item{lang_folder}{The target base folder to save the Roxygen files. It defaults
 to 'man-lang'. The final destination will be a combination of this and the
