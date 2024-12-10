@@ -14,17 +14,30 @@ Creates the Rd files based on translated Roxygen scripts
 ## Usage
 ```r
 
-process_roxygen_folder(folder, source = "man-lang", target = "inst/man-lang")
+process_roxygen_folder(
+  folder,
+  r_folder = "R",
+  source_folder = "man-lang",
+  target_folder = "inst/man-lang",
+  pkg_path = "."
+)
 
-process_roxygen(source = "man-lang", target = "inst/man-lang")
+process_roxygen(
+  source_folder = "man-lang",
+  target_folder = "inst/man-lang",
+  r_folder = "R",
+  pkg_path = "."
+)
 ```
 
 ## Arguments
 |Arguments|Description|
 |---|---|
 | folder | Source sub-folder where the source Roxygen R scripts are |
-| source | Base source folder where the different translations are located. Defaults to 'man-lang'. |
-| target | Base target folder where the different translations will be located. Defaults to 'inst/man-lang' |
+| r_folder | Source of the original R scripts. Only used to see if the Roxygen documentation is different from what is capture in the `source_folder` |
+| source_folder | Base source folder where the different translations are located. Defaults to 'man-lang'. |
+| target_folder | Base target folder where the different translations will be located. Defaults to 'inst/man-lang' |
+| pkg_path | The path to the package |
 
 
 
