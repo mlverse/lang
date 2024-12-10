@@ -55,14 +55,6 @@ translate_roxygen_imp <- function(path,
                                   no = 1,
                                   of = 1,
                                   pkg_env = NULL) {
-  if (is.null(pkg_env)) {
-    if (is_dir(path)) {
-      pkg_path <- path_dir(path)
-    } else {
-      pkg_path <- path_dir(path_dir(path))
-    }
-    pkg_env <- env_package(pkg_path)
-  }
   current_roxy <- roxy_comments(path)
   result_msg <- ""
   if (is.null(current_roxy)) {
