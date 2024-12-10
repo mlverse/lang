@@ -1,62 +1,52 @@
-#' Translates the Roxygen2 documentation
+#' Translates the Roxygen2 documentation to a different language
 #' @description
 #' Reads the Roxygen2 tags in the package and translates them. The translations
 #' are stored in R scripts. The default location of the new scripts is 'man-lang'.
-#' The will be in a sub-folder representing the language the are translated to.
+#' They will be in a sub-folder representing the language the are translated to.
 #'
 #' @details This approach makes it easier to edit the translations by hand after
 #' the LLM does a first pass. It also allows for others to collaborate
 #' with improving the translation.
 #' @param lang The target language to translate help to
-#' @param folder 2-letter language/source folder to save the new
+#' @param lang_sub_folder 2-letter language/source folder to save the new
 #' Roxygen scripts to.
-#' @param target The target base folder to save the Roxygen files. It defaults
+#' @param lang_folder The target base folder to save the Roxygen files. It defaults
 #' to 'man-lang'. The final destination will be a combination of this and the
 #' folder from `folder`
-#' @param source The source R scripts. It defaults to the 'R' folder.
+#' @param r_script A single R script to translate. Defaults to NULL. If it is
+#' null, then every R script in the `r_folder` will be translated
+#' @param r_folder The source R scripts. It defaults to the 'R' folder.
 #'
 #' @export
 translate_roxygen <- function(
     lang,
-    folder,
-    target = path("man-lang"),
-    source = path("R")) {
-  if (nchar(folder) != 2) {
+    lang_sub_folder,
+    lang_folder = path("man-lang"),
+    r_script = NULL,
+    r_folder = path("R")) {
+  if (nchar(lang_sub_folder) != 2) {
     cli_abort("Use an ISO 639 2 character language code for `folder`")
   }
-  if (!is_dir(source)) {
+  if (!is_dir(r_folder)) {
     cli_abort("`source` needs to be a valid directory")
   }
-  target <- path(target, folder)
-  dir_create(target)
-  cli_h3("`lang` translating Roxygen into '{lang}'")
-  r_files <- dir_ls(source, glob = "*.R")
-  pkg_env <- env_package(source)
-  for (i in seq_along(r_files)) {
+  lang_folder <- path(lang_folder, lang_sub_folder)
+  dir_create(lang_folder)
+  if (is.null(r_script)) {
+    cli_h3("`lang` translating Roxygen into '{lang}'")
+    r_script <- dir_ls(r_folder, glob = "*.R")
+  }
+  pkg_env <- env_package(r_folder)
+  for (i in seq_along(r_script)) {
     translate_roxygen_imp(
-      path = r_files[[i]],
+      path = r_script[[i]],
       lang = lang,
-      dir = target,
+      dir = lang_folder,
       no = i,
-      of = length(r_files),
+      of = length(r_script),
       pkg_env = pkg_env
     )
   }
-}
-
-
-#' @rdname translate_roxygen
-#' @param path The path to the R script containing the Roxygen help
-#' documentation
-#' @param target_path The path to write the new, translated, R script to. The
-#' name of the file will match that of the original R script.
-#' @export
-translate_roxygen_file <- function(path, lang, target_path) {
-  translate_roxygen_imp(
-    path = path,
-    lang = lang,
-    dir = target_path
-  )
 }
 
 translate_roxygen_imp <- function(path,
@@ -88,7 +78,7 @@ translate_roxygen_imp <- function(path,
       result_msg <- "[Skipping, no changes detected]"
     }
   }
-  if(result_msg == "") {
+  if (result_msg == "") {
     parsed <- parse_file(path, env = pkg_env)
     contents <- NULL
     tg_label <- NULL
@@ -151,7 +141,7 @@ translate_roxygen_imp <- function(path,
         current_roxy
       )
       writeLines(contents, rd_path)
-    } 
+    }
   }
   cli_inform("[{no}/{of}] {path} --> {result_msg}")
   invisible()

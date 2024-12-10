@@ -2,35 +2,35 @@
 % Please edit documentation in R/translate-roxygen.R
 \name{translate_roxygen}
 \alias{translate_roxygen}
-\alias{translate_roxygen_file}
-\title{Translates the Roxygen2 documentation}
+\title{Translates the Roxygen2 documentation to a different language}
 \usage{
-translate_roxygen(lang, folder, target = path("man-lang"), source = path("R"))
-
-translate_roxygen_file(path, lang, target_path)
+translate_roxygen(
+  lang,
+  lang_sub_folder,
+  lang_folder = path("man-lang"),
+  r_script = NULL,
+  r_folder = path("R")
+)
 }
 \arguments{
 \item{lang}{The target language to translate help to}
 
-\item{folder}{2-letter language/source folder to save the new
+\item{lang_sub_folder}{2-letter language/source folder to save the new
 Roxygen scripts to.}
 
-\item{target}{The target base folder to save the Roxygen files. It defaults
+\item{lang_folder}{The target base folder to save the Roxygen files. It defaults
 to 'man-lang'. The final destination will be a combination of this and the
 folder from \code{folder}}
 
-\item{source}{The source R scripts. It defaults to the 'R' folder.}
+\item{r_script}{A single R script to translate. Defaults to NULL. If it is
+null, then every R script in the \code{r_folder} will be translated}
 
-\item{path}{The path to the R script containing the Roxygen help
-documentation}
-
-\item{target_path}{The path to write the new, translated, R script to. The
-name of the file will match that of the original R script.}
+\item{r_folder}{The source R scripts. It defaults to the 'R' folder.}
 }
 \description{
 Reads the Roxygen2 tags in the package and translates them. The translations
 are stored in R scripts. The default location of the new scripts is 'man-lang'.
-The will be in a sub-folder representing the language the are translated to.
+They will be in a sub-folder representing the language the are translated to.
 }
 \details{
 This approach makes it easier to edit the translations by hand after
