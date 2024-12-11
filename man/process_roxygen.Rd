@@ -17,8 +17,8 @@ process_roxygen(
 are. Defaults to NULL. If left null, all of the sub-folders in the
 \code{source_folder} will be processed}
 
-\item{source_folder}{Base source folder where the different translations are located.
-Defaults to 'man-lang'.}
+\item{source_folder}{Base source folder where the different translations are
+located. Defaults to 'man-lang'.}
 
 \item{target_folder}{Base target folder where the different translations will be
 located. Defaults to 'inst/man-lang'}

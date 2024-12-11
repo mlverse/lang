@@ -2,8 +2,8 @@
 #' @param source_sub_folder Source sub-folder where the source Roxygen R scripts
 #' are. Defaults to NULL. If left null, all of the sub-folders in the
 #' `source_folder` will be processed
-#' @param source_folder Base source folder where the different translations are located.
-#' Defaults to 'man-lang'.
+#' @param source_folder Base source folder where the different translations are
+#' located. Defaults to 'man-lang'.
 #' @param target_folder Base target folder where the different translations will be
 #' located. Defaults to 'inst/man-lang'
 #' @param r_folder Source of the original R scripts. Only used to see if the

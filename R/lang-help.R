@@ -66,11 +66,9 @@ rd_inst <- function(topic, package, lang) {
   } else if (substr(lang, 3, 3) == "_") {
     folder <- substr(lang, 1, 2)
   } else {
-    codes <- readRDS(system.file("iso/codes.rds", package = "lang"))
-    lang <- tolower(lang)
-    match <- codes[codes$name == lang, "code"]
-    if (nrow(match) > 0) {
-      folder <- as.character(match)[[1]]
+    code <- to_iso639(lang)
+    if (!is.null(code)) {
+      folder <- code[[1]]
     }
   }
   if (!is.null(folder)) {
