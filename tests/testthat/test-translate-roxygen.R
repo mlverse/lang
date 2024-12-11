@@ -5,9 +5,9 @@ test_that("Translate Roxygen works", {
   expect_message(
     translate_roxygen(
       lang = "spanish",
-      folder = "es",
-      target = path(temp_pkg, "man-lang"),
-      source = path(temp_pkg, "R")
+      lang_sub_folder = "es",
+      lang_folder = path(temp_pkg, "man-lang"),
+      r_folder = path(temp_pkg, "R")
     )
   )
   expect_equal(

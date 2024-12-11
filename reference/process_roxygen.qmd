@@ -5,7 +5,7 @@ execute:
   freeze: true
 ---
 
-## process_roxygen_folder
+## process_roxygen
 
 ## Description
 Creates the Rd files based on translated Roxygen scripts
@@ -14,15 +14,8 @@ Creates the Rd files based on translated Roxygen scripts
 ## Usage
 ```r
 
-process_roxygen_folder(
-  folder,
-  r_folder = "R",
-  source_folder = "man-lang",
-  target_folder = "inst/man-lang",
-  pkg_path = "."
-)
-
 process_roxygen(
+  source_sub_folder = NULL,
   source_folder = "man-lang",
   target_folder = "inst/man-lang",
   r_folder = "R",
@@ -33,10 +26,10 @@ process_roxygen(
 ## Arguments
 |Arguments|Description|
 |---|---|
-| folder | Source sub-folder where the source Roxygen R scripts are |
-| r_folder | Source of the original R scripts. Only used to see if the Roxygen documentation is different from what is capture in the `source_folder` |
+| source_sub_folder | Source sub-folder where the source Roxygen R scripts are. Defaults to NULL. If left null, all of the sub-folders in the `source_folder` will be processed |
 | source_folder | Base source folder where the different translations are located. Defaults to 'man-lang'. |
 | target_folder | Base target folder where the different translations will be located. Defaults to 'inst/man-lang' |
+| r_folder | Source of the original R scripts. Only used to see if the Roxygen documentation is different from what is capture in the `source_folder` |
 | pkg_path | The path to the package |
 
 

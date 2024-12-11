@@ -27,19 +27,7 @@ lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 
 
 
-## Value
-Returns either a text or html version of the topic's help documentation
 
 
-## Examples
-```r
-
-
-library(lang)
-llm_use("ollama", "llama3.2", .silent = TRUE)
-lang_help("llm_classify", "mall", lang = "french")
-
-
-```
 
 
