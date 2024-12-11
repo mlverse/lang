@@ -3,7 +3,7 @@ roxy_comments <- function(x) {
   roxy_comment <- substr(script_contents, 1, 2) == "#'"
   just_roxy <- script_contents[roxy_comment]
   just_roxy <- just_roxy[just_roxy != "#'"]
-  
+
   if (length(just_roxy) == 0) {
     return(NULL)
   } else {

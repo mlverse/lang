@@ -17,10 +17,10 @@ process_roxygen <- function(
     target_folder = "inst/man-lang",
     r_folder = "R",
     pkg_path = ".") {
-  if(!dir_exists(source_folder)) {
+  if (!dir_exists(path(pkg_path, source_folder))) {
     cli_abort("Source folder: '{source_folder}', is not found")
   }
-  if(is.null(source_sub_folder)) {
+  if (is.null(source_sub_folder)) {
     compare_man_lang(
       r_folder = r_folder,
       source_folder = source_folder,
@@ -72,9 +72,11 @@ process_roxygen_folder <- function(
   # Uses `callr` to run roxygenize, mainly to avoid the messages from roxygen2
   path_label <- path(source_folder, source_sub_folder)
   cli_alert_info(
-    paste0("Creating Rd files from '{path_label}'", 
-           " ({to_title(from_iso639(source_sub_folder)) })"
-           ))
+    paste0(
+      "Creating Rd files from '{path_label}'",
+      " ({to_title(from_iso639(source_sub_folder)) })"
+    )
+  )
   callr::r_safe(
     func = function(x) roxygen2::roxygenize(x, roclets = "rd"),
     args = list(copy_path)
