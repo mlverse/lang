@@ -2,46 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mlverse.github.io/lang/reference/translate_roxygen.html</loc>
-    <lastmod>2024-12-09T19:14:08.673Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/index.html</loc>
-    <lastmod>2024-12-09T19:14:08.669Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
   </url>
   <url>
-    <loc>https://mlverse.github.io/lang/reference/reexports.html</loc>
-    <lastmod>2024-12-09T19:14:08.669Z</lastmod>
+    <loc>https://mlverse.github.io/lang/reference/process_roxygen.html</loc>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/to_iso639.html</loc>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/index.html</loc>
-    <lastmod>2024-12-09T19:14:08.669Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.890Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/NEWS.html</loc>
-    <lastmod>2024-12-09T19:14:08.673Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/LICENSE.html</loc>
-    <lastmod>2024-12-09T19:14:08.673Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/cran-comments.html</loc>
-    <lastmod>2024-12-09T19:14:08.673Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/LICENSE.html</loc>
-    <lastmod>2024-12-09T19:14:08.669Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.890Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/help.html</loc>
-    <lastmod>2024-12-09T19:14:08.669Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/reexports.html</loc>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/process_roxygen_folder.html</loc>
-    <lastmod>2024-12-09T19:14:08.669Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/lang_help.html</loc>
-    <lastmod>2024-12-09T19:14:08.669Z</lastmod>
+    <lastmod>2024-12-11T16:53:33.894Z</lastmod>
   </url>
 </urlset>

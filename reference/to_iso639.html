@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Translates help – lang</title>
+<title>Convert to and from ISO 639 language code – lang</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -152,7 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#lang_help" id="toc-lang_help" class="nav-link active" data-scroll-target="#lang_help">lang_help</a></li>
+  <li><a href="#to_iso639" id="toc-to_iso639" class="nav-link active" data-scroll-target="#to_iso639">to_iso639</a></li>
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
@@ -164,7 +164,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Translates help</h1>
+<h1 class="title">Convert to and from ISO 639 language code</h1>
 </div>
 
 
@@ -181,17 +181,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="lang_help" class="level2">
-<h2 class="anchored" data-anchor-id="lang_help">lang_help</h2>
+<section id="to_iso639" class="level2">
+<h2 class="anchored" data-anchor-id="to_iso639">to_iso639</h2>
 </section>
 <section id="description" class="level2">
 <h2 class="anchored" data-anchor-id="description">Description</h2>
-<p>Translates a given topic into a target language. It uses the <code>lang</code> argument to determine which language to translate to. If not passed, this function will look for a target language in the LANG and LANGUAGE environment variables to determine the target language. If the target language is English, no translation will be processed, so the help returned will be the original package’s documentation.</p>
+<p>Convert to and from ISO 639 language code</p>
 </section>
 <section id="usage" class="level2">
 <h2 class="anchored" data-anchor-id="usage">Usage</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_help</span>(topic, <span class="at">package =</span> <span class="cn">NULL</span>, <span class="at">lang =</span> <span class="cn">NULL</span>, <span class="at">type =</span> <span class="fu">getOption</span>(<span class="st">"help_type"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">to_iso639</span>(lang, <span class="at">silent =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">from_iso639</span>(iso)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="arguments" class="level2">
 <h2 class="anchored" data-anchor-id="arguments">Arguments</h2>
@@ -208,20 +210,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td>topic</td>
-<td>The topic to search for</td>
+<td>lang</td>
+<td>Name of the language to be converted</td>
 </tr>
 <tr class="even">
-<td>package</td>
-<td>The R package to look for the topic</td>
+<td>silent</td>
+<td>Flag to indicate if the function should return a message with the result. If there is no match, it will be an error message</td>
 </tr>
 <tr class="odd">
-<td>lang</td>
-<td>Language to translate the help to</td>
-</tr>
-<tr class="even">
-<td>type</td>
-<td>Produce “html” or “text” output for the help. It default to <code>getOption("help_type")</code></td>
+<td>iso</td>
+<td>The two-letter ISO 639 code to search</td>
 </tr>
 </tbody>
 </table>

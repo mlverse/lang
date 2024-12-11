@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Translates the Roxygen2 documentation – lang</title>
+<title>Translates the Roxygen2 documentation to a different language – lang</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Translates the Roxygen2 documentation</h1>
+<h1 class="title">Translates the Roxygen2 documentation to a different language</h1>
 </div>
 
 
@@ -187,14 +187,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="description" class="level2">
 <h2 class="anchored" data-anchor-id="description">Description</h2>
-<p>Reads the Roxygen2 tags in the package and translates them. The translations are stored in R scripts. The default location of the new scripts is ‘man-lang’. The will be in a sub-folder representing the language the are translated to.</p>
+<p>Reads the Roxygen2 tags in the package and translates them. The translations are stored in R scripts. The default location of the new scripts is ‘man-lang’. They will be in a sub-folder representing the language the are translated to.</p>
 </section>
 <section id="usage" class="level2">
 <h2 class="anchored" data-anchor-id="usage">Usage</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">translate_roxygen</span>(lang, folder, <span class="at">target =</span> <span class="fu">path</span>(<span class="st">"man-lang"</span>), <span class="at">source =</span> <span class="fu">path</span>(<span class="st">"R"</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">translate_roxygen_file</span>(path, lang, target_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">translate_roxygen</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  lang,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">lang_sub_folder =</span> <span class="fu">to_iso639</span>(lang, <span class="at">silent =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lang_folder =</span> <span class="fu">path</span>(<span class="st">"man-lang"</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_script =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_folder =</span> <span class="fu">path</span>(<span class="st">"R"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="arguments" class="level2">
 <h2 class="anchored" data-anchor-id="arguments">Arguments</h2>
@@ -215,24 +219,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>The target language to translate help to</td>
 </tr>
 <tr class="even">
-<td>folder</td>
-<td>2-letter language/source folder to save the new Roxygen scripts to.</td>
+<td>lang_sub_folder</td>
+<td>2-letter language/source folder to save the new Roxygen scripts to. It defaults to taking the value from <code>lang</code>, and attempts to convert it into an ISO 639 two-letter designation</td>
 </tr>
 <tr class="odd">
-<td>target</td>
+<td>lang_folder</td>
 <td>The target base folder to save the Roxygen files. It defaults to ‘man-lang’. The final destination will be a combination of this and the folder from <code>folder</code></td>
 </tr>
 <tr class="even">
-<td>source</td>
-<td>The source R scripts. It defaults to the ‘R’ folder.</td>
+<td>r_script</td>
+<td>A single R script to translate. Defaults to NULL. If it is null, then every R script in the <code>r_folder</code> will be translated</td>
 </tr>
 <tr class="odd">
-<td>path</td>
-<td>The path to the R script containing the Roxygen help documentation</td>
-</tr>
-<tr class="even">
-<td>target_path</td>
-<td>The path to write the new, translated, R script to. The name of the file will match that of the original R script.</td>
+<td>r_folder</td>
+<td>The source R scripts. It defaults to the ‘R’ folder.</td>
 </tr>
 </tbody>
 </table>

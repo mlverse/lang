@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Translates help – lang</title>
+<title>Creates the Rd files based on translated Roxygen scripts – lang</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -152,10 +152,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#lang_help" id="toc-lang_help" class="nav-link active" data-scroll-target="#lang_help">lang_help</a></li>
+  <li><a href="#process_roxygen" id="toc-process_roxygen" class="nav-link active" data-scroll-target="#process_roxygen">process_roxygen</a></li>
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
   </ul>
 </nav>
     </div>
@@ -164,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Translates help</h1>
+<h1 class="title">Creates the Rd files based on translated Roxygen scripts</h1>
 </div>
 
 
@@ -181,17 +182,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="lang_help" class="level2">
-<h2 class="anchored" data-anchor-id="lang_help">lang_help</h2>
+<section id="process_roxygen" class="level2">
+<h2 class="anchored" data-anchor-id="process_roxygen">process_roxygen</h2>
 </section>
 <section id="description" class="level2">
 <h2 class="anchored" data-anchor-id="description">Description</h2>
-<p>Translates a given topic into a target language. It uses the <code>lang</code> argument to determine which language to translate to. If not passed, this function will look for a target language in the LANG and LANGUAGE environment variables to determine the target language. If the target language is English, no translation will be processed, so the help returned will be the original package’s documentation.</p>
+<p>Creates the Rd files based on translated Roxygen scripts</p>
 </section>
 <section id="usage" class="level2">
 <h2 class="anchored" data-anchor-id="usage">Usage</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_help</span>(topic, <span class="at">package =</span> <span class="cn">NULL</span>, <span class="at">lang =</span> <span class="cn">NULL</span>, <span class="at">type =</span> <span class="fu">getOption</span>(<span class="st">"help_type"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">process_roxygen</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">source_sub_folder =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">source_folder =</span> <span class="st">"man-lang"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">target_folder =</span> <span class="st">"inst/man-lang"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_folder =</span> <span class="st">"R"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pkg_path =</span> <span class="st">"."</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="arguments" class="level2">
 <h2 class="anchored" data-anchor-id="arguments">Arguments</h2>
@@ -208,23 +215,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td>topic</td>
-<td>The topic to search for</td>
+<td>source_sub_folder</td>
+<td>Source sub-folder where the source Roxygen R scripts are. Defaults to NULL. If left null, all of the sub-folders in the <code>source_folder</code> will be processed</td>
 </tr>
 <tr class="even">
-<td>package</td>
-<td>The R package to look for the topic</td>
+<td>source_folder</td>
+<td>Base source folder where the different translations are located. Defaults to ‘man-lang’.</td>
 </tr>
 <tr class="odd">
-<td>lang</td>
-<td>Language to translate the help to</td>
+<td>target_folder</td>
+<td>Base target folder where the different translations will be located. Defaults to ‘inst/man-lang’</td>
 </tr>
 <tr class="even">
-<td>type</td>
-<td>Produce “html” or “text” output for the help. It default to <code>getOption("help_type")</code></td>
+<td>r_folder</td>
+<td>Source of the original R scripts. Only used to see if the Roxygen documentation is different from what is capture in the <code>source_folder</code></td>
+</tr>
+<tr class="odd">
+<td>pkg_path</td>
+<td>The path to the package</td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="value" class="level2">
+<h2 class="anchored" data-anchor-id="value">Value</h2>
+<p>Multiple Rd files based on the source R scripts</p>
 
 
 </section>
