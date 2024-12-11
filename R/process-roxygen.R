@@ -69,14 +69,13 @@ process_roxygen_folder <- function(
     new_path = path(copy_path, "R"),
     overwrite = TRUE
   )
-  # Uses `callr` to run roxygenize, mainly to avoid the messages from roxygen2
-  path_label <- path(source_folder, source_sub_folder)
   cli_alert_info(
     paste0(
-      "Creating Rd files from '{path_label}'",
-      " ({to_title(from_iso639(source_sub_folder)) })"
+      "Creating Rd files from {path_rel(source_path)}",
+      " ({to_title(from_iso639(source_sub_folder)[[1]]) })"
     )
   )
+  # Uses `callr` to run roxygenize, mainly to avoid the messages from roxygen2
   callr::r_safe(
     func = function(x) roxygen2::roxygenize(x, roclets = "rd"),
     args = list(copy_path)
