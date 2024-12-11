@@ -43,4 +43,4 @@ pkgsite:
         - section: Package developers
           contents:
           - translate_roxygen.qmd
-          - process_roxygen_folder.qmd
+          - process_roxygen.qmd
