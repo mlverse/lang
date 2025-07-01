@@ -8,7 +8,9 @@ execute:
   
 website:
   title: lang
+  favicon: "site/images/favicon/apple-touch-icon.png"
   navbar:
+    logo: "site/images/favicon/apple-touch-icon.png"
     left:
       - href: reference/index.qmd
         text: Reference   
@@ -35,12 +37,8 @@ pkgsite:
     reference:
       dir: reference
       index:
-        file: index.qmd
         contents:
-        - section: Live translation
-          contents: 
-          - lang_help.qmd
-        - section: Package developers
-          contents:
-          - translate_roxygen.qmd
-          - process_roxygen.qmd
+          - section: Live translation
+            contents: 
+            - lang_help
+            - help

@@ -3,22 +3,12 @@ title: Package index
 toc: false
 ---
 
-## Live translation
-
 [lang_help()](lang_help.qmd)
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates help
 
-## Package developers
 
-[translate_roxygen()](translate_roxygen.qmd)
+[help()](help.qmd)
 
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates the Roxygen2 documentation to a different language
-
-[process_roxygen()](process_roxygen.qmd)
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creates the Rd files based on translated Roxygen scripts
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Drop-in replacements for `help()` and `?` functions
