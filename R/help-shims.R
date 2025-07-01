@@ -31,7 +31,7 @@ shim_lang_help <- function(topic, package = NULL, ...) {
       is_string(topic)
     }
   )
-
+  topic_str <- NULL
   if (is_string) {
     topic_str <- topic
     topic_name <- sym(topic)
