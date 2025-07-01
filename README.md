@@ -58,7 +58,7 @@ Translating: Title
 If your environment is set to use the Spanish language, the help pane
 should display this:
 
-<img src="man/figures/lm-spanish.png" align="center" 
+<img src="man/figures/lm-spanish.png" align="center" width="100%"
 alt="Screenshot of the lm function's help page in Spanish"/>
 
 R enforces the printed name of each section, so they cannot be
