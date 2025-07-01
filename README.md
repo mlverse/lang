@@ -58,14 +58,14 @@ Translating: Title
 If your environment is set to use the Spanish language, the help pane
 should display this:
 
-<img src="man/figures/lm-spanish.png" align="center" 
+<img src="man/figures/lm-spanish.png" align="center" width="100%"
 alt="Screenshot of the lm function's help page in Spanish"/>
 
 R enforces the printed name of each section, so they cannot be
 translated. So titles such as Description, Usage and Arguments will
 always remain untranslated.
 
-### How it works
+## How it works
 
 The language that the help documentation will be translated to, is
 determined by one of the following two environment variables. In order
@@ -88,9 +88,9 @@ Description, Details, Arguments, etc.). If `lang` determines that your
 environment is set to use English, it will simply display the original
 documentation.
 
-### Considerations
+## Considerations
 
-#### Translation is not perfect
+### Translations are not perfect
 
 As you can imagine, the quality of translation will mostly depend on the
 LLM being used. This solution is meant to be as helpful as possible, but
@@ -100,7 +100,7 @@ even an imperfect translation could go a long way with someone who is
 struggling to understand how to use a specific function in a package,
 and may also struggle with the English language.
 
-#### Debug
+### Debug
 
 If the original English help page displays, check your environment
 variables:
