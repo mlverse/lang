@@ -20,3 +20,14 @@ test_that("shim_lang_question works", {
     )
   )
 })
+
+test_that("Shim is able to be attached", {
+  insert_global_shims(force = TRUE)
+  shims <- find("?")
+  expect_true("lang_shims" %in% shims)
+})
+
+test_that("end_lang() works", {
+  expect_true(en_lang("en_"))
+})
+
