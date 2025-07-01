@@ -318,17 +318,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+        <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
   <li><a href="#lang" id="toc-lang" class="nav-link active" data-scroll-target="#lang">lang</a>
   <ul class="collapse">
   <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
-  <li><a href="#using-lang" id="toc-using-lang" class="nav-link" data-scroll-target="#using-lang">Using <code>lang</code></a>
-  <ul class="collapse">
+  <li><a href="#using-lang" id="toc-using-lang" class="nav-link" data-scroll-target="#using-lang">Using <code>lang</code></a></li>
   <li><a href="#how-it-works" id="toc-how-it-works" class="nav-link" data-scroll-target="#how-it-works">How it works</a></li>
-  <li><a href="#considerations" id="toc-considerations" class="nav-link" data-scroll-target="#considerations">Considerations</a></li>
+  <li><a href="#considerations" id="toc-considerations" class="nav-link" data-scroll-target="#considerations">Considerations</a>
+  <ul class="collapse">
+  <li><a href="#translations-are-not-perfect" id="toc-translations-are-not-perfect" class="nav-link" data-scroll-target="#translations-are-not-perfect">Translations are not perfect</a></li>
+  <li><a href="#debug" id="toc-debug" class="nav-link" data-scroll-target="#debug">Debug</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -366,10 +368,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> ?lm</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Translating<span class="sc">:</span> Title</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If your environment is set to use the Spanish language, the help pane should display this:</p>
-<p><img src="man/figures/lm-spanish.png" align="center" alt="Screenshot of the lm function's help page in Spanish"></p>
+<p><img src="man/figures/lm-spanish.png" align="center" width="100%" alt="Screenshot of the lm function's help page in Spanish"></p>
 <p>R enforces the printed name of each section, so they cannot be translated. So titles such as Description, Usage and Arguments will always remain untranslated.</p>
-<section id="how-it-works" class="level3">
-<h3 class="anchored" data-anchor-id="how-it-works">How it works</h3>
+</section>
+<section id="how-it-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-it-works">How it works</h2>
 <p>The language that the help documentation will be translated to, is determined by one of the following two environment variables. In order of priority, the variables are:</p>
 <ol type="1">
 <li><code>LANGUAGE</code></li>
@@ -378,14 +381,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>It is likely that your <code>LANG</code> variable already defaults to your locale. For example, mine is set to: <code>en_US.UTF-8</code> (That means English, United States). For someone in France, the locale would be something such as <code>fr_FR.UTF-8</code>. Llama3.2, recognizes these UTF locales, and using <code>lang</code>, calling <code>?</code> will result in translating the function’s help documentation into French.</p>
 <p>It uses the <code>mall</code> package as the integration point with the LLM. Under the hood, it runs <code>llm_vec_translate()</code> multiple times to translate the most common sections of the help documentation (e.g.: Title, Description, Details, Arguments, etc.). If <code>lang</code> determines that your environment is set to use English, it will simply display the original documentation.</p>
 </section>
-<section id="considerations" class="level3">
-<h3 class="anchored" data-anchor-id="considerations">Considerations</h3>
-<section id="translation-is-not-perfect" class="level4">
-<h4 class="anchored" data-anchor-id="translation-is-not-perfect">Translation is not perfect</h4>
+<section id="considerations" class="level2">
+<h2 class="anchored" data-anchor-id="considerations">Considerations</h2>
+<section id="translations-are-not-perfect" class="level3">
+<h3 class="anchored" data-anchor-id="translations-are-not-perfect">Translations are not perfect</h3>
 <p>As you can imagine, the quality of translation will mostly depend on the LLM being used. This solution is meant to be as helpful as possible, but acknowledging that at this stage of LLMs, only a human curated translation will be the best solution. Having said that, I believe that even an imperfect translation could go a long way with someone who is struggling to understand how to use a specific function in a package, and may also struggle with the English language.</p>
 </section>
-<section id="debug" class="level4">
-<h4 class="anchored" data-anchor-id="debug">Debug</h4>
+<section id="debug" class="level3">
+<h3 class="anchored" data-anchor-id="debug">Debug</h3>
 <p>If the original English help page displays, check your environment variables:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANG"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "en_US.UTF-8"</span></span>
@@ -395,7 +398,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If this is your case, set the <code>LANGUAGE</code> variable to your preference. You can use the full language name, such as ‘spanish’, or ‘french’, etc. You can use <code>Sys.setenv(LANGUAGE = "[my language]")</code>, or, for a more permanent solution, add the entry to your your .Renviron file (<code>usethis::edit_r_environ()</code>).</p>
 
 
-</section>
 </section>
 </section>
 </section>
