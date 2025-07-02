@@ -31,12 +31,11 @@ format:
       dark: [cosmo, site/theme-dark.scss]
         
 pkgsite: 
-    dir: "."
-    reference:
-      dir: reference
-      index:
-        contents:
-          - section: Live translation
-            contents: 
-            - lang_help
-            - help
+  dir: "."
+  reference:
+    dir: reference
+    index:
+      contents: 
+        - section: Live translation
+          contents: 
+          - lang_help

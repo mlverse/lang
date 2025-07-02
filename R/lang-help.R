@@ -27,10 +27,8 @@ lang_help <- function(topic,
     # Extracts name of package by using the name of its source folder
     package <- path_file(help_pkg)
   }
-  # Checks if package has a translated Rd in its installation files
-  inst_path <- rd_inst(topic, package, lang)
   # Translates the Rd if there is nothing pre-installed
-  topic_path <- inst_path %||% rd_translate(topic, package, lang)
+  topic_path <- rd_translate(topic, package, lang)
   structure(
     list(
       topic = topic,
@@ -58,30 +56,6 @@ rstudioapi_available <- function() {
   is_installed("rstudioapi") && rstudioapi::isAvailable()
 }
 
-rd_inst <- function(topic, package, lang) {
-  folder <- NULL
-  out <- NULL
-  if (nchar(lang) == 2) {
-    folder <- lang
-  } else if (substr(lang, 3, 3) == "_") {
-    folder <- substr(lang, 1, 2)
-  } else {
-    code <- to_iso639(lang)
-    if (!is.null(code)) {
-      folder <- code[[1]]
-    }
-  }
-  if (!is.null(folder)) {
-    pkg_rds_path <- system.file("man-lang", package = package)
-    pkg_rd_lan <- path(pkg_rds_path, folder)
-    rd_path <- path(pkg_rd_lan, topic, ext = "Rd")
-    if (file_exists(rd_path)) {
-      out <- rd_path
-    }
-  }
-  out
-}
-
 rd_translate <- function(topic, package, lang) {
   db <- Rd_db(package)
   rd_content <- db[[path(topic, ext = "Rd")]]
@@ -89,6 +63,11 @@ rd_translate <- function(topic, package, lang) {
   tag_name <- NULL
   tag_label <- NULL
   cli_progress_message("Translating: {.emph {tag_label}}")
+  rs <- callr::r_session$new()
+  use_lang <- rs$run(
+    function(x) mall::llm_use(x, .silent = TRUE),
+    args = list(x = getOption(".lang_chat"))
+  )
   for (i in seq_along(rd_content)) {
     rd_i <- rd_content[[i]]
     tag_name <- attr(rd_i, "Rd_tag")
@@ -106,17 +85,17 @@ rd_translate <- function(topic, package, lang) {
     tag_label <- to_title(tag_label)
     cli_progress_update()
     if (tag_name %in% standard_tags) {
-      rd_content[[i]] <- rd_prep_translate(rd_i, lang)
+      rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
     }
     if (tag_name == "\\section") {
-      rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang)
-      rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang)
+      rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang, rs)
+      rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang, rs)
     }
     if (tag_name == "\\arguments") {
       for (k in seq_along(rd_i)) {
         rd_k <- rd_i[[k]]
         if (length(rd_k) > 1) {
-          rd_i[[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang)
+          rd_i[[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
         }
       }
       rd_content[[i]] <- rd_i
@@ -130,10 +109,10 @@ rd_translate <- function(topic, package, lang) {
         k_attrs <- attributes(rd_k)
         rd_char <- as.character(rd_k)
         if (inherits(rd_k, "list")) {
-          rd_k <- lapply(rd_char, rd_comment_translate, lang)
+          rd_k <- lapply(rd_char, rd_comment_translate, lang, rs)
         }
         if (inherits(rd_k, "character")) {
-          rd_k <- rd_comment_translate(rd_char, lang)
+          rd_k <- rd_comment_translate(rd_char, lang, rs)
         }
         attributes(rd_k) <- k_attrs
         rd_i[[k]] <- rd_k
@@ -142,6 +121,7 @@ rd_translate <- function(topic, package, lang) {
     }
   }
   tag_name <- NULL
+  rs$close()
   cli_progress_update()
   rd_text <- paste0(as.character(rd_content), collapse = "")
   topic_path <- fs::path(tempdir(), topic_name, ext = "Rd")
@@ -149,14 +129,17 @@ rd_translate <- function(topic, package, lang) {
   topic_path
 }
 
-rd_comment_translate <- function(x, lang) {
+rd_comment_translate <- function(x, lang, rs) {
   rd_char <- as.character(x)
   if (length(rd_char) == 1) {
     if (substr(rd_char, 1, 2) == "# ") {
       last_char <- substr(rd_char, nchar(rd_char), nchar(rd_char))
       n_char <- ifelse(last_char == "\n", 1, 0)
       rd_char <- substr(rd_char, 3, nchar(rd_char) - n_char)
-      rd_char <- llm_vec_translate(rd_char, lang)
+      rd_char <- rs$run(
+        function(x, y) mall::llm_vec_translate(rd_char, lang),
+        args = list(x = rd_char, y = lang)
+      )
       rd_char <- paste0("# ", rd_char, "\n")
     } else {
 
@@ -168,11 +151,17 @@ rd_comment_translate <- function(x, lang) {
   x
 }
 
-rd_prep_translate <- function(x, lang) {
-  tag_text <- llm_vec_translate(
-    x = rd_extract_text(x),
-    language = lang,
-    additional_prompt = "Do not translate anything between single quotes."
+rd_prep_translate <- function(x, lang, rs) {
+  rd_text <- rd_extract_text(x)
+  tag_text <- rs$run(
+    function(x, y) {
+      mall::llm_vec_translate(
+        x = x,
+        language = y,
+        additional_prompt = "Do not translate anything between single quotes. Do not translate the words: NULL, TRUE and FALSE"
+      )
+    },
+    args = list(x = rd_text, y = lang)
   )
   tag_text <- rd_code_markers(tag_text)
   tag_text <- gsub("`", "", tag_text)

@@ -3,12 +3,10 @@ title: Package index
 toc: false
 ---
 
+### Live translation
+
 [lang_help()](lang_help.qmd)
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates help
 
-
-[help()](help.qmd)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Drop-in replacements for `help()` and `?` functions
