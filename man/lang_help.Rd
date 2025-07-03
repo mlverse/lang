@@ -24,3 +24,13 @@ determine the target language. If the target language is English, no translation
 will be processed, so the help returned will be the original package's
 documentation.
 }
+\examples{
+\donttest{ 
+  library(lang)
+  
+  lang_use("ollama", "llama3.2", seed = 100)
+  
+  lang_help("predict", lang = "spanish", type = "text")
+}
+
+}

@@ -8,7 +8,7 @@ execute:
 ## lang_use
 
 ## Description
-Allows us to specify the back-end provider, model to use during the current R session. The arguments are passed to an `mall::llm_use()`.
+Allows us to specify the back-end provider, model to use during the current R session.
 
 
 ## Usage

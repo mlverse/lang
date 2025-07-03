@@ -4,7 +4,7 @@
 #' Specify the model to use
 #' @description
 #' Allows us to specify the back-end provider, model to use during the current
-#' R session. The arguments are passed to an `mall::llm_use()`.
+#' R session. 
 #' @param backend "ollama" or an `ellmer` `Chat` object. If using "ollama",
 #' `mall` will use is out-of-the-box integration with that back-end. Defaults
 #' to "ollama".

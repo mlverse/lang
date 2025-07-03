@@ -12,6 +12,15 @@
 #' @param lang Language to translate the help to
 #' @param type Produce "html" or "text" output for the help. It default to
 #' `getOption("help_type")`
+#' @examples
+#' \donttest{ 
+#'   library(lang)
+#'   
+#'   lang_use("ollama", "llama3.2", seed = 100)
+#'   
+#'   lang_help("predict", lang = "spanish", type = "text")
+#' }
+#' 
 #' @export
 lang_help <- function(topic,
                       package = NULL,

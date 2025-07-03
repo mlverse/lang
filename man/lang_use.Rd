@@ -28,5 +28,5 @@ R session.
 }
 \description{
 Allows us to specify the back-end provider, model to use during the current
-R session. The arguments are passed to an \code{mall::llm_use()}.
+R session.
 }

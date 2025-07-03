@@ -33,6 +33,7 @@ format:
 pkgsite: 
   dir: "."
   reference:
+    not_run_examples: true
     dir: reference
     index:
       contents: 
