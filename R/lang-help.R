@@ -148,8 +148,8 @@ rd_comment_translate <- function(x, lang, rs) {
       n_char <- ifelse(last_char == "\n", 1, 0)
       rd_char <- substr(rd_char, 3, nchar(rd_char) - n_char)
       rd_char <- rs$run(
-        function(x, y) mall::llm_vec_translate(rd_char, lang),
-        args = list(x = rd_char, y = lang)
+        function(x, language) mall::llm_vec_translate(x = x, language = language),
+        args = list(x = rd_char, language = lang)
       )
       rd_char <- paste0("# ", rd_char, "\n")
     } else {
@@ -165,16 +165,16 @@ rd_comment_translate <- function(x, lang, rs) {
 rd_prep_translate <- function(x, lang, rs) {
   rd_text <- rd_extract_text(x)
   tag_text <- rs$run(
-    function(x, y) {
+    function(x, language) {
       mall::llm_vec_translate(
         x = x,
-        language = y,
+        language = language,
         additional_prompt = paste("Do not translate anything between single",
                                  "quotes. Do not translate the words: NULL,",
                                  "TRUE and FALSE")
       )
     },
-    args = list(x = rd_text, y = lang)
+    args = list(x = rd_text, language = lang)
   )
   tag_text <- rd_code_markers(tag_text)
   tag_text <- gsub("`", "", tag_text)
