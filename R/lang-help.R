@@ -19,6 +19,10 @@ lang_help <- function(topic,
                       type = getOption("help_type")) {
   lang <- which_lang(lang)
 
+  if (en_lang(lang)) {
+    abort("Language already set to English, use `help()`")
+  }
+
   if (is.null(package)) {
     # Gets the path to installed help file
     help_path <- as.character(utils::help(topic, help_type = "text"))
@@ -70,12 +74,12 @@ rd_translate <- function(topic, package, lang) {
     .cache = lang_args[[".cache"]]
   )
   args <- lang_args[["args"]]
-  if(length(args) > 0) {
+  if (length(args) > 0) {
     use_args <- c(use_args, args)
   }
   use_lang <- rs$run(
     function(x) {
-      rlang::exec(mall::llm_use, !!! x)
+      rlang::exec(mall::llm_use, !!!x)
     },
     args = list(x = use_args)
   )
@@ -169,9 +173,11 @@ rd_prep_translate <- function(x, lang, rs) {
       mall::llm_vec_translate(
         x = x,
         language = language,
-        additional_prompt = paste("Do not translate anything between single",
-                                 "quotes. Do not translate the words: NULL,",
-                                 "TRUE and FALSE")
+        additional_prompt = paste(
+          "Do not translate anything between single",
+          "quotes. Do not translate the words: NULL,",
+          "TRUE and FALSE"
+        )
       )
     },
     args = list(x = rd_text, language = lang)

@@ -39,3 +39,5 @@ pkgsite:
         - section: Live translation
           contents: 
           - lang_help
+          - lang_use
+          

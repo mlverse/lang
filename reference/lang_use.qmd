@@ -1,0 +1,35 @@
+---
+title: "Specify the model to use"
+execute:
+  eval: true
+  freeze: true
+---
+
+## lang_use
+
+## Description
+Allows us to specify the back-end provider, model to use during the current R session. The arguments are passed to an `mall::llm_use()`.
+
+
+## Usage
+```r
+
+lang_use(backend = NULL, model = NULL, .cache = NULL, ...)
+```
+
+## Arguments
+|Arguments|Description|
+|---|---|
+| backend | "ollama" or an `ellmer` `Chat` object. If using "ollama", `mall` will use is out-of-the-box integration with that back-end. Defaults to "ollama". |
+| model | The name of model supported by the back-end provider |
+| .cache | The path to save model results, so they can be re-used if the same operation is ran again. To turn off, set this argument to an empty character: `""`. It defaults to a temp folder. If this argument is left `NULL` when calling this function, no changes to the path will be made. |
+| ... | Additional arguments that this function will pass down to the integrating function. In the case of Ollama, it will pass those arguments to `ollamar::chat()`. |
+
+
+
+## Value
+Console output of the current LLM setup to be used during the R session.
+
+
+
+

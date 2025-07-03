@@ -30,4 +30,3 @@ test_that("Shim is able to be attached", {
 test_that("end_lang() works", {
   expect_true(en_lang("en_"))
 })
-

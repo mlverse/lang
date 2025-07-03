@@ -15,13 +15,9 @@ coverage](https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg)](https
 Use an **LLM to translate a function’s help documentation on-the-fly**.
 `lang` overrides the `?` and `help()` functions in your R session. If
 you are using RStudio or Positron, the translated help page will appear
-in the usual help pane.
+in the Help pane on the IDE.
 
-If you are a package developer, `lang` helps you translate your
-documentation, and to include it as part of your package. `lang` will
-use the same `?` override to display your translated help documents.
-
-## Installation
+## Installing
 
 To install the GitHub version of `lang`, use:
 
@@ -30,23 +26,39 @@ install.packages("pak")
 pak::pak("mlverse/lang")
 ```
 
-## Using `lang`
+## Setup `lang`
 
-If you have not used `mall` yet, then the first step is to set it up.
-Feel free to follow the instructions in that package’s [Get
-Started](https://mlverse.github.io/mall/#get-started) page. Setting up
-your LLM and `mall` should be a one time process.
-
-On an every day R session, you’ll just need to load `lang` and then tell
-it which model to run using `llm_use()`:
+`lang` can be initialized by one of two ways. The first way is to use an
+`ellmer` chat object:
 
 ``` r
 library(lang)
 
-llm_use("ollama", "llama3.2", seed = 100)
+lang_use(ellmer::chat_openai(model = "gpt-4o"))
 ```
 
-After that, simply use `?` to trigger and display the translated
+Or, call Ollama directly by passing `"ollama"` as the backend argument,
+and specify the model to be used:
+
+``` r
+lang_use("ollama", "llama3.2", seed = 100)
+```
+
+As a convenience feature, `lang` is able to automatically establish a
+connection with the LLM at the beginning o R session. To do this you can
+use the `.lang_chat` option:
+
+``` r
+options(.lang_chat =  ellmer::chat_openai(model = "gpt-4o"))
+```
+
+Add this line to your *.Rprofile* file in order for that code to run
+every time you start R. You can call `usethis::edit_r_profile()` to open
+your .Rprofile file so you can add the option.
+
+## Using `lang`
+
+After setup, simply use `?` to trigger and display the translated
 documentation. During translation, `lang` will display its progress by
 showing which section of the documentation is currently translating:
 
@@ -121,3 +133,12 @@ You can use the full language name, such as ‘spanish’, or ‘french’, etc.
 You can use `Sys.setenv(LANGUAGE = "[my language]")`, or, for a more
 permanent solution, add the entry to your your .Renviron file
 (`usethis::edit_r_environ()`).
+
+### Interaction with `mall`
+
+`lang` uses the `mall` package to produce the translations. To avoid
+conflicts in the setup and use of both packages during the R session,
+`lang` runs `mall` in a separate R process which is only alive while
+translating the documentation. This means that you can have a specific
+LLM setup for `lang`, and a different one for `mall` during your R
+session.

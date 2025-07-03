@@ -10,3 +10,8 @@ toc: false
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates help
 
+[lang_use()](lang_use.qmd)
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify the model to use
+
