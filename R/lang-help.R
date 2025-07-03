@@ -27,7 +27,6 @@ lang_help <- function(topic,
     # Extracts name of package by using the name of its source folder
     package <- path_file(help_pkg)
   }
-  # Translates the Rd if there is nothing pre-installed
   topic_path <- rd_translate(topic, package, lang)
   structure(
     list(
@@ -64,9 +63,21 @@ rd_translate <- function(topic, package, lang) {
   tag_label <- NULL
   cli_progress_message("Translating: {.emph {tag_label}}")
   rs <- callr::r_session$new()
+  lang_args <- lang_use_impl(.is_internal = TRUE)
+  use_args <- list(
+    backend = lang_args[["backend"]],
+    model = lang_args[["model"]],
+    .cache = lang_args[[".cache"]]
+  )
+  args <- lang_args[["args"]]
+  if(length(args) > 0) {
+    use_args <- c(use_args, args)
+  }
   use_lang <- rs$run(
-    function(x) mall::llm_use(x, .silent = TRUE),
-    args = list(x = getOption(".lang_chat"))
+    function(x) {
+      rlang::exec(mall::llm_use, !!! x)
+    },
+    args = list(x = use_args)
   )
   for (i in seq_along(rd_content)) {
     rd_i <- rd_content[[i]]
@@ -158,7 +169,9 @@ rd_prep_translate <- function(x, lang, rs) {
       mall::llm_vec_translate(
         x = x,
         language = y,
-        additional_prompt = "Do not translate anything between single quotes. Do not translate the words: NULL, TRUE and FALSE"
+        additional_prompt = paste("Do not translate anything between single",
+                                 "quotes. Do not translate the words: NULL,",
+                                 "TRUE and FALSE")
       )
     },
     args = list(x = rd_text, y = lang)

@@ -2,6 +2,7 @@
 
 S3method(print,lang_topic)
 export(lang_help)
+export(lang_use)
 export(llm_use)
 export(to_iso639)
 import(cli)
