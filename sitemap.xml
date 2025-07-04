@@ -2,42 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mlverse.github.io/lang/LICENSE.html</loc>
-    <lastmod>2025-07-01T23:35:17.815Z</lastmod>
+    <lastmod>2025-07-04T13:42:42.259Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/LICENSE.html</loc>
-    <lastmod>2025-07-01T23:35:17.839Z</lastmod>
+    <lastmod>2025-07-04T13:42:42.283Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/NEWS.html</loc>
-    <lastmod>2025-07-01T23:35:17.839Z</lastmod>
+    <lastmod>2025-07-04T13:42:42.283Z</lastmod>
   </url>
   <url>
-    <loc>https://mlverse.github.io/lang/reference/index.html</loc>
-    <lastmod>2025-07-01T23:35:17.825Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/to_iso639.html</loc>
-    <lastmod>2025-07-01T23:35:17.825Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/reexports.html</loc>
-    <lastmod>2025-07-01T23:35:17.825Z</lastmod>
+    <loc>https://mlverse.github.io/lang/reference/lang_use.html</loc>
+    <lastmod>2025-07-04T13:42:42.270Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/lang_help.html</loc>
-    <lastmod>2025-07-01T23:35:17.825Z</lastmod>
+    <lastmod>2025-07-04T13:42:42.270Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/reexports.html</loc>
+    <lastmod>2025-07-04T13:42:42.270Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/to_iso639.html</loc>
+    <lastmod>2025-07-04T13:42:42.270Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/index.html</loc>
+    <lastmod>2025-07-04T13:42:42.270Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/help.html</loc>
-    <lastmod>2025-07-01T23:35:17.825Z</lastmod>
+    <lastmod>2025-07-04T13:42:42.270Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/cran-comments.html</loc>
-    <lastmod>2025-07-01T23:35:17.840Z</lastmod>
+    <lastmod>2025-07-04T13:42:42.283Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/index.html</loc>
-    <lastmod>2025-07-01T23:35:17.816Z</lastmod>
+    <lastmod>2025-07-04T13:42:42.260Z</lastmod>
   </url>
 </urlset>

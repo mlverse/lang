@@ -324,13 +324,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#lang" id="toc-lang" class="nav-link active" data-scroll-target="#lang">lang</a>
   <ul class="collapse">
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
+  <li><a href="#installing" id="toc-installing" class="nav-link" data-scroll-target="#installing">Installing</a></li>
+  <li><a href="#setup-lang" id="toc-setup-lang" class="nav-link" data-scroll-target="#setup-lang">Setup <code>lang</code></a></li>
   <li><a href="#using-lang" id="toc-using-lang" class="nav-link" data-scroll-target="#using-lang">Using <code>lang</code></a></li>
   <li><a href="#how-it-works" id="toc-how-it-works" class="nav-link" data-scroll-target="#how-it-works">How it works</a></li>
   <li><a href="#considerations" id="toc-considerations" class="nav-link" data-scroll-target="#considerations">Considerations</a>
   <ul class="collapse">
   <li><a href="#translations-are-not-perfect" id="toc-translations-are-not-perfect" class="nav-link" data-scroll-target="#translations-are-not-perfect">Translations are not perfect</a></li>
   <li><a href="#debug" id="toc-debug" class="nav-link" data-scroll-target="#debug">Debug</a></li>
+  <li><a href="#interaction-with-mall" id="toc-interaction-with-mall" class="nav-link" data-scroll-target="#interaction-with-mall">Interaction with <code>mall</code></a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -349,24 +351,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>lang</h1>
 <!-- badges: start -->
 <p><a href="https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/mlverse/lang?branch=main"><img src="https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg" class="img-fluid" alt="Codecov test coverage"></a> <!-- badges: end --></p>
-<p>Use an <strong>LLM to translate a function’s help documentation on-the-fly</strong>. <code>lang</code> overrides the <code>?</code> and <code>help()</code> functions in your R session. If you are using RStudio or Positron, the translated help page will appear in the usual help pane.</p>
-<p>If you are a package developer, <code>lang</code> helps you translate your documentation, and to include it as part of your package. <code>lang</code> will use the same <code>?</code> override to display your translated help documents.</p>
-<section id="installation" class="level2">
-<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<p>Use an <strong>LLM to translate a function’s help documentation on-the-fly</strong>. <code>lang</code> overrides the <code>?</code> and <code>help()</code> functions in your R session. If you are using RStudio or Positron, the translated help page will appear in the Help pane on the IDE.</p>
+<section id="installing" class="level2">
+<h2 class="anchored" data-anchor-id="installing">Installing</h2>
 <p>To install the GitHub version of <code>lang</code>, use:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"pak"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"mlverse/lang"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="using-lang" class="level2">
-<h2 class="anchored" data-anchor-id="using-lang">Using <code>lang</code></h2>
-<p>If you have not used <code>mall</code> yet, then the first step is to set it up. Feel free to follow the instructions in that package’s <a href="https://mlverse.github.io/mall/#get-started">Get Started</a> page. Setting up your LLM and <code>mall</code> should be a one time process.</p>
-<p>On an every day R session, you’ll just need to load <code>lang</code> and then tell it which model to run using <code>llm_use()</code>:</p>
+<section id="setup-lang" class="level2">
+<h2 class="anchored" data-anchor-id="setup-lang">Setup <code>lang</code></h2>
+<p><code>lang</code> can be initialized by one of two ways. The first way is to use an <code>ellmer</code> chat object:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lang)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">llm_use</span>(<span class="st">"ollama"</span>, <span class="st">"llama3.2"</span>, <span class="at">seed =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>After that, simply use <code>?</code> to trigger and display the translated documentation. During translation, <code>lang</code> will display its progress by showing which section of the documentation is currently translating:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> ?lm</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Translating<span class="sc">:</span> Title</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>(ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-4o"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Or, call Ollama directly by passing <code>"ollama"</code> as the backend argument, and specify the model to be used:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>(<span class="st">"ollama"</span>, <span class="st">"llama3.2"</span>, <span class="at">seed =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>As a convenience feature, <code>lang</code> is able to automatically establish a connection with the LLM at the beginning o R session. To do this you can use the <code>.lang_chat</code> option:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">.lang_chat =</span>  ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-4o"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Add this line to your <em>.Rprofile</em> file in order for that code to run every time you start R. You can call <code>usethis::edit_r_profile()</code> to open your .Rprofile file so you can add the option.</p>
+</section>
+<section id="using-lang" class="level2">
+<h2 class="anchored" data-anchor-id="using-lang">Using <code>lang</code></h2>
+<p>After setup, simply use <code>?</code> to trigger and display the translated documentation. During translation, <code>lang</code> will display its progress by showing which section of the documentation is currently translating:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> ?lm</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>Translating<span class="sc">:</span> Title</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If your environment is set to use the Spanish language, the help pane should display this:</p>
 <p><img src="man/figures/lm-spanish.png" align="center" width="100%" alt="Screenshot of the lm function's help page in Spanish"></p>
 <p>R enforces the printed name of each section, so they cannot be translated. So titles such as Description, Usage and Arguments will always remain untranslated.</p>
@@ -390,12 +398,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="debug" class="level3">
 <h3 class="anchored" data-anchor-id="debug">Debug</h3>
 <p>If the original English help page displays, check your environment variables:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANG"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "en_US.UTF-8"</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANGUAGE"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANG"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "en_US.UTF-8"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANGUAGE"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In my case, <code>lang</code> recognizes that the environment is set to English, because of the <code>en</code> code in the variable. If your <code>LANG</code> variable is set to <code>en_...</code> then no translation will occur.</p>
 <p>If this is your case, set the <code>LANGUAGE</code> variable to your preference. You can use the full language name, such as ‘spanish’, or ‘french’, etc. You can use <code>Sys.setenv(LANGUAGE = "[my language]")</code>, or, for a more permanent solution, add the entry to your your .Renviron file (<code>usethis::edit_r_environ()</code>).</p>
+</section>
+<section id="interaction-with-mall" class="level3">
+<h3 class="anchored" data-anchor-id="interaction-with-mall">Interaction with <code>mall</code></h3>
+<p><code>lang</code> uses the <code>mall</code> package to produce the translations. To avoid conflicts in the setup and use of both packages during the R session, <code>lang</code> runs <code>mall</code> in a separate R process which is only alive while translating the documentation. This means that you can have a specific LLM setup for <code>lang</code>, and a different one for <code>mall</code> during your R session.</p>
 
 
 </section>
