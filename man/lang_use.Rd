@@ -2,7 +2,7 @@
 % Please edit documentation in R/lang-use.R
 \name{lang_use}
 \alias{lang_use}
-\title{Specify the model to use}
+\title{Specifies the LLM provider and model to use during the R session}
 \usage{
 lang_use(backend = NULL, model = NULL, .cache = NULL, ...)
 }
@@ -29,4 +29,20 @@ R session.
 \description{
 Allows us to specify the back-end provider, model to use during the current
 R session.
+}
+\examples{
+\donttest{ 
+  library(lang)
+  
+  # Using an `ellmer` chat object
+  lang_use(ellmer::chat_openai(model = "gpt-4o"))
+  
+  # Using Ollama directly
+  lang_use("ollama", "llama3.2", seed = 100)
+  
+  # Turn off cache by setting it to ""
+  lang_use("ollama", "llama3.2", seed = 100, .cache = "")
+}
+
+
 }

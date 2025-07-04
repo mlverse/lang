@@ -8,10 +8,10 @@ toc: false
 [lang_help()](lang_help.qmd)
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates help
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates help documentation to another language
 
 [lang_use()](lang_use.qmd)
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify the model to use
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies the LLM provider and model to use during the R session
 

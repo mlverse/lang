@@ -1,0 +1,15 @@
+{
+  "hash": "de0ec10122e996564c1b9615be50c082",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Specifies the LLM provider and model to use during the R session\"\nexecute:\n  eval: true\n  freeze: true\n---\n\n## lang_use\n\n## Description\nAllows us to specify the back-end provider, model to use during the current R session.\n\n\n## Usage\n```r\n\nlang_use(backend = NULL, model = NULL, .cache = NULL, ...)\n```\n\n## Arguments\n|Arguments|Description|\n|---|---|\n| backend | \"ollama\" or an `ellmer` `Chat` object. If using \"ollama\", `mall` will use is out-of-the-box integration with that back-end. Defaults to \"ollama\". |\n| model | The name of model supported by the back-end provider |\n| .cache | The path to save model results, so they can be re-used if the same operation is ran again. To turn off, set this argument to an empty character: `\"\"`. It defaults to a temp folder. If this argument is left `NULL` when calling this function, no changes to the path will be made. |\n| ... | Additional arguments that this function will pass down to the integrating function. In the case of Ollama, it will pass those arguments to `ollamar::chat()`. |\n\n\n\n## Value\nConsole output of the current LLM setup to be used during the R session.\n\n\n## Examples\n\n::: {.cell}\n\n```{.r .cell-code}\n\n \n  library(lang)\n  \n  # Using an `ellmer` chat object\n  lang_use(ellmer::chat_openai(model = \"gpt-4o\"))\n#> \n#> ── `lang` session\n#> Backend: 'OpenAI' via `ellmer`\n#> Model: gpt-4o\n#> Cache:\n#> /var/folders/y_/f_0cx_291nl0s8h26t4jg6ch0000gp/T//RtmpTHbviH/_lang_cache4124265bf27d\n  \n  # Using Ollama directly\n  lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#> \n#> ── `lang` session \n#> Backend: OllamaModel: llama3.2Cache:\n#> /var/folders/y_/f_0cx_291nl0s8h26t4jg6ch0000gp/T//RtmpTHbviH/_lang_cache4124265bf27d\n  \n  # Turn off cache by setting it to \"\"\n  lang_use(\"ollama\", \"llama3.2\", seed = 100, .cache = \"\")\n#> \n#> ── `lang` session \n#> Backend: OllamaModel: llama3.2Cache: [Disabled]\n```\n:::\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -30,6 +30,11 @@ format:
       light: [cosmo, site/theme.scss]
       dark: [cosmo, site/theme-dark.scss]
         
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>"    
+    
 pkgsite: 
   dir: "."
   reference:

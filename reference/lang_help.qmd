@@ -1,5 +1,5 @@
 ---
-title: "Translates help"
+title: "Translates help documentation to another language"
 execute:
   eval: true
   freeze: true
@@ -37,7 +37,7 @@ lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
   
   lang_use("ollama", "llama3.2", seed = 100)
   
-  lang_help("predict", lang = "spanish", type = "text")
+  lang_help("lang_help", lang = "spanish", type = "text")
 
 
 

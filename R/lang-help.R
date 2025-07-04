@@ -1,4 +1,4 @@
-#' Translates help
+#' Translates help documentation to another language
 #' @description
 #' Translates a given topic into a target language. It uses the `lang` argument
 #' to determine which language to translate to. If not passed, this function will
@@ -18,7 +18,7 @@
 #'   
 #'   lang_use("ollama", "llama3.2", seed = 100)
 #'   
-#'   lang_help("predict", lang = "spanish", type = "text")
+#'   lang_help("lang_help", lang = "spanish", type = "text")
 #' }
 #' 
 #' @export

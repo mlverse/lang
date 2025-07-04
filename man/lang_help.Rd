@@ -2,7 +2,7 @@
 % Please edit documentation in R/lang-help.R
 \name{lang_help}
 \alias{lang_help}
-\title{Translates help}
+\title{Translates help documentation to another language}
 \usage{
 lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 }
@@ -30,7 +30,7 @@ documentation.
   
   lang_use("ollama", "llama3.2", seed = 100)
   
-  lang_help("predict", lang = "spanish", type = "text")
+  lang_help("lang_help", lang = "spanish", type = "text")
 }
 
 }
