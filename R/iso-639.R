@@ -17,7 +17,6 @@ to_iso639 <- function(lang, silent = TRUE) {
     if (!silent) {
       cli_abort("'{lang}' could not be matched to an ISO 639 code")
     }
-    out <- NULL
   }
   out
 }
