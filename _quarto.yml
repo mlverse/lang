@@ -30,13 +30,20 @@ format:
       light: [cosmo, site/theme.scss]
       dark: [cosmo, site/theme-dark.scss]
         
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>"    
+    
 pkgsite: 
-    dir: "."
-    reference:
-      dir: reference
-      index:
-        contents:
-          - section: Live translation
-            contents: 
-            - lang_help
-            - help
+  dir: "."
+  reference:
+    not_run_examples: true
+    dir: reference
+    index:
+      contents: 
+        - section: Live translation
+          contents: 
+          - lang_help
+          - lang_use
+          

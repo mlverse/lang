@@ -3,12 +3,15 @@ title: Package index
 toc: false
 ---
 
+### Live translation
+
 [lang_help()](lang_help.qmd)
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates help
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Translates help documentation to another language
+
+[lang_use()](lang_use.qmd)
 
 
-[help()](help.qmd)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specifies the LLM provider and model to use during the R session
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Drop-in replacements for `help()` and `?` functions

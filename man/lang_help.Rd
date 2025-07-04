@@ -2,7 +2,7 @@
 % Please edit documentation in R/lang-help.R
 \name{lang_help}
 \alias{lang_help}
-\title{Translates help}
+\title{Translates help documentation to another language}
 \usage{
 lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 }
@@ -23,4 +23,14 @@ look for a target language in the LANG and LANGUAGE environment variables to
 determine the target language. If the target language is English, no translation
 will be processed, so the help returned will be the original package's
 documentation.
+}
+\examples{
+\donttest{ 
+  library(lang)
+  
+  lang_use("ollama", "llama3.2", seed = 100)
+  
+  lang_help("lang_help", lang = "spanish", type = "text")
+}
+
 }

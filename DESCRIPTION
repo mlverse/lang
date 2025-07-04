@@ -1,7 +1,7 @@
 Package: lang
 Title: Using an Large Language Model of your choice, it translates the R
     help documentation to a specific language
-Version: 0.0.0.9003
+Version: 0.0.0.9005
 Authors@R: 
     person("Edgar", "Ruiz", , "edgar@posit.co", role = c("aut", "cre"))
 Description: Use an 'LLM' to translate a function's help documentation on-the-fly.
@@ -13,6 +13,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
+    callr,
     cli,
     fs,
     glue,
@@ -23,6 +24,7 @@ Imports:
     tools,
     withr
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    ellmer
 Config/testthat/edition: 3
 URL: https://mlverse.github.io/lang/
