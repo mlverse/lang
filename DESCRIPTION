@@ -24,6 +24,7 @@ Imports:
     tools,
     withr
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    ellmer
 Config/testthat/edition: 3
 URL: https://mlverse.github.io/lang/
