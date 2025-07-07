@@ -74,11 +74,7 @@ rd_translate <- function(topic, package, lang) {
   tag_text <- NULL
   tag_name <- NULL
   tag_label <- NULL
-  i <- 0
-  cli_progress_bar(
-    total = as.integer(object.size(rd_content)),
-    format = "Step {i} of {length(rd_content)} | {pb_bar} {pb_percent} | {tag_label}"
-  )
+
   rs <- callr::r_session$new()
   lang_args <- lang_use_impl(.is_internal = TRUE)
   use_args <- list(
@@ -96,29 +92,42 @@ rd_translate <- function(topic, package, lang) {
     },
     args = list(x = use_args)
   )
+  standard_tags <- c(
+    "\\title", "\\description",
+    "\\value", "\\details",
+    "\\seealso"
+  )  
+  non_standard_tags <- c(
+    "\\section", "\\arguments", "\\examples"
+  )
+  all_tags <-  as.character(lapply(rd_content, function(x) attr(x, "Rd_tag")))
+  filter_obj <- lapply(
+    c(standard_tags, non_standard_tags), 
+    function(x) rd_content[all_tags == x]
+  )
+  i <- 0
+  cli_progress_bar(
+    total = as.integer(object.size(filter_obj)),
+    format = "Section {i} of {length(filter_obj)} | {pb_bar} {pb_percent} | {tag_label}"
+  )
+  
   obj_progress <- 0
   for (i in seq_along(rd_content)) {
-    #Sys.sleep(1)
     tag_label <- NULL
     rd_i <- rd_content[[i]]
     tag_name <- attr(rd_i, "Rd_tag")
-    standard_tags <- c(
-      "\\title", "\\description",
-      "\\value", "\\details",
-      "\\seealso", "\\section"
-    )
-    if (tag_name == "\\section") {
-      tag_label <- paste0("Section: '", as.character(rd_i), "'")
-    }
-    if (is.null(tag_label)) {
-      tag_label <- tag_to_label(tag_name)
-    }
-    tag_label <- to_title(tag_label)
-    cli_progress_update()
+    tag_label <- tag_name
     if (tag_name %in% standard_tags) {
+      tag_label <- tag_to_label(tag_name)
+      cli_progress_update()
       rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
-    }
+    }        
     if (tag_name == "\\section") {
+      tag_full <- rd_extract_text(rd_i)
+      if(nchar(tag_full > 7)) {
+        tag_full <- paste0(tag_full, "...")
+      }
+      tag_label <- paste0("Section: '", tag_full , "'")      
       rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang, rs)
       rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang, rs)
     }
@@ -126,6 +135,8 @@ rd_translate <- function(topic, package, lang) {
       for (k in seq_along(rd_i)) {
         rd_k <- rd_i[[k]]
         if (length(rd_k) > 1) {
+          tag_label <- glue("Arguments: `{rd_extract_text(rd_k[[1]])}`")
+          cli_progress_update()
           rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
         }
       }
@@ -184,6 +195,7 @@ rd_comment_translate <- function(x, lang, rs) {
 }
 
 rd_prep_translate <- function(x, lang, rs) {
+  Sys.sleep(1)
   rd_text <- rd_extract_text(x)
   tag_text <- rs$run(
     function(x, language) {
