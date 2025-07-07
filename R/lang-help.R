@@ -74,7 +74,12 @@ rd_translate <- function(topic, package, lang) {
   tag_text <- NULL
   tag_name <- NULL
   tag_label <- NULL
-  cli_progress_message("Translating: {.emph {tag_label}}")
+  i <- 0
+  #cli_progress_message("Translating: {.emph {tag_label}}")
+  cli_progress_bar(
+    total = as.integer(object.size(rd_content)),
+    format = "Step {i} of {length(rd_content)} | {pb_bar} {pb_percent} | {tag_label}"
+  )
   rs <- callr::r_session$new()
   lang_args <- lang_use_impl(.is_internal = TRUE)
   use_args <- list(
@@ -92,7 +97,10 @@ rd_translate <- function(topic, package, lang) {
     },
     args = list(x = use_args)
   )
+  obj_progress <- 0
   for (i in seq_along(rd_content)) {
+    Sys.sleep(1)
+    tag_label <- NULL
     rd_i <- rd_content[[i]]
     tag_name <- attr(rd_i, "Rd_tag")
     standard_tags <- c(
@@ -143,6 +151,8 @@ rd_translate <- function(topic, package, lang) {
       }
       rd_content[[i]] <- rd_i
     }
+    obj_progress <- obj_progress + as.integer(object.size(rd_i))
+    cli_progress_update(set = obj_progress)    
   }
   tag_name <- NULL
   rs$close()
