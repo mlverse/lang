@@ -5,9 +5,6 @@
         x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
         shim_lang_help("llm_classify", "mall", type = "text")
       })
-    Message
-      Translating: 
-      Translating: Title
     Output
       _C_a_t_e_g_o_r_i_z_e _d_a_t_a _a_s _o_n_e _o_f _o_p_t_i_o_n_s _g_i_v_e_n
       
@@ -99,9 +96,6 @@
           shim_lang_question("llm_classify", "mall")
         })
       })
-    Message
-      Translating: 
-      Translating: Title
     Output
       _C_a_t_e_g_o_r_i_z_e _d_a_t_a _a_s _o_n_e _o_f _o_p_t_i_o_n_s _g_i_v_e_n
       
@@ -193,9 +187,6 @@
           help(llm_classify)
         })
       })
-    Message
-      Translating: 
-      Translating: Title
     Output
       _C_a_t_e_g_o_r_i_z_e _d_a_t_a _a_s _o_n_e _o_f _o_p_t_i_o_n_s _g_i_v_e_n
       

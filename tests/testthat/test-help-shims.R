@@ -36,7 +36,7 @@ test_that("Shim is able to be attached", {
         })
       }
     )
-  )  
+  )
 })
 
 test_that("end_lang() works", {
