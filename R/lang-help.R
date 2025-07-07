@@ -75,7 +75,6 @@ rd_translate <- function(topic, package, lang) {
   tag_name <- NULL
   tag_label <- NULL
   i <- 0
-  #cli_progress_message("Translating: {.emph {tag_label}}")
   cli_progress_bar(
     total = as.integer(object.size(rd_content)),
     format = "Step {i} of {length(rd_content)} | {pb_bar} {pb_percent} | {tag_label}"
@@ -99,7 +98,7 @@ rd_translate <- function(topic, package, lang) {
   )
   obj_progress <- 0
   for (i in seq_along(rd_content)) {
-    Sys.sleep(1)
+    #Sys.sleep(1)
     tag_label <- NULL
     rd_i <- rd_content[[i]]
     tag_name <- attr(rd_i, "Rd_tag")
@@ -109,7 +108,7 @@ rd_translate <- function(topic, package, lang) {
       "\\seealso", "\\section"
     )
     if (tag_name == "\\section") {
-      tag_label <- paste0("Section: '", as.character(rd_i[[1]]), "'")
+      tag_label <- paste0("Section: '", as.character(rd_i), "'")
     }
     if (is.null(tag_label)) {
       tag_label <- tag_to_label(tag_name)
@@ -127,10 +126,9 @@ rd_translate <- function(topic, package, lang) {
       for (k in seq_along(rd_i)) {
         rd_k <- rd_i[[k]]
         if (length(rd_k) > 1) {
-          rd_i[[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
+          rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
         }
       }
-      rd_content[[i]] <- rd_i
     }
     if (tag_name == "\\name") {
       topic_name <- rd_i
