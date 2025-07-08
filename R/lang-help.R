@@ -198,7 +198,13 @@ rd_comment_translate <- function(x, lang, rs) {
 }
 
 rd_prep_translate <- function(x, lang, rs) {
-  rd_text <- rd_extract_text(x)
+  if (any(lapply(x, length) == 2)) {
+    rd_extract <- lapply(x, rd_extract_text, collapse = FALSE)
+    rd_extract <- lapply(rd_extract, paste, collapse = " ")
+    rd_text <- paste(rd_extract, collapse = " ")
+  } else {
+    rd_text <- rd_extract_text(x)
+  }
   tag_text <- rs$run(
     function(x, language) {
       mall::llm_vec_translate(
@@ -232,12 +238,18 @@ rd_extract_text <- function(x, collapse = TRUE) {
   if (collapse) {
     rd_text <- paste0(as.character(x), collapse = "")
   }
+  return_mask <- "\\(\\(\\(return\\)\\)\\)"
+  rd_text <- gsub("\n", return_mask, rd_text)
   temp_rd <- tempfile(fileext = ".Rd")
   writeLines(rd_text, temp_rd)
-  rd_txt <- capture.output(Rd2txt(temp_rd, fragment = TRUE))
+  suppressWarnings(
+    rd_txt <- capture.output(Rd2txt(temp_rd, fragment = TRUE))
+  )
+  rd_txt <- gsub(paste0(return_mask, return_mask), "\n\n\n\n", rd_txt)
+  rd_txt <- gsub(return_mask, " ", rd_txt)
   if (collapse) {
     rd_txt[rd_txt == ""] <- "\n\n"
-    rd_txt <- paste0(rd_txt, collapse = "")
+    rd_txt <- paste0(rd_txt, collapse = " ")
   }
   rd_txt <- gsub("\U2018", "'", rd_txt)
   rd_txt <- gsub("\U2019", "'", rd_txt)
