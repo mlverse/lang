@@ -12,12 +12,37 @@ test_that("shim_lang_question works", {
     withr::with_options(
       list(help_type = "text"),
       {
-        withr::with_envvar(c("LANG" = "spanish"), {
+        withr::with_envvar(c("LANG" = "en"), {
           x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
           shim_lang_question("llm_classify", "mall")
         })
       }
     )
+  )
+})
+
+test_that("Shim works as expected", {
+  expect_snapshot(
+    withr::with_options(
+      list(help_type = "text"),
+      {
+        x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+        shim_lang_question(mall::llm_classify)
+      }
+    )
+  )
+})
+
+test_that("Shim works as expected", {
+  withr::with_options(
+    list(help_type = "text"),
+    {
+      x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+      expect_identical(
+        shim_lang_question(?lm),
+        utils::`?`(?lm)
+      )
+    }
   )
 })
 

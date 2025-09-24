@@ -106,7 +106,7 @@ shim_lang_question <- function(e1, e2) {
     cli::cli_abort("Unknown input.")
   }
 
-  if (!en_lang()) {
+  if (!en_lang() && !is.null(topic)) {
     lang_help(topic, pkg)
   } else {
     eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
