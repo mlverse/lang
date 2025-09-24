@@ -4,7 +4,7 @@
 #' Specifies the LLM provider and model to use during the R session
 #' @description
 #' Allows us to specify the back-end provider, model to use during the current
-#' R session. 
+#' R session.
 #' @param backend "ollama" or an `ellmer` `Chat` object. If using "ollama",
 #' `mall` will use is out-of-the-box integration with that back-end. Defaults
 #' to "ollama".
@@ -20,19 +20,18 @@
 #' R session.
 #'
 #' @examples
-#' \donttest{ 
-#'   library(lang)
-#'   
-#'   # Using an `ellmer` chat object
-#'   lang_use(ellmer::chat_openai(model = "gpt-4o"))
-#'   
-#'   # Using Ollama directly
-#'   lang_use("ollama", "llama3.2", seed = 100)
-#'   
-#'   # Turn off cache by setting it to ""
-#'   lang_use("ollama", "llama3.2", seed = 100, .cache = "")
+#' \donttest{
+#' library(lang)
+#'
+#' # Using an `ellmer` chat object
+#' lang_use(ellmer::chat_openai(model = "gpt-4o"))
+#'
+#' # Using Ollama directly
+#' lang_use("ollama", "llama3.2", seed = 100)
+#'
+#' # Turn off cache by setting it to ""
+#' lang_use("ollama", "llama3.2", seed = 100, .cache = "")
 #' }
-#' 
 #'
 #' @export
 lang_use <- function(
@@ -68,15 +67,15 @@ lang_use_impl <- function(
     return(ca)
   } else {
     backend <- ca[["backend"]]
-    if (inherits(backend, "Chat")) { 
+    if (inherits(backend, "Chat")) {
       provider <- backend$get_provider()
       backend_str <- glue("'{provider@name}' via `ellmer`")
       model_str <- provider@model
     } else {
       backend_str <- "Ollama"
-      model_str <- ca[["model"]] 
+      model_str <- ca[["model"]]
     }
-    if(ca[[".cache"]] == "") {
+    if (ca[[".cache"]] == "") {
       cache_str <- "[Disabled]"
     } else {
       cache_str <- ca[[".cache"]]
@@ -84,7 +83,7 @@ lang_use_impl <- function(
     cli_h3("{col_cyan('`lang`')} session")
     cli_inform(glue("{col_green('Backend:')} {backend_str}"))
     cli_inform(glue("{col_green('Model:')} {model_str}"))
-    cli_inform(glue("{col_green('Cache:')} {cache_str}"))  
+    cli_inform(glue("{col_green('Cache:')} {cache_str}"))
   }
   invisible()
 }

@@ -30,5 +30,5 @@ tag_to_label <- function(x) {
   if (length(match) > 0) {
     x <- as.character(match)
   }
-  x
+  to_title(x)
 }

@@ -25,12 +25,12 @@ will be processed, so the help returned will be the original package's
 documentation.
 }
 \examples{
-\donttest{ 
-  library(lang)
-  
-  lang_use("ollama", "llama3.2", seed = 100)
-  
-  lang_help("lang_help", lang = "spanish", type = "text")
+\donttest{
+library(lang)
+
+lang_use("ollama", "llama3.2", seed = 100)
+
+lang_help("lang_help", lang = "spanish", type = "text")
 }
 
 }

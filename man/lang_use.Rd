@@ -31,18 +31,17 @@ Allows us to specify the back-end provider, model to use during the current
 R session.
 }
 \examples{
-\donttest{ 
-  library(lang)
-  
-  # Using an `ellmer` chat object
-  lang_use(ellmer::chat_openai(model = "gpt-4o"))
-  
-  # Using Ollama directly
-  lang_use("ollama", "llama3.2", seed = 100)
-  
-  # Turn off cache by setting it to ""
-  lang_use("ollama", "llama3.2", seed = 100, .cache = "")
-}
+\donttest{
+library(lang)
 
+# Using an `ellmer` chat object
+lang_use(ellmer::chat_openai(model = "gpt-4o"))
+
+# Using Ollama directly
+lang_use("ollama", "llama3.2", seed = 100)
+
+# Turn off cache by setting it to ""
+lang_use("ollama", "llama3.2", seed = 100, .cache = "")
+}
 
 }
