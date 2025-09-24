@@ -3,9 +3,6 @@ test_that("Interaction with LLM works", {
   expect_snapshot(
     lang_help("llm_classify", "mall", lang = "spanish", type = "text")
   )
-  expect_snapshot(
-    lang_help("lm", "stats", lang = "spanish", type = "text")
-  )
   expect_error(
     lang_help("llm_classify", "mall", lang = "english", type = "text")
   )

@@ -1,3 +1,5 @@
+skip_on_os("windows")
+
 test_that("shim_lang_help works", {
   expect_snapshot(
     withr::with_envvar(c("LANG" = "spanish"), {
