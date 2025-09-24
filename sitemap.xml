@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mlverse.github.io/lang/LICENSE.html</loc>
-    <lastmod>2025-07-04T17:31:35.937Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/LICENSE.html</loc>
-    <lastmod>2025-07-04T17:31:35.961Z</lastmod>
+    <loc>https://mlverse.github.io/lang/index.html</loc>
+    <lastmod>2025-09-24T15:42:33.125Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/NEWS.html</loc>
-    <lastmod>2025-07-04T17:31:35.961Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/lang_use.html</loc>
-    <lastmod>2025-07-04T17:31:35.947Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/lang_help.html</loc>
-    <lastmod>2025-07-04T17:31:35.947Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/reexports.html</loc>
-    <lastmod>2025-07-04T17:31:35.948Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/to_iso639.html</loc>
-    <lastmod>2025-07-04T17:31:35.948Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/index.html</loc>
-    <lastmod>2025-07-04T17:31:35.947Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/help.html</loc>
-    <lastmod>2025-07-04T17:31:35.947Z</lastmod>
+    <lastmod>2025-09-24T15:42:33.147Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/cran-comments.html</loc>
-    <lastmod>2025-07-04T17:31:35.961Z</lastmod>
+    <lastmod>2025-09-24T15:42:33.148Z</lastmod>
   </url>
   <url>
-    <loc>https://mlverse.github.io/lang/index.html</loc>
-    <lastmod>2025-07-04T17:31:35.938Z</lastmod>
+    <loc>https://mlverse.github.io/lang/reference/lang_use.html</loc>
+    <lastmod>2025-09-24T15:42:33.134Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/reexports.html</loc>
+    <lastmod>2025-09-24T15:42:33.134Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/lang_help.html</loc>
+    <lastmod>2025-09-24T15:42:33.134Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/to_iso639.html</loc>
+    <lastmod>2025-09-24T15:42:33.134Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/help.html</loc>
+    <lastmod>2025-09-24T15:42:33.134Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/index.html</loc>
+    <lastmod>2025-09-24T15:42:33.134Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/tests/testthat/test-pkg/LICENSE.html</loc>
+    <lastmod>2025-09-24T15:42:33.147Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/LICENSE.html</loc>
+    <lastmod>2025-09-24T15:42:33.124Z</lastmod>
   </url>
 </urlset>
