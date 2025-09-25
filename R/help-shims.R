@@ -131,28 +131,40 @@ insert_global_shims <- function(force = FALSE) {
   )
 }
 
-which_lang <- function(lang = NULL) {
+which_lang <- function(lang = NULL, choose = FALSE) {
   if (is.null(lang)) {
     env_lang <- Sys.getenv("LANG", unset = NA)
     env_language <- Sys.getenv("LANGUAGE", unset = NA)
-    lang <- "english"
-    if (!is.na(env_lang)) {
-      lang <- env_lang
-    }
-    if (!is.na(env_language)) {
+    lang <- c(LANG = env_lang, LANGUAGE = env_language)
+    lang <- lang[!is.na(lang)]
+    if (length(lang) > 1 && choose) {
       lang <- env_language
+      if (unique(length(lang) > 1) && is.null(.lang_env$choose)) {
+        cli_bullets(
+          c(
+            "i" =  "The `LANG` and `LANGUAGE` variables have different values.\n",
+            " " = "Will use value of `LANGUAGE`: {.val {env_language}}",
+            " " = "{.emph This message will only appear once during your session}"
+          )
+        )
+        .lang_env$choose <- TRUE
+      }
+    }
+    if (length(lang) == 0) {
+      lang <- "english"
     }
   }
   lang
 }
 
 en_lang <- function(lang = NULL) {
-  out <- FALSE
-  lang <- which_lang(lang)
-  if (nchar(lang) > 2) {
-    if (substr(lang, 1, 3) == "en_" | lang == tolower("english")) {
-      out <- TRUE
+  is_en <- NULL
+  langs <- which_lang(lang)
+  for (lang in langs) {
+    if (nchar(lang) > 2) {
+      curr_en <- substr(lang, 1, 3) == "en_" | lang == tolower("english")
+      is_en <- c(is_en, curr_en)
     }
   }
-  out
+  all(is_en)
 }

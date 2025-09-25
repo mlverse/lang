@@ -1,5 +1,6 @@
 .lang_env <- new.env()
 .lang_env$session <- list()
+.lang_env$choose <- NULL
 
 #' Specifies the LLM provider and model to use during the R session
 #' @description
