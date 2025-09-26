@@ -1,25 +1,21 @@
 skip_on_os("windows")
 
 test_that("shim_lang_help works", {
-  expect_snapshot(
-    withr::with_envvar(c("LANG" = "spanish"), {
-      x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
-      shim_lang_help("llm_classify", "mall", type = "text")
-    })
-  )
+  withr::with_envvar(c("LANGUAGE" = "spanish", LANG = NA), {
+    x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+    expect_snapshot(shim_lang_help("llm_classify", "mall", type = "text"))
+  })
 })
 
 test_that("shim_lang_question works", {
-  expect_snapshot(
-    withr::with_options(
-      list(help_type = "text"),
-      {
-        withr::with_envvar(c("LANG" = "en"), {
-          x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
-          shim_lang_question("llm_classify", "mall")
-        })
-      }
-    )
+  withr::with_options(
+    list(help_type = "text"),
+    {
+      withr::with_envvar(c("LANGUAGE" = "en", LANG = NA), {
+        x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+        expect_snapshot(shim_lang_question("llm_classify", "mall"))
+      })
+    }
   )
 })
 
@@ -55,7 +51,7 @@ test_that("Shim is able to be attached", {
   withr::with_options(
     list(help_type = "text"),
     {
-      withr::with_envvar(c("LANG" = "spanish"), {
+      withr::with_envvar(c("LANGUAGE" = "spanish", LANG = NA), {
         x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
         expect_snapshot(help(llm_classify))
         expect_snapshot(shim_lang_question(llm_classify))

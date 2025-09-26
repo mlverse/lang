@@ -77,7 +77,7 @@ shim_lang_help <- function(topic, package = NULL, ...) {
 #'
 #' @rdname help
 #' @name ?
-shim_lang_question <- function(e1, e2) {
+shim_lang_question <- function(e1, e2 = NULL) {
   pkg <- NULL
   # Get string version of e1, for find_topic
   e1_expr <- substitute(e1)
@@ -109,7 +109,11 @@ shim_lang_question <- function(e1, e2) {
   if (!en_lang() && !is.null(topic)) {
     lang_help(topic, pkg)
   } else {
-    eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
+    if(is.null(e2)) {
+      eval(as.call(list(utils::`?`, substitute(e1))))
+    } else {
+      help(substitute(e1), substitute(e2))
+    }
   }
 }
 
@@ -138,7 +142,6 @@ which_lang <- function(lang = NULL, choose = FALSE) {
     lang <- c(LANG = env_lang, LANGUAGE = env_language)
     lang <- lang[!is.na(lang)]
     if (length(lang) > 1 && choose) {
-      lang <- env_language
       if (unique(length(lang) > 1) && is.null(.lang_env$choose)) {
         cli_bullets(
           c(
@@ -149,6 +152,7 @@ which_lang <- function(lang = NULL, choose = FALSE) {
         )
         .lang_env$choose <- TRUE
       }
+      lang <- env_language
     }
     if (length(lang) == 0) {
       lang <- "english"
