@@ -74,8 +74,8 @@ rd_translate <- function(topic, package, lang) {
   tag_text <- NULL
   tag_name <- NULL
   tag_label <- NULL
-
   rs <- callr::r_session$new()
+  on.exit(rs$close())
   lang_args <- lang_use_impl(.is_internal = TRUE)
   use_args <- list(
     backend = lang_args[["backend"]],
