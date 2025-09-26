@@ -63,3 +63,10 @@ test_that("Shim is able to be attached", {
 test_that("end_lang() works", {
   expect_true(en_lang("en_"))
 })
+
+test_that("Conflicting language message shows up", {
+  withr::with_envvar(c("LANGUAGE" = "spanish", LANG = "english"), {
+    x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+    expect_snapshot(which_lang(choose = TRUE))
+  })
+})
