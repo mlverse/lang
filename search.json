@@ -1,40 +1,5 @@
 [
   {
-    "objectID": "index.html#installing",
-    "href": "index.html#installing",
-    "title": "lang",
-    "section": "Installing",
-    "text": "Installing\nTo install the GitHub version of lang, use:\ninstall.packages(\"pak\")\npak::pak(\"mlverse/lang\")"
-  },
-  {
-    "objectID": "index.html#setup-lang",
-    "href": "index.html#setup-lang",
-    "title": "lang",
-    "section": "Setup lang",
-    "text": "Setup lang\nlang can be initialized by one of two ways. The first way is to use an ellmer chat object:\nlibrary(lang)\n\nlang_use(ellmer::chat_openai(model = \"gpt-4o\"))\nOr, call Ollama directly by passing \"ollama\" as the backend argument, and specify the model to be used:\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\nAs a convenience feature, lang is able to automatically establish a connection with the LLM at the beginning o R session. To do this you can use the .lang_chat option:\noptions(.lang_chat =  ellmer::chat_openai(model = \"gpt-4o\"))\nAdd this line to your .Rprofile file in order for that code to run every time you start R. You can call usethis::edit_r_profile() to open your .Rprofile file so you can add the option."
-  },
-  {
-    "objectID": "index.html#using-lang",
-    "href": "index.html#using-lang",
-    "title": "lang",
-    "section": "Using lang",
-    "text": "Using lang\nAfter setup, simply use ? to trigger and display the translated documentation. During translation, lang will display its progress by showing which section of the documentation is currently translating:\n&gt; ?lm\nTranslating: Title\nIf your environment is set to use the Spanish language, the help pane should display this:\n\nR enforces the printed name of each section, so they cannot be translated. So titles such as Description, Usage and Arguments will always remain untranslated."
-  },
-  {
-    "objectID": "index.html#how-it-works",
-    "href": "index.html#how-it-works",
-    "title": "lang",
-    "section": "How it works",
-    "text": "How it works\nThe language that the help documentation will be translated to, is determined by one of the following two environment variables. In order of priority, the variables are:\n\nLANGUAGE\nLANG\n\nIt is likely that your LANG variable already defaults to your locale. For example, mine is set to: en_US.UTF-8 (That means English, United States). For someone in France, the locale would be something such as fr_FR.UTF-8. Llama3.2, recognizes these UTF locales, and using lang, calling ? will result in translating the function’s help documentation into French.\nIt uses the mall package as the integration point with the LLM. Under the hood, it runs llm_vec_translate() multiple times to translate the most common sections of the help documentation (e.g.: Title, Description, Details, Arguments, etc.). If lang determines that your environment is set to use English, it will simply display the original documentation."
-  },
-  {
-    "objectID": "index.html#considerations",
-    "href": "index.html#considerations",
-    "title": "lang",
-    "section": "Considerations",
-    "text": "Considerations\n\nTranslations are not perfect\nAs you can imagine, the quality of translation will mostly depend on the LLM being used. This solution is meant to be as helpful as possible, but acknowledging that at this stage of LLMs, only a human curated translation will be the best solution. Having said that, I believe that even an imperfect translation could go a long way with someone who is struggling to understand how to use a specific function in a package, and may also struggle with the English language.\n\n\nDebug\nIf the original English help page displays, check your environment variables:\nSys.getenv(\"LANG\")\n#&gt; [1] \"en_US.UTF-8\"\nSys.getenv(\"LANGUAGE\")\n#&gt; [1] \"\"\nIn my case, lang recognizes that the environment is set to English, because of the en code in the variable. If your LANG variable is set to en_... then no translation will occur.\nIf this is your case, set the LANGUAGE variable to your preference. You can use the full language name, such as ‘spanish’, or ‘french’, etc. You can use Sys.setenv(LANGUAGE = \"[my language]\"), or, for a more permanent solution, add the entry to your your .Renviron file (usethis::edit_r_environ()).\n\n\nInteraction with mall\nlang uses the mall package to produce the translations. To avoid conflicts in the setup and use of both packages during the R session, lang runs mall in a separate R process which is only alive while translating the documentation. This means that you can have a specific LLM setup for lang, and a different one for mall during your R session."
-  },
-  {
     "objectID": "tests/testthat/test-pkg/NEWS.html",
     "href": "tests/testthat/test-pkg/NEWS.html",
     "title": "mall (dev)",
@@ -42,32 +7,39 @@
     "text": "mall (dev)\n\nAdds support for {elmer}\n\n\n\nmall 0.1.0\n\nInitial CRAN submission."
   },
   {
-    "objectID": "tests/testthat/test-pkg/cran-comments.html",
-    "href": "tests/testthat/test-pkg/cran-comments.html",
-    "title": "lang",
+    "objectID": "tests/testthat/test-pkg/LICENSE.html",
+    "href": "tests/testthat/test-pkg/LICENSE.html",
+    "title": "MIT License",
     "section": "",
-    "text": "Thank you for the feedback and instructions, I have made the following changes:\n\nUpdated the Title field to title case\nChanged all to \nChanged default location in llm_use() to use a temp folder\nChanged the tests to use a temp folder location\n\n\n\nThis is a new package submission. Run multiple ‘Large Language Model’ predictions against a table. The predictions run row-wise over a specified column. It works using a one-shot prompt, along with the current row’s content. The prompt that is used will depend of the type of analysis needed.\nThe README file is very short because all the information about how to use it is this website: https://mlverse.github.io/mall/."
+    "text": "MIT License\nCopyright (c) 2024 mall authors\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
   },
   {
-    "objectID": "tests/testthat/test-pkg/cran-comments.html#resubmission",
-    "href": "tests/testthat/test-pkg/cran-comments.html#resubmission",
-    "title": "lang",
-    "section": "",
-    "text": "Thank you for the feedback and instructions, I have made the following changes:\n\nUpdated the Title field to title case\nChanged all to \nChanged default location in llm_use() to use a temp folder\nChanged the tests to use a temp folder location\n\n\n\nThis is a new package submission. Run multiple ‘Large Language Model’ predictions against a table. The predictions run row-wise over a specified column. It works using a one-shot prompt, along with the current row’s content. The prompt that is used will depend of the type of analysis needed.\nThe README file is very short because all the information about how to use it is this website: https://mlverse.github.io/mall/."
+    "objectID": "reference/to_iso639.html#description",
+    "href": "reference/to_iso639.html#description",
+    "title": "Convert to and from ISO 639 language code",
+    "section": "Description",
+    "text": "Description\nConvert to and from ISO 639 language code"
   },
   {
-    "objectID": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-environments",
-    "href": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-environments",
-    "title": "lang",
-    "section": "R CMD check environments",
-    "text": "R CMD check environments\n\nMac OS M3 (aarch64-apple-darwin23), R 4.4.1 (Local)\nMac OS x86_64-apple-darwin20.0 (64-bit), R 4.4.1 (GH Actions)\nWindows x86_64-w64-mingw32 (64-bit), R 4.4.1 (GH Actions)\nLinux x86_64-pc-linux-gnu (64-bit), R 4.4.1 (GH Actions)\nLinux x86_64-pc-linux-gnu (64-bit), R 4.5.0 (dev) (GH Actions)\nLinux x86_64-pc-linux-gnu (64-bit), R 4.3.3 (old release) (GH Actions)"
+    "objectID": "reference/to_iso639.html#usage",
+    "href": "reference/to_iso639.html#usage",
+    "title": "Convert to and from ISO 639 language code",
+    "section": "Usage",
+    "text": "Usage\n\nto_iso639(lang, silent = TRUE)\n\nfrom_iso639(iso)"
   },
   {
-    "objectID": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-results",
-    "href": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-results",
-    "title": "lang",
-    "section": "R CMD check results",
-    "text": "R CMD check results\n0 errors ✔ | 0 warnings ✔ | 0 notes ✔"
+    "objectID": "reference/to_iso639.html#arguments",
+    "href": "reference/to_iso639.html#arguments",
+    "title": "Convert to and from ISO 639 language code",
+    "section": "Arguments",
+    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\nlang\nName of the language to be converted\n\n\nsilent\nFlag to indicate if the function should return a message with the result. If there is no match, it will be an error message\n\n\niso\nThe two-letter ISO 639 code to search"
+  },
+  {
+    "objectID": "reference/reexports.html#description",
+    "href": "reference/reexports.html#description",
+    "title": "Objects exported from other packages",
+    "section": "Description",
+    "text": "Description\nThese objects are imported from other packages. Follow the links below to see their documentation. mall llm_use"
   },
   {
     "objectID": "reference/lang_use.html#description",
@@ -105,11 +77,53 @@
     "text": "Examples\n\n\n \n  library(lang)\n  \n  # Using an `ellmer` chat object\n  lang_use(ellmer::chat_openai(model = \"gpt-4o\"))\n#&gt; \n#&gt; ── `lang` session\n#&gt; Backend: 'OpenAI' via `ellmer`\n#&gt; Model: gpt-4o\n#&gt; Cache:\n#&gt; /var/folders/y_/f_0cx_291nl0s8h26t4jg6ch0000gp/T//RtmpTHbviH/_lang_cache4124265bf27d\n  \n  # Using Ollama directly\n  lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; \n#&gt; ── `lang` session \n#&gt; Backend: OllamaModel: llama3.2Cache:\n#&gt; /var/folders/y_/f_0cx_291nl0s8h26t4jg6ch0000gp/T//RtmpTHbviH/_lang_cache4124265bf27d\n  \n  # Turn off cache by setting it to \"\"\n  lang_use(\"ollama\", \"llama3.2\", seed = 100, .cache = \"\")\n#&gt; \n#&gt; ── `lang` session \n#&gt; Backend: OllamaModel: llama3.2Cache: [Disabled]"
   },
   {
-    "objectID": "reference/reexports.html#description",
-    "href": "reference/reexports.html#description",
-    "title": "Objects exported from other packages",
-    "section": "Description",
-    "text": "Description\nThese objects are imported from other packages. Follow the links below to see their documentation. mall llm_use"
+    "objectID": "LICENSE.html",
+    "href": "LICENSE.html",
+    "title": "MIT License",
+    "section": "",
+    "text": "MIT License\nCopyright (c) 2024 lang authors\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+  },
+  {
+    "objectID": "index.html#installing",
+    "href": "index.html#installing",
+    "title": "lang",
+    "section": "Installing",
+    "text": "Installing\nTo install the GitHub version of lang, use:\ninstall.packages(\"pak\")\npak::pak(\"mlverse/lang\")"
+  },
+  {
+    "objectID": "index.html#setup-lang",
+    "href": "index.html#setup-lang",
+    "title": "lang",
+    "section": "Setup lang",
+    "text": "Setup lang\nlang can be initialized by one of two ways. The first way is to use an ellmer chat object:\nlibrary(lang)\n\nlang_use(ellmer::chat_openai(model = \"gpt-4o\"))\nOr, call Ollama directly by passing \"ollama\" as the backend argument, and specify the model to be used:\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\nAs a convenience feature, lang is able to automatically establish a connection with the LLM at the beginning o R session. To do this you can use the .lang_chat option:\noptions(.lang_chat =  ellmer::chat_openai(model = \"gpt-4o\"))\nAdd this line to your .Rprofile file in order for that code to run every time you start R. You can call usethis::edit_r_profile() to open your .Rprofile file so you can add the option."
+  },
+  {
+    "objectID": "index.html#using-lang",
+    "href": "index.html#using-lang",
+    "title": "lang",
+    "section": "Using lang",
+    "text": "Using lang\nAfter setup, simply use ? to trigger and display the translated documentation. During translation, lang will display its progress by showing which section of the documentation is currently translating:\n&gt; ?lm\nTranslating: Title\nIf your environment is set to use the Spanish language, the help pane should display this:\n\nR enforces the printed name of each section, so they cannot be translated. So titles such as Description, Usage and Arguments will always remain untranslated."
+  },
+  {
+    "objectID": "index.html#how-it-works",
+    "href": "index.html#how-it-works",
+    "title": "lang",
+    "section": "How it works",
+    "text": "How it works\nThe language that the help documentation will be translated to, is determined by one of the following two environment variables. In order of priority, the variables are:\n\nLANGUAGE\nLANG\n\nIt is likely that your LANG variable already defaults to your locale. For example, mine is set to: en_US.UTF-8 (That means English, United States). For someone in France, the locale would be something such as fr_FR.UTF-8. Llama3.2, recognizes these UTF locales, and using lang, calling ? will result in translating the function’s help documentation into French.\nIt uses the mall package as the integration point with the LLM. Under the hood, it runs llm_vec_translate() multiple times to translate the most common sections of the help documentation (e.g.: Title, Description, Details, Arguments, etc.). If lang determines that your environment is set to use English, it will simply display the original documentation."
+  },
+  {
+    "objectID": "index.html#considerations",
+    "href": "index.html#considerations",
+    "title": "lang",
+    "section": "Considerations",
+    "text": "Considerations\n\nTranslations are not perfect\nAs you can imagine, the quality of translation will mostly depend on the LLM being used. This solution is meant to be as helpful as possible, but acknowledging that at this stage of LLMs, only a human curated translation will be the best solution. Having said that, I believe that even an imperfect translation could go a long way with someone who is struggling to understand how to use a specific function in a package, and may also struggle with the English language.\n\n\nDebug\nIf the original English help page displays, check your environment variables:\nSys.getenv(\"LANG\")\n#&gt; [1] \"en_US.UTF-8\"\nSys.getenv(\"LANGUAGE\")\n#&gt; [1] \"\"\nIn my case, lang recognizes that the environment is set to English, because of the en code in the variable. If your LANG variable is set to en_... then no translation will occur.\nIf this is your case, set the LANGUAGE variable to your preference. You can use the full language name, such as ‘spanish’, or ‘french’, etc. You can use Sys.setenv(LANGUAGE = \"[my language]\"), or, for a more permanent solution, add the entry to your your .Renviron file (usethis::edit_r_environ()).\n\n\nInteraction with mall\nlang uses the mall package to produce the translations. To avoid conflicts in the setup and use of both packages during the R session, lang runs mall in a separate R process which is only alive while translating the documentation. This means that you can have a specific LLM setup for lang, and a different one for mall during your R session."
+  },
+  {
+    "objectID": "reference/index.html",
+    "href": "reference/index.html",
+    "title": "Package index",
+    "section": "",
+    "text": "Live translation\nlang_help()\n      Translates help documentation to another language\nlang_use()\n      Specifies the LLM provider and model to use during the R session"
   },
   {
     "objectID": "reference/lang_help.html#description",
@@ -140,27 +154,6 @@
     "text": "Examples\n\n\n \n  library(lang)\n  \n  lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; \n#&gt; ── `lang` session\n#&gt; Backend: Ollama\n#&gt; Model: llama3.2\n#&gt; Cache:\n#&gt; /var/folders/y_/f_0cx_291nl0s8h26t4jg6ch0000gp/T//RtmpqoYCua/_lang_cache41636a8a3806\n  \n  lang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt; Translating: \n#&gt; Translating: Title\n#&gt; Translating: Title\n#&gt; Translating: Title\n#&gt; _\bD_\bo_\bc_\bu_\bm_\be_\bn_\bt_\ba_\bc_\bi_\bó_\bn _\bd_\be _\ba_\by_\bu_\bd_\ba _\bs_\be _\bt_\br_\ba_\bd_\bu_\bc_\be _\ba _\bo_\bt_\br_\bo _\bi_\bd_\bi_\bo_\bm_\ba.\n#&gt; \n#&gt; _\bD_\be_\bs_\bc_\br_\bi_\bp_\bt_\bi_\bo_\bn:\n#&gt; \n#&gt;      La función traduce un tema dado en un idioma objetivo. Utiliza la\n#&gt;      'lang' argumento para determinar el idioma al que se traducirá. Si\n#&gt;      no se pasa, esta función buscará el idioma objetivo en las\n#&gt;      variables de entorno LANG y LANGUAGE para determinarlo. Si el\n#&gt;      idioma objetivo es inglés, no se procesará la traducción, por lo\n#&gt;      que se devolverá la documentación original del paquete.\n#&gt; \n#&gt; _\bU_\bs_\ba_\bg_\be:\n#&gt; \n#&gt;      lang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))\n#&gt;      \n#&gt; _\bA_\br_\bg_\bu_\bm_\be_\bn_\bt_\bs:\n#&gt; \n#&gt;    topic: El tema a buscar\n#&gt; \n#&gt;  package: El paquete de R para buscar el tema\n#&gt; \n#&gt;     lang: Lenguaje al que se debe traducir la ayuda\n#&gt; \n#&gt;     type: Produzca 'html' o 'text' como salida para la ayuda; por\n#&gt;           defecto, se utiliza la opción 'getOption(\"help_type\")'.\n#&gt; \n#&gt; _\bE_\bx_\ba_\bm_\bp_\bl_\be_\bs:\n#&gt; \n#&gt;        library(lang)\n#&gt;        \n#&gt;        lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt;        \n#&gt;        lang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt;"
   },
   {
-    "objectID": "reference/to_iso639.html#description",
-    "href": "reference/to_iso639.html#description",
-    "title": "Convert to and from ISO 639 language code",
-    "section": "Description",
-    "text": "Description\nConvert to and from ISO 639 language code"
-  },
-  {
-    "objectID": "reference/to_iso639.html#usage",
-    "href": "reference/to_iso639.html#usage",
-    "title": "Convert to and from ISO 639 language code",
-    "section": "Usage",
-    "text": "Usage\n\nto_iso639(lang, silent = TRUE)\n\nfrom_iso639(iso)"
-  },
-  {
-    "objectID": "reference/to_iso639.html#arguments",
-    "href": "reference/to_iso639.html#arguments",
-    "title": "Convert to and from ISO 639 language code",
-    "section": "Arguments",
-    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\nlang\nName of the language to be converted\n\n\nsilent\nFlag to indicate if the function should return a message with the result. If there is no match, it will be an error message\n\n\niso\nThe two-letter ISO 639 code to search"
-  },
-  {
     "objectID": "reference/help.html#description",
     "href": "reference/help.html#description",
     "title": "Drop-in replacements for help and ? functions",
@@ -182,24 +175,31 @@
     "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\ntopic\nA name or character string specifying the help topic.\n\n\npackage\nA name or character string specifying the package in which to search for the help topic. If NULL, search all packages.\n\n\n…\nAdditional arguments to pass to utils::help().\n\n\ne1\nFirst argument to pass along to utils::?. | | e2 | Second argument to pass along to utils::?."
   },
   {
-    "objectID": "reference/index.html",
-    "href": "reference/index.html",
-    "title": "Package index",
+    "objectID": "tests/testthat/test-pkg/cran-comments.html",
+    "href": "tests/testthat/test-pkg/cran-comments.html",
+    "title": "lang",
     "section": "",
-    "text": "Live translation\nlang_help()\n      Translates help documentation to another language\nlang_use()\n      Specifies the LLM provider and model to use during the R session"
+    "text": "Thank you for the feedback and instructions, I have made the following changes:\n\nUpdated the Title field to title case\nChanged all to \nChanged default location in llm_use() to use a temp folder\nChanged the tests to use a temp folder location\n\n\n\nThis is a new package submission. Run multiple ‘Large Language Model’ predictions against a table. The predictions run row-wise over a specified column. It works using a one-shot prompt, along with the current row’s content. The prompt that is used will depend of the type of analysis needed.\nThe README file is very short because all the information about how to use it is this website: https://mlverse.github.io/mall/."
   },
   {
-    "objectID": "tests/testthat/test-pkg/LICENSE.html",
-    "href": "tests/testthat/test-pkg/LICENSE.html",
-    "title": "MIT License",
+    "objectID": "tests/testthat/test-pkg/cran-comments.html#resubmission",
+    "href": "tests/testthat/test-pkg/cran-comments.html#resubmission",
+    "title": "lang",
     "section": "",
-    "text": "MIT License\nCopyright (c) 2024 mall authors\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+    "text": "Thank you for the feedback and instructions, I have made the following changes:\n\nUpdated the Title field to title case\nChanged all to \nChanged default location in llm_use() to use a temp folder\nChanged the tests to use a temp folder location\n\n\n\nThis is a new package submission. Run multiple ‘Large Language Model’ predictions against a table. The predictions run row-wise over a specified column. It works using a one-shot prompt, along with the current row’s content. The prompt that is used will depend of the type of analysis needed.\nThe README file is very short because all the information about how to use it is this website: https://mlverse.github.io/mall/."
   },
   {
-    "objectID": "LICENSE.html",
-    "href": "LICENSE.html",
-    "title": "MIT License",
-    "section": "",
-    "text": "MIT License\nCopyright (c) 2024 lang authors\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+    "objectID": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-environments",
+    "href": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-environments",
+    "title": "lang",
+    "section": "R CMD check environments",
+    "text": "R CMD check environments\n\nMac OS M3 (aarch64-apple-darwin23), R 4.4.1 (Local)\nMac OS x86_64-apple-darwin20.0 (64-bit), R 4.4.1 (GH Actions)\nWindows x86_64-w64-mingw32 (64-bit), R 4.4.1 (GH Actions)\nLinux x86_64-pc-linux-gnu (64-bit), R 4.4.1 (GH Actions)\nLinux x86_64-pc-linux-gnu (64-bit), R 4.5.0 (dev) (GH Actions)\nLinux x86_64-pc-linux-gnu (64-bit), R 4.3.3 (old release) (GH Actions)"
+  },
+  {
+    "objectID": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-results",
+    "href": "tests/testthat/test-pkg/cran-comments.html#r-cmd-check-results",
+    "title": "lang",
+    "section": "R CMD check results",
+    "text": "R CMD check results\n0 errors ✔ | 0 warnings ✔ | 0 notes ✔"
   }
 ]
