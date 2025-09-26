@@ -92,10 +92,7 @@
 # Shim works as expected
 
     Code
-      withr::with_options(list(help_type = "text"), {
-        x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
-        shim_lang_question(mall::llm_classify)
-      })
+      shim_lang_question(mall::llm_classify)
 
 # Shim is able to be attached
 

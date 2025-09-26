@@ -20,15 +20,15 @@ test_that("shim_lang_question works", {
 })
 
 test_that("Shim works as expected", {
-  expect_snapshot(
-    withr::with_options(
-      list(help_type = "text"),
-      {
+  withr::with_options(
+    list(help_type = "text"),
+    {
+      withr::with_envvar(c("LANGUAGE" = "es", LANG = NA), {
         x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
-        shim_lang_question(mall::llm_classify)
-      }
-    )
-  )
+        expect_snapshot(shim_lang_question(mall::llm_classify))
+      })
+    }
+  )  
 })
 
 test_that("Shim works as expected", {
