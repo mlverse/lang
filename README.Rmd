@@ -11,6 +11,11 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+library(lang)
+library(ellmer)
+chat <- chat_openai(model = "gpt-4o")
+lang_use(backend = chat, .lang = "spanish")
 ```
 
 <img src="man/figures/logo.png" align="right" alt="" width="120" />
@@ -37,35 +42,44 @@ pak::pak("mlverse/lang")
 
 ## Using `lang`
 
-In order to work, `lang` needs two things: 
+In order to work, `lang` needs two things:
   
-  1. An LLM 
+  1. An LLM connection
   
   1. A target language (e.g.: Spanish, French, Korean)
 
-Both can be defined using `lang_use()`, and then access translated help 
-by using `help()` or `?`.
-
-This example shows how to use Llama 3.2, via Ollama, to
-translate the `lm()` function's help into Spanish:
+These two can be defined using `lang_use()`.  For example,  the following code
+shows  how to use OpenAI's GPT-4o model to translate `lm()`'s help  into Spanish:
 
 ```r
 library(lang)
 
-lang_use("ollama", "llama3.2", .lang = "spanish")
+chat <- ellmer::chat_openai(model = "gpt-4o")
+
+lang_use(backend = chat, .lang = "spanish")
 
 ?lm
+#> [1/7] ■■                                 4% | Title
 ```
+<img src="man/figures/lm-spanish.png" align="center" width="100%"
+alt="Screenshot of the lm function's help page in Spanish"/>
 
-### LLM
+After setup, simply use `?` to trigger and display the translated documentation.
+During translation, `lang` will display its progress by showing which section
+of the documentation is currently translating: 
 
-There are two ways to define the LLM that `lang` will use during the R session.
+R enforces the printed name of each section, so they cannot be
+translated. This means that titles such as "Description", "Usage" and "Arguments" 
+will always remain untranslated. 
 
-1. Use an  `ellmer` chat object: 
+
+### LLM connections
+
+There are two ways to define the LLM in `lang_use()`:
+
+1. Use an  [`ellmer`](https://ellmer.tidyverse.org/) chat object: 
 
     ```r
-    library(lang)
-    
     lang_use(backend = ellmer::chat_openai(model = "gpt-4o"))
     ```
 
@@ -79,6 +93,39 @@ as the `backend` argument, and specify which installed  model to use:
     Under the hood, `lang` uses the  [`ollamar`](https://hauselin.github.io/ollama-r/) 
     package to integrate with Ollama. Any additional arguments, such as `seed` 
     as shown above, will be passed as-is to `ollamar`'s `chat()` function. 
+
+### Target language
+
+
+In order of priority, these are the ways how `lang` determines the language it
+will translate to: 
+
+1. Value in `.lang` when calling `lang_use()`
+1. `LANGUAGE` environment variable
+1. `LANG` environment variable
+
+It is likely that your `LANG` variable  already defaults to your locale. 
+For example, mine is set to: `en_US.UTF-8` (That means English, United States). 
+For someone in France, the locale would be  something such as `fr_FR.UTF-8`. 
+Llama3.2, recognizes these UTF locales, and using `lang`, calling `?` will 
+result in translating the function's help documentation into French. 
+
+If both environmnet variables are set, and are different from each other, 
+`lang` will display a one-time message indicating which value it will use. 
+If the target language is English, `lang` will re-route help calls back to base
+R.
+
+To check the current target language at any point during the R session, 
+simply run: `lang_use()`,  with no arguments, and it will print out the 
+current settings, which include language:
+
+```{r}
+lang_use()
+```
+
+
+
+
 
 ### Automatically set 
 
@@ -103,46 +150,9 @@ In the example, we set `.silent` to `TRUE` so that there is no message every tim
 we restart the R session.
 
 
-After setup, simply use `?` to trigger and display the translated documentation.
-During translation, `lang` will display its progress by showing which section
-of the documentation is currently translating: 
-
-```r
-> ?lm
-#> [1/7] ■■                                 4% | Title
-```
-
-If your environment is set to use the Spanish language, the help pane should
-display this:
-
-<img src="man/figures/lm-spanish.png" align="center" width="100%"
-alt="Screenshot of the lm function's help page in Spanish"/>
-
-R enforces the printed name of each section, so they cannot be
-translated. So titles such as Description, Usage and Arguments will always
-remain untranslated. 
 
 
-## How it works
 
-The language that the help documentation will be translated to, is determined by
-one of the following two environment variables. In order of priority, the 
-variables are:
-
-1. `LANGUAGE`
-1. `LANG`
-
-It is likely that your `LANG` variable  already defaults to your locale. 
-For example, mine is set to: `en_US.UTF-8` (That means English, United States). 
-For someone in France, the locale would be  something such as `fr_FR.UTF-8`. 
-Llama3.2, recognizes these UTF locales, and using `lang`, calling `?` will 
-result in translating the function's help documentation into French. 
-
-It uses the `mall` package as the integration point with the LLM. Under the hood,
-it runs `llm_vec_translate()` multiple times to translate the most common 
-sections of the help documentation (e.g.: Title, Description, Details,
-Arguments, etc.).  If `lang` determines that your environment is set to use 
-English, it will simply display the original documentation. 
 
 ## Considerations
 
