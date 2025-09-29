@@ -137,6 +137,10 @@ insert_global_shims <- function(force = FALSE) {
 
 which_lang <- function(lang = NULL, choose = FALSE) {
   if (is.null(lang)) {
+    session_lang <- .lang_env$session[[".lang"]]
+    if(!is.null(session_lang)) {
+      return(session_lang)
+    }
     env_lang <- Sys.getenv("LANG", unset = NA)
     env_language <- Sys.getenv("LANGUAGE", unset = NA)
     lang <- c(LANG = env_lang, LANGUAGE = env_language)
