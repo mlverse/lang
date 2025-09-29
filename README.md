@@ -54,7 +54,10 @@ alt="Screenshot of the lm function's help page in Spanish"/>
 
 After setup, simply use `?` to trigger and display the translated
 documentation. During translation, `lang` will display its progress by
-showing which section of the documentation is currently translating:
+showing which section of the documentation is currently translating.
+During the R session, if you request the same R function’s help more
+than one time, then `lang` will use its cached results, which will run
+immediately.
 
 R enforces the printed name of each section, so they cannot be
 translated. This means that titles such as “Description”, “Usage” and
@@ -99,7 +102,7 @@ States). For someone in France, the locale would be something such as
 calling `?` will result in translating the function’s help documentation
 into French.
 
-If both environmnet variables are set, and are different from each
+If both environment variables are set, and are different from each
 other, `lang` will display a one-time message indicating which value it
 will use. If the target language is English, `lang` will re-route help
 calls back to base R.
@@ -116,7 +119,31 @@ lang_use()
 #> Language: spanish
 ```
 
-### Automatically set
+## Tips
+
+### Caching
+
+By default, `lang` will cache the translations it performs in a
+temporary folder. If R is restarted, a new folder will be used.
+
+If you notice that you are translating the same function’s help over and
+over, and across different R sessions, then fixing the cache location
+would be helpful. Use `.cache` to define the folder:
+
+``` r
+lang::lang_use(
+  backend = "ollama", 
+  model = "llama3.2", 
+  .cache = "~/help-translations/", 
+  .lang = "spanish"
+  )
+```
+
+### Auto-initialize at startup
+
+If `lang` becomes a regular part of your workflow, and running
+`lang_use()` at the beginning of every R session becomes cumbersome,
+then consider letting R connect at start up.
 
 If present, the *.Rprofile* file runs at the beginning of any R session.
 If you wish to automatically set the model and language to use, add a
@@ -138,7 +165,7 @@ lang::lang_use(
 ```
 
 In the example, we set `.silent` to `TRUE` so that there is no message
-every time we restart the R session.
+every the R session is restarted.
 
 ## Considerations
 
