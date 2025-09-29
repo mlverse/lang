@@ -13,7 +13,6 @@ The ? and `help` functions are replacements for functions of the same name in th
 
 ## Usage
 ```r
-
 # help(topic, package = NULL, ...)
 
 # ?e2
@@ -28,6 +27,7 @@ The ? and `help` functions are replacements for functions of the same name in th
 | ... | Additional arguments to pass to `utils::help()`. |
 | e1 | First argument to pass along to utils::?``. |
 | e2 | Second argument to pass along to utils::?``. |
+
 
 
 

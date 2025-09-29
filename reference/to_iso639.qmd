@@ -13,7 +13,6 @@ Convert to and from ISO 639 language code
 
 ## Usage
 ```r
-
 to_iso639(lang, silent = TRUE)
 
 from_iso639(iso)
@@ -25,6 +24,7 @@ from_iso639(iso)
 | lang | Name of the language to be converted |
 | silent | Flag to indicate if the function should return a message with the result. If there is no match, it will be an error message |
 | iso | The two-letter ISO 639 code to search |
+
 
 
 
