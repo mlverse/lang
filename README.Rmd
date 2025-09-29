@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 Use an **LLM to translate a function's help documentation on-the-fly**. `lang` 
 overrides the `?` and `help()` functions in your R session. If you are using 
 RStudio or Positron, the translated help page will appear in the Help 
-pane on the IDE.
+pane. 
 
 ## Installing
 
@@ -35,38 +35,73 @@ install.packages("pak")
 pak::pak("mlverse/lang")
 ```
 
-## Setup `lang`
+## Using `lang`
 
-`lang` can be initialized by one of two ways. The first way is to use an 
-`ellmer` chat object: 
+In order to work, `lang` needs two things: 
+  
+  1. An LLM 
+  
+  1. A target language (e.g.: Spanish, French, Korean)
+
+Both can be defined using `lang_use()`, and then access translated help 
+by using `help()` or `?`.
+
+This example shows how to use Llama 3.2, via Ollama, to
+translate the `lm()` function's help into Spanish:
 
 ```r
 library(lang)
 
-lang_use(ellmer::chat_openai(model = "gpt-4o"))
+lang_use("ollama", "llama3.2", .lang = "spanish")
+
+?lm
 ```
 
-Or, call Ollama directly by passing `"ollama"` as the backend argument, and
-specify the model to be used: 
+### LLM
 
-```r
-lang_use("ollama", "llama3.2", seed = 100)
-```
+There are two ways to define the LLM that `lang` will use during the R session.
 
-As a convenience feature, `lang` is able to automatically establish a connection 
-with the LLM at the beginning o R session. To do this you can use the 
-`.lang_chat` option:
+1. Use an  `ellmer` chat object: 
 
-```r
-options(.lang_chat =  ellmer::chat_openai(model = "gpt-4o"))
-```
+    ```r
+    library(lang)
+    
+    lang_use(backend = ellmer::chat_openai(model = "gpt-4o"))
+    ```
 
-Add this line to your *.Rprofile* file in order for that code to run every time
-you start R.  You can call `usethis::edit_r_profile()` to open your .Rprofile
+1. Use local LLMs available through [Ollama](https://ollama.com/). Pass `"ollama"` 
+as the `backend` argument, and specify which installed  model to use:
+
+    ```r
+    lang_use(backend = "ollama", model = "llama3.2", seed = 100)
+    ```
+    
+    Under the hood, `lang` uses the  [`ollamar`](https://hauselin.github.io/ollama-r/) 
+    package to integrate with Ollama. Any additional arguments, such as `seed` 
+    as shown above, will be passed as-is to `ollamar`'s `chat()` function. 
+
+### Automatically set 
+
+If present, the *.Rprofile* file runs at the beginning of any R session. If you
+wish to automatically set the model and language to use, add a call to `llm_use()`
+to this file.  You can call `usethis::edit_r_profile()` to open your .Rprofile
 file so you can add the option. 
 
+Here is an example of such a call that could be used in the .Rprofile file:
 
-## Using `lang`
+```r
+lang::lang_use(
+  backend = "ollama", 
+  model = "llama3.2", 
+  .cache = "~/help-translations/", 
+  .lang = "spanish",
+  .silent = TRUE
+  )
+```
+
+In the example, we set `.silent` to `TRUE` so that there is no message every time
+we restart the R session.
+
 
 After setup, simply use `?` to trigger and display the translated documentation.
 During translation, `lang` will display its progress by showing which section
@@ -74,7 +109,7 @@ of the documentation is currently translating:
 
 ```r
 > ?lm
-Translating: Title
+#> [1/7] ■■                                 4% | Title
 ```
 
 If your environment is set to use the Spanish language, the help pane should
