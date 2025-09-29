@@ -109,7 +109,7 @@ shim_lang_question <- function(e1, e2 = NULL) {
   if (!en_lang() && !is.null(topic)) {
     lang_help(topic, pkg)
   } else {
-    if(is.null(e2)) {
+    if (is.null(e2)) {
       eval(as.call(list(utils::`?`, substitute(e1))))
     } else {
       help(substitute(e1), substitute(e2))
@@ -138,7 +138,7 @@ insert_global_shims <- function(force = FALSE) {
 which_lang <- function(lang = NULL, choose = FALSE) {
   if (is.null(lang)) {
     session_lang <- .lang_env$session[[".lang"]]
-    if(!is.null(session_lang)) {
+    if (!is.null(session_lang)) {
       return(session_lang)
     }
     env_lang <- Sys.getenv("LANG", unset = NA)

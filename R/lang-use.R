@@ -14,7 +14,7 @@
 #' character: `""`. It defaults to a temp folder. If this argument is left
 #' `NULL` when calling this function, no changes to the path will be made.
 #' @param .lang Target language to translate to. This will override values found
-#' in the LANG and LANGUAGE environment variables. 
+#' in the LANG and LANGUAGE environment variables.
 #' @returns Console output of the current LLM setup to be used during the
 #' R session.
 #'
@@ -58,16 +58,17 @@ lang_use_impl <- function(
     ...) {
   args <- list(...)
   ca <- .lang_env$session
-  if(!is.null(getOption(".lang_chat"))) {
+  if (!is.null(getOption(".lang_chat"))) {
     cli_warn(c(
       "Option `.lang_chat` is no longer supported",
       "Use `lang::lang_use([backend])` in your .RProfile file instead"
-      ))
+    ))
   }
   ca[["backend"]] <- backend %||% ca[["backend"]]
   ca[["model"]] <- model %||% ca[["model"]]
-  ca[[".cache"]] <- .cache %||% ca[[".cache"]] %||% tempfile("_lang_cache")
-  ca[[".lang"]] <- .lang %||% ca[[".lang"]] 
+  temp_lang <- tempfile("_lang_cache")
+  ca[[".cache"]] <- .cache %||% ca[[".cache"]] %||% temp_lang
+  ca[[".lang"]] <- .lang %||% ca[[".lang"]]
   if (length(args) > 0) {
     ca[["args"]] <- args
   }
@@ -89,10 +90,13 @@ lang_use_impl <- function(
     } else {
       cache_str <- ca[[".cache"]]
     }
-    cli_h3("{col_cyan('`lang`')} session")
+    cli_inform("{symbol$em_dash} {col_cyan('`lang`')} session")
     cli_inform(glue("{col_green('Backend:')} {backend_str}"))
     cli_inform(glue("{col_green('Model:')} {model_str}"))
-    cli_inform(glue("{col_green('Cache:')} {cache_str}"))
+    if (path_dir(ca[[".cache"]]) != path_dir(temp_lang)) {
+      cli_inform(glue("{col_green('Cache:')} {cache_str}"))
+    }
+    cli_inform(glue("{col_green('Language:')} {which_lang()}"))
   }
   invisible()
 }

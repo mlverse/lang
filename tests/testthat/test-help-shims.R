@@ -28,7 +28,7 @@ test_that("Shim works as expected", {
         expect_snapshot(shim_lang_question(mall::llm_classify))
       })
     }
-  )  
+  )
 })
 
 test_that("Shim works as expected", {

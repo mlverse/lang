@@ -4,7 +4,7 @@
 \alias{lang_use}
 \title{Specifies the LLM provider and model to use during the R session}
 \usage{
-lang_use(backend = NULL, model = NULL, .cache = NULL, ...)
+lang_use(backend = NULL, model = NULL, .cache = NULL, .lang = NULL, ...)
 }
 \arguments{
 \item{backend}{"ollama" or an \code{ellmer} \code{Chat} object. If using "ollama",
@@ -17,6 +17,9 @@ to "ollama".}
 the same operation is ran again. To turn off, set this argument to an empty
 character: \code{""}. It defaults to a temp folder. If this argument is left
 \code{NULL} when calling this function, no changes to the path will be made.}
+
+\item{.lang}{Target language to translate to. This will override values found
+in the LANG and LANGUAGE environment variables.}
 
 \item{...}{Additional arguments that this function will pass down to the
 integrating function. In the case of Ollama, it will pass those arguments to
