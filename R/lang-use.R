@@ -15,6 +15,8 @@
 #' `NULL` when calling this function, no changes to the path will be made.
 #' @param .lang Target language to translate to. This will override values found
 #' in the LANG and LANGUAGE environment variables.
+#' @param .silent Boolean flag that controls if there is or not output to the
+#' console. Defaults to FALSE.
 #' @returns Console output of the current LLM setup to be used during the
 #' R session.
 #'
@@ -28,8 +30,18 @@
 #' # Using Ollama directly
 #' lang_use("ollama", "llama3.2", seed = 100)
 #'
-#' # Turn off cache by setting it to ""
+#' # Turn off cache by setting `.cache` to ""
 #' lang_use("ollama", "llama3.2", seed = 100, .cache = "")
+#' 
+#' # Use `.lang` to set the target language to translate to,
+#' # it will be set for the current R session
+#' lang_use("ollama", "llama3.2", .lang = "spanish")
+#' 
+#' # Use `.silent` to avoid console output
+#' lang_use("ollama", "llama3.2", .lang = "spanish", .silent = TRUE)
+#' 
+#' # To see current settings, simply call the function
+#' lang_use()
 #' }
 #'
 #' @export
@@ -38,6 +50,7 @@ lang_use <- function(
     model = NULL,
     .cache = NULL,
     .lang = NULL,
+    .silent = FALSE,
     ...) {
   lang_use_impl(
     backend = backend,
@@ -45,6 +58,7 @@ lang_use <- function(
     .cache = .cache,
     .is_internal = FALSE,
     .lang = .lang,
+    .silent = .silent,
     ... = ...
   )
 }
@@ -55,6 +69,7 @@ lang_use_impl <- function(
     .cache = NULL,
     .is_internal = FALSE,
     .lang = NULL,
+    .silent = FALSE,
     ...) {
   args <- list(...)
   ca <- .lang_env$session
@@ -75,7 +90,7 @@ lang_use_impl <- function(
   .lang_env$session <- ca
   if (.is_internal) {
     return(ca)
-  } else {
+  } else if(!.silent) {
     backend <- ca[["backend"]]
     if (inherits(backend, "Chat")) {
       provider <- backend$get_provider()

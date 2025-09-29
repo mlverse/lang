@@ -4,7 +4,14 @@
 \alias{lang_use}
 \title{Specifies the LLM provider and model to use during the R session}
 \usage{
-lang_use(backend = NULL, model = NULL, .cache = NULL, .lang = NULL, ...)
+lang_use(
+  backend = NULL,
+  model = NULL,
+  .cache = NULL,
+  .lang = NULL,
+  .silent = FALSE,
+  ...
+)
 }
 \arguments{
 \item{backend}{"ollama" or an \code{ellmer} \code{Chat} object. If using "ollama",
@@ -20,6 +27,9 @@ character: \code{""}. It defaults to a temp folder. If this argument is left
 
 \item{.lang}{Target language to translate to. This will override values found
 in the LANG and LANGUAGE environment variables.}
+
+\item{.silent}{Boolean flag that controls if there is or not output to the
+console. Defaults to FALSE.}
 
 \item{...}{Additional arguments that this function will pass down to the
 integrating function. In the case of Ollama, it will pass those arguments to
@@ -43,8 +53,18 @@ lang_use(ellmer::chat_openai(model = "gpt-4o"))
 # Using Ollama directly
 lang_use("ollama", "llama3.2", seed = 100)
 
-# Turn off cache by setting it to ""
+# Turn off cache by setting `.cache` to ""
 lang_use("ollama", "llama3.2", seed = 100, .cache = "")
+
+# Use `.lang` to set the target language to translate to,
+# it will be set for the current R session
+lang_use("ollama", "llama3.2", .lang = "spanish")
+
+# Use `.silent` to avoid console output
+lang_use("ollama", "llama3.2", .lang = "spanish", .silent = TRUE)
+
+# To see current settings, simply call the function
+lang_use()
 }
 
 }
