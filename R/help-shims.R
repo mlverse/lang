@@ -77,7 +77,7 @@ shim_lang_help <- function(topic, package = NULL, ...) {
 #'
 #' @rdname help
 #' @name ?
-shim_lang_question <- function(e1, e2 = NULL) {
+shim_lang_question <- function(e1, e2) {
   pkg <- NULL
   # Get string version of e1, for find_topic
   e1_expr <- substitute(e1)
@@ -105,11 +105,10 @@ shim_lang_question <- function(e1, e2 = NULL) {
   } else {
     cli::cli_abort("Unknown input.")
   }
-
   if (!en_lang() && !is.null(topic)) {
     lang_help(topic, pkg)
   } else {
-    if (is.null(e2)) {
+    if (is_missing(e2)) {
       eval(as.call(list(utils::`?`, substitute(e1))))
     } else {
       help(substitute(e1), substitute(e2))
