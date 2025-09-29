@@ -57,7 +57,13 @@ lang_use_impl <- function(
     ...) {
   args <- list(...)
   ca <- .lang_env$session
-  ca[["backend"]] <- backend %||% ca[["backend"]] %||% getOption(".lang_chat")
+  if(!is.null(getOption(".lang_chat"))) {
+    cli_warn(c(
+      "Option `.lang_chat` is no longer supported",
+      "Use `lang::lang_use([backend])` in your .RProfile file instead"
+      ))
+  }
+  ca[["backend"]] <- backend %||% ca[["backend"]]
   ca[["model"]] <- model %||% ca[["model"]]
   ca[[".cache"]] <- .cache %||% ca[[".cache"]] %||% tempfile("_lang_cache")
   if (length(args) > 0) {

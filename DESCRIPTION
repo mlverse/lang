@@ -19,7 +19,6 @@ Imports:
     glue,
     mall,
     rlang,
-    roxygen2,
     rstudioapi,
     tools,
     withr
