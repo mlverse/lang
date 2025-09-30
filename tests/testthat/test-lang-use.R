@@ -1,7 +1,7 @@
 test_that("Empty lang_use() returns 'unset'", {
   .lang_env$session <- NULL
   expect_snapshot(
-    lang_use()
+    lang_use(.lang = "english")
   )
 })
 
