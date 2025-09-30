@@ -25,7 +25,7 @@
     "href": "reference/to_iso639.html#usage",
     "title": "Convert to and from ISO 639 language code",
     "section": "Usage",
-    "text": "Usage\n\nto_iso639(lang, silent = TRUE)\n\nfrom_iso639(iso)"
+    "text": "Usage\nto_iso639(lang, silent = TRUE)\n\nfrom_iso639(iso)"
   },
   {
     "objectID": "reference/to_iso639.html#arguments",
@@ -53,14 +53,14 @@
     "href": "reference/lang_use.html#usage",
     "title": "Specifies the LLM provider and model to use during the R session",
     "section": "Usage",
-    "text": "Usage\n\nlang_use(backend = NULL, model = NULL, .cache = NULL, ...)"
+    "text": "Usage\nlang_use(\n  backend = NULL,\n  model = NULL,\n  .cache = NULL,\n  .lang = NULL,\n  .silent = FALSE,\n  ...\n)"
   },
   {
     "objectID": "reference/lang_use.html#arguments",
     "href": "reference/lang_use.html#arguments",
     "title": "Specifies the LLM provider and model to use during the R session",
     "section": "Arguments",
-    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\nbackend\n“ollama” or an ellmer Chat object. If using “ollama”, mall will use is out-of-the-box integration with that back-end. Defaults to “ollama”.\n\n\nmodel\nThe name of model supported by the back-end provider\n\n\n.cache\nThe path to save model results, so they can be re-used if the same operation is ran again. To turn off, set this argument to an empty character: \"\". It defaults to a temp folder. If this argument is left NULL when calling this function, no changes to the path will be made.\n\n\n…\nAdditional arguments that this function will pass down to the integrating function. In the case of Ollama, it will pass those arguments to ollamar::chat()."
+    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\nbackend\n“ollama” or an ellmer Chat object. If using “ollama”, mall will use is out-of-the-box integration with that back-end. Defaults to “ollama”.\n\n\nmodel\nThe name of model supported by the back-end provider\n\n\n.cache\nThe path to save model results, so they can be re-used if the same operation is ran again. To turn off, set this argument to an empty character: \"\". It defaults to a temp folder. If this argument is left NULL when calling this function, no changes to the path will be made.\n\n\n.lang\nTarget language to translate to. This will override values found in the LANG and LANGUAGE environment variables.\n\n\n.silent\nBoolean flag that controls if there is or not output to the console. Defaults to FALSE.\n\n\n…\nAdditional arguments that this function will pass down to the integrating function. In the case of Ollama, it will pass those arguments to ollamar::chat()."
   },
   {
     "objectID": "reference/lang_use.html#value",
@@ -74,7 +74,7 @@
     "href": "reference/lang_use.html#examples",
     "title": "Specifies the LLM provider and model to use during the R session",
     "section": "Examples",
-    "text": "Examples\n\n\n \n  library(lang)\n  \n  # Using an `ellmer` chat object\n  lang_use(ellmer::chat_openai(model = \"gpt-4o\"))\n#&gt; \n#&gt; ── `lang` session\n#&gt; Backend: 'OpenAI' via `ellmer`\n#&gt; Model: gpt-4o\n#&gt; Cache:\n#&gt; /var/folders/y_/f_0cx_291nl0s8h26t4jg6ch0000gp/T//RtmpTHbviH/_lang_cache4124265bf27d\n  \n  # Using Ollama directly\n  lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; \n#&gt; ── `lang` session \n#&gt; Backend: OllamaModel: llama3.2Cache:\n#&gt; /var/folders/y_/f_0cx_291nl0s8h26t4jg6ch0000gp/T//RtmpTHbviH/_lang_cache4124265bf27d\n  \n  # Turn off cache by setting it to \"\"\n  lang_use(\"ollama\", \"llama3.2\", seed = 100, .cache = \"\")\n#&gt; \n#&gt; ── `lang` session \n#&gt; Backend: OllamaModel: llama3.2Cache: [Disabled]"
+    "text": "Examples\n\n\n\nlibrary(lang)\n\n# Using an `ellmer` chat object\nlang_use(ellmer::chat_openai(model = \"gpt-4o\"))\n#&gt; — `lang` session\n#&gt; Backend: 'OpenAI' via `ellmer`\n#&gt; Model: gpt-4o\n#&gt; Language: en_US.UTF-8\n\n# Using Ollama directly\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; — `lang` session\n#&gt; Backend: Ollama\n#&gt; Model: llama3.2\n#&gt; Language: en_US.UTF-8\n\n# Turn off cache by setting `.cache` to \"\"\nlang_use(\"ollama\", \"llama3.2\", seed = 100, .cache = \"\")\n#&gt; — `lang` session\n#&gt; Backend: Ollama\n#&gt; Model: llama3.2\n#&gt; Cache: [Disabled]\n#&gt; Language: en_US.UTF-8\n\n# Use `.lang` to set the target language to translate to,\n# it will be set for the current R session\nlang_use(\"ollama\", \"llama3.2\", .lang = \"spanish\")\n#&gt; — `lang` session\n#&gt; Backend: Ollama\n#&gt; Model: llama3.2\n#&gt; Cache: [Disabled]\n#&gt; Language: spanish\n\n# Use `.silent` to avoid console output\nlang_use(\"ollama\", \"llama3.2\", .lang = \"spanish\", .silent = TRUE)\n\n# To see current settings, simply call the function\nlang_use()\n#&gt; — `lang` session\n#&gt; Backend: Ollama\n#&gt; Model: llama3.2\n#&gt; Cache: [Disabled]\n#&gt; Language: spanish"
   },
   {
     "objectID": "LICENSE.html",
@@ -91,25 +91,18 @@
     "text": "Installing\nTo install the GitHub version of lang, use:\ninstall.packages(\"pak\")\npak::pak(\"mlverse/lang\")"
   },
   {
-    "objectID": "index.html#setup-lang",
-    "href": "index.html#setup-lang",
-    "title": "lang",
-    "section": "Setup lang",
-    "text": "Setup lang\nlang can be initialized by one of two ways. The first way is to use an ellmer chat object:\nlibrary(lang)\n\nlang_use(ellmer::chat_openai(model = \"gpt-4o\"))\nOr, call Ollama directly by passing \"ollama\" as the backend argument, and specify the model to be used:\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\nAs a convenience feature, lang is able to automatically establish a connection with the LLM at the beginning o R session. To do this you can use the .lang_chat option:\noptions(.lang_chat =  ellmer::chat_openai(model = \"gpt-4o\"))\nAdd this line to your .Rprofile file in order for that code to run every time you start R. You can call usethis::edit_r_profile() to open your .Rprofile file so you can add the option."
-  },
-  {
     "objectID": "index.html#using-lang",
     "href": "index.html#using-lang",
     "title": "lang",
     "section": "Using lang",
-    "text": "Using lang\nAfter setup, simply use ? to trigger and display the translated documentation. During translation, lang will display its progress by showing which section of the documentation is currently translating:\n&gt; ?lm\nTranslating: Title\nIf your environment is set to use the Spanish language, the help pane should display this:\n\nR enforces the printed name of each section, so they cannot be translated. So titles such as Description, Usage and Arguments will always remain untranslated."
+    "text": "Using lang\nIn order to work, lang needs two things:\n\nAn LLM connection\nA target language (e.g.: Spanish, French, Korean)\n\nThese two can be defined using lang_use(). For example, the following code shows how to use OpenAI’s GPT-4o model to translate lm()’s help into Spanish:\nlibrary(lang)\n\nchat &lt;- ellmer::chat_openai(model = \"gpt-4o\")\n\nlang_use(backend = chat, .lang = \"spanish\")\n\n?lm\n#&gt; [1/7] ■■                                 4% | Title\n\nAfter setup, simply use ? to trigger and display the translated documentation. During translation, lang will display its progress by showing which section of the documentation is currently translating. During the R session, if you request the same R function’s help more than one time, then lang will use its cached results, which will run immediately.\nR enforces the printed name of each section, so they cannot be translated. This means that titles such as “Description”, “Usage” and “Arguments” will always remain untranslated.\n\nLLM connections\nThere are two ways to define the LLM in lang_use():\n\nUse an ellmer chat object:\nlang_use(backend = ellmer::chat_openai(model = \"gpt-4o\"))\nUse local LLMs available through Ollama. Pass \"ollama\" as the backend argument, and specify which installed model to use:\nlang_use(backend = \"ollama\", model = \"llama3.2\", seed = 100)\nUnder the hood, lang uses the ollamar package to integrate with Ollama. Any additional arguments, such as seed as shown above, will be passed as-is to ollamar’s chat() function.\n\n\n\nTarget language\nIn order of priority, these are the ways how lang determines the language it will translate to:\n\nValue in .lang when calling lang_use()\nLANGUAGE environment variable\nLANG environment variable\n\nIt is likely that your LANG variable already defaults to your locale. For example, mine is set to: en_US.UTF-8 (That means English, United States). For someone in France, the locale would be something such as fr_FR.UTF-8. Llama3.2, recognizes these UTF locales, and using lang, calling ? will result in translating the function’s help documentation into French.\nIf both environment variables are set, and are different from each other, lang will display a one-time message indicating which value it will use. If the target language is English, lang will re-route help calls back to base R.\nTo check the current target language at any point during the R session, simply run: lang_use(), with no arguments, and it will print out the current settings, which include language:\nlang_use()\n#&gt; — `lang` session\n#&gt; Backend: 'OpenAI' via `ellmer`\n#&gt; Model: gpt-4o\n#&gt; Language: spanish"
   },
   {
-    "objectID": "index.html#how-it-works",
-    "href": "index.html#how-it-works",
+    "objectID": "index.html#tips",
+    "href": "index.html#tips",
     "title": "lang",
-    "section": "How it works",
-    "text": "How it works\nThe language that the help documentation will be translated to, is determined by one of the following two environment variables. In order of priority, the variables are:\n\nLANGUAGE\nLANG\n\nIt is likely that your LANG variable already defaults to your locale. For example, mine is set to: en_US.UTF-8 (That means English, United States). For someone in France, the locale would be something such as fr_FR.UTF-8. Llama3.2, recognizes these UTF locales, and using lang, calling ? will result in translating the function’s help documentation into French.\nIt uses the mall package as the integration point with the LLM. Under the hood, it runs llm_vec_translate() multiple times to translate the most common sections of the help documentation (e.g.: Title, Description, Details, Arguments, etc.). If lang determines that your environment is set to use English, it will simply display the original documentation."
+    "section": "Tips",
+    "text": "Tips\n\nCaching\nBy default, lang will cache the translations it performs in a temporary folder. If R is restarted, a new folder will be used.\nIf you notice that you are translating the same function’s help over and over, and across different R sessions, then fixing the cache location would be helpful. Use .cache to define the folder:\nlang::lang_use(\n  backend = \"ollama\", \n  model = \"llama3.2\", \n  .cache = \"~/help-translations/\", \n  .lang = \"spanish\"\n  )\n\n\nAuto-initialize at startup\nIf lang becomes a regular part of your workflow, and running lang_use() at the beginning of every R session becomes cumbersome, then consider letting R connect at start up.\nIf present, the .Rprofile file runs at the beginning of any R session. If you wish to automatically set the model and language to use, add a call to llm_use() to this file. You can call usethis::edit_r_profile() to open your .Rprofile file so you can add the option.\nHere is an example of such a call that could be used in the .Rprofile file:\nlang::lang_use(\n  backend = \"ollama\", \n  model = \"llama3.2\", \n  .cache = \"~/help-translations/\", \n  .lang = \"spanish\",\n  .silent = TRUE\n  )\nIn the example, we set .silent to TRUE so that there is no message every the R session is restarted."
   },
   {
     "objectID": "index.html#considerations",
@@ -130,14 +123,14 @@
     "href": "reference/lang_help.html#description",
     "title": "Translates help documentation to another language",
     "section": "Description",
-    "text": "Description\nTranslates a given topic into a target language. It uses the lang argument to determine which language to translate to. If not passed, this function will look for a target language in the LANG and LANGUAGE environment variables to determine the target language. If the target language is English, no translation will be processed, so the help returned will be the original package’s documentation."
+    "text": "Description\nTranslates a given topic into a target language. It uses the lang argument to determine which language to translate to. If not passed, this function will look for a target language in the LANG and LANGUAGE environment variables, or if something has been passed to the .lang argument in lang_use(), to determine the target language. If the target language is English, no translation will be processed, so the help returned will be the original package’s documentation."
   },
   {
     "objectID": "reference/lang_help.html#usage",
     "href": "reference/lang_help.html#usage",
     "title": "Translates help documentation to another language",
     "section": "Usage",
-    "text": "Usage\n\nlang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))"
+    "text": "Usage\nlang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))"
   },
   {
     "objectID": "reference/lang_help.html#arguments",
@@ -151,7 +144,7 @@
     "href": "reference/lang_help.html#examples",
     "title": "Translates help documentation to another language",
     "section": "Examples",
-    "text": "Examples\n\n\n \n  library(lang)\n  \n  lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; \n#&gt; ── `lang` session\n#&gt; Backend: Ollama\n#&gt; Model: llama3.2\n#&gt; Cache:\n#&gt; /var/folders/y_/f_0cx_291nl0s8h26t4jg6ch0000gp/T//RtmpqoYCua/_lang_cache41636a8a3806\n  \n  lang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt; Translating: \n#&gt; Translating: Title\n#&gt; Translating: Title\n#&gt; Translating: Title\n#&gt; _\bD_\bo_\bc_\bu_\bm_\be_\bn_\bt_\ba_\bc_\bi_\bó_\bn _\bd_\be _\ba_\by_\bu_\bd_\ba _\bs_\be _\bt_\br_\ba_\bd_\bu_\bc_\be _\ba _\bo_\bt_\br_\bo _\bi_\bd_\bi_\bo_\bm_\ba.\n#&gt; \n#&gt; _\bD_\be_\bs_\bc_\br_\bi_\bp_\bt_\bi_\bo_\bn:\n#&gt; \n#&gt;      La función traduce un tema dado en un idioma objetivo. Utiliza la\n#&gt;      'lang' argumento para determinar el idioma al que se traducirá. Si\n#&gt;      no se pasa, esta función buscará el idioma objetivo en las\n#&gt;      variables de entorno LANG y LANGUAGE para determinarlo. Si el\n#&gt;      idioma objetivo es inglés, no se procesará la traducción, por lo\n#&gt;      que se devolverá la documentación original del paquete.\n#&gt; \n#&gt; _\bU_\bs_\ba_\bg_\be:\n#&gt; \n#&gt;      lang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))\n#&gt;      \n#&gt; _\bA_\br_\bg_\bu_\bm_\be_\bn_\bt_\bs:\n#&gt; \n#&gt;    topic: El tema a buscar\n#&gt; \n#&gt;  package: El paquete de R para buscar el tema\n#&gt; \n#&gt;     lang: Lenguaje al que se debe traducir la ayuda\n#&gt; \n#&gt;     type: Produzca 'html' o 'text' como salida para la ayuda; por\n#&gt;           defecto, se utiliza la opción 'getOption(\"help_type\")'.\n#&gt; \n#&gt; _\bE_\bx_\ba_\bm_\bp_\bl_\be_\bs:\n#&gt; \n#&gt;        library(lang)\n#&gt;        \n#&gt;        lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt;        \n#&gt;        lang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt;"
+    "text": "Examples\n\n\n\nlibrary(lang)\n\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; — `lang` session\n#&gt; Backend: Ollama\n#&gt; Model: llama3.2\n#&gt; Language: en_US.UTF-8\n\nlang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt; [1/7] ■■                                 4% | Title\n#&gt; [2/7] ■■■■■■■■■                         28% | Description\n#&gt; [3/7] ■■■■■■■■■■■■■■■■■■                57% | Arguments: `lang`\n#&gt; [4/7] ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | \\examples\n#&gt; \"_\bT_\br_\ba_\bd_\bu_\bc_\be _\bl_\ba _\bd_\bo_\bc_\bu_\bm_\be_\bn_\bt_\ba_\bc_\bi_\bó_\bn _\bd_\be _\ba_\by_\bu_\bd_\ba _\ba _\bo_\bt_\br_\bo _\bi_\bd_\bi_\bo_\bm_\ba\"\n#&gt; \n#&gt; _\bD_\be_\bs_\bc_\br_\bi_\bp_\bt_\bi_\bo_\bn:\n#&gt; \n#&gt;      La función traduce un tema dado en un idioma objetivo. Utiliza el\n#&gt;      argumento 'lang' para determinar qué idioma traducir. Si no se\n#&gt;      pasa, esta función buscará a un idioma objetivo en las variables\n#&gt;      de entorno LANG y LANGUAGE para determinar el idioma objetivo. Si\n#&gt;      el idioma objetivo es inglés, no se procesará la traducción, por\n#&gt;      lo que la ayuda devuelta será la documentación original del\n#&gt;      paquete.\n#&gt; \n#&gt; _\bU_\bs_\ba_\bg_\be:\n#&gt; \n#&gt;      lang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))\n#&gt;      \n#&gt; _\bA_\br_\bg_\bu_\bm_\be_\bn_\bt_\bs:\n#&gt; \n#&gt;    topic: El tema a buscar\n#&gt; \n#&gt;  package: El paquete R para buscar el tema.\n#&gt; \n#&gt;     lang: ¿De qué idioma necesita traducir la ayuda?\n#&gt; \n#&gt;     type: Producir \"html\" o \"text\" como salida para la ayuda, por\n#&gt;           defecto a 'getOption(\"help_type\")'.\n#&gt; \n#&gt; _\bE_\bx_\ba_\bm_\bp_\bl_\be_\bs:\n#&gt; \n#&gt;      library(lang)\n#&gt;      \n#&gt;      lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt;      \n#&gt;      lang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt;"
   },
   {
     "objectID": "reference/help.html#description",
@@ -165,7 +158,7 @@
     "href": "reference/help.html#usage",
     "title": "Drop-in replacements for help and ? functions",
     "section": "Usage",
-    "text": "Usage\n\n# help(topic, package = NULL, ...)\n\n# ?e2\n# e1?e2"
+    "text": "Usage\n# help(topic, package = NULL, ...)\n\n# ?e2\n# e1?e2"
   },
   {
     "objectID": "reference/help.html#arguments",
