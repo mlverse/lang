@@ -68,6 +68,7 @@ test_that("Conflicting language message shows up", {
   withr::with_envvar(c("LANGUAGE" = "spanish", LANG = "english"), {
     x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
     .lang_env$choose <- NULL
+    .lang_env[["session"]]$.lang <- NULL
     expect_snapshot(which_lang(choose = TRUE))
   })
 })

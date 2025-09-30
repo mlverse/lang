@@ -144,6 +144,8 @@ which_lang <- function(lang = NULL, choose = FALSE) {
     env_language <- Sys.getenv("LANGUAGE", unset = NA)
     lang <- c(LANG = env_lang, LANGUAGE = env_language)
     lang <- lang[!is.na(lang)]
+    lang <- lang[lang != "C"]
+    lang <- lang[!startsWith(lang, "C.")]
     if (length(lang) > 1 && choose) {
       if (unique(length(lang) > 1) && is.null(.lang_env$choose)) {
         cli_bullets(
@@ -160,6 +162,9 @@ which_lang <- function(lang = NULL, choose = FALSE) {
     if (length(lang) == 0) {
       lang <- "english"
     }
+  }
+  if (length(lang) == 1 && choose) {
+    .lang_env$session[[".lang"]] <- lang
   }
   lang
 }

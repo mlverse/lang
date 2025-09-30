@@ -33,14 +33,9 @@ lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 
 ## Examples
 ```{r}
-
-
 library(lang)
 
 lang_use("ollama", "llama3.2", seed = 100)
 
 lang_help("lang_help", lang = "spanish", type = "text")
-
-
-
 ```

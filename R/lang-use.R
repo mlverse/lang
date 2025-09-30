@@ -32,14 +32,14 @@
 #'
 #' # Turn off cache by setting `.cache` to ""
 #' lang_use("ollama", "llama3.2", seed = 100, .cache = "")
-#' 
+#'
 #' # Use `.lang` to set the target language to translate to,
 #' # it will be set for the current R session
 #' lang_use("ollama", "llama3.2", .lang = "spanish")
-#' 
+#'
 #' # Use `.silent` to avoid console output
 #' lang_use("ollama", "llama3.2", .lang = "spanish", .silent = TRUE)
-#' 
+#'
 #' # To see current settings, simply call the function
 #' lang_use()
 #' }
@@ -90,7 +90,7 @@ lang_use_impl <- function(
   .lang_env$session <- ca
   if (.is_internal) {
     return(ca)
-  } else if(!.silent) {
+  } else if (!.silent) {
     backend <- ca[["backend"]]
     if (inherits(backend, "Chat")) {
       provider <- backend$get_provider()
@@ -98,7 +98,7 @@ lang_use_impl <- function(
       model_str <- provider@model
     } else if (is.null(backend)) {
       backend_str <- "[Unset]"
-      model_str <- ca[["model"]]    
+      model_str <- ca[["model"]]
     } else {
       backend_str <- "Ollama"
       model_str <- ca[["model"]]
@@ -108,15 +108,16 @@ lang_use_impl <- function(
     } else {
       cache_str <- ca[[".cache"]]
     }
+    current_lang <- which_lang(.lang, choose = TRUE)
     cli_inform("{symbol$em_dash} {col_cyan('`lang`')} session")
     cli_inform(glue("{col_green('Backend:')} {backend_str}"))
-    if(!is.null(model_str)) {
-      cli_inform(glue("{col_green('Model:')} {model_str}"))  
+    if (!is.null(model_str)) {
+      cli_inform(glue("{col_green('Model:')} {model_str}"))
     }
     if (path_dir(ca[[".cache"]]) != path_dir(temp_lang)) {
       cli_inform(glue("{col_green('Cache:')} {cache_str}"))
     }
-    cli_inform(glue("{col_green('Language:')} {which_lang()}"))
+    cli_inform(glue("{col_green('Language:')} {current_lang}"))
   }
   invisible()
 }

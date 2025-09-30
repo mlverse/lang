@@ -44,8 +44,6 @@ Console output of the current LLM setup to be used during the R session.
 
 ## Examples
 ```{r}
-
-
 library(lang)
 
 # Using an `ellmer` chat object
@@ -66,7 +64,4 @@ lang_use("ollama", "llama3.2", .lang = "spanish", .silent = TRUE)
 
 # To see current settings, simply call the function
 lang_use()
-
-
-
 ```
