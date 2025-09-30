@@ -15,7 +15,7 @@ coverage](https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg)](https
 Use an **LLM to translate a function’s help documentation on-the-fly**.
 `lang` overrides the `?` and `help()` functions in your R session. If
 you are using RStudio or Positron, the translated help page will appear
-in the Help pane on the IDE.
+in the Help pane.
 
 ## Installing
 
@@ -26,65 +26,74 @@ install.packages("pak")
 pak::pak("mlverse/lang")
 ```
 
-## Setup `lang`
+## Using `lang`
 
-`lang` can be initialized by one of two ways. The first way is to use an
-`ellmer` chat object:
+In order to work, `lang` needs two things:
+
+1.  An LLM connection
+
+2.  A target language (e.g.: Spanish, French, Korean)
+
+These two can be defined using `lang_use()`. For example, the following
+code shows how to use OpenAI’s GPT-4o model to translate `lm()`’s help
+into Spanish:
 
 ``` r
 library(lang)
 
-lang_use(ellmer::chat_openai(model = "gpt-4o"))
+chat <- ellmer::chat_openai(model = "gpt-4o")
+
+lang_use(backend = chat, .lang = "spanish")
+
+?lm
+#> [1/7] ■■                                 4% | Title
 ```
-
-Or, call Ollama directly by passing `"ollama"` as the backend argument,
-and specify the model to be used:
-
-``` r
-lang_use("ollama", "llama3.2", seed = 100)
-```
-
-As a convenience feature, `lang` is able to automatically establish a
-connection with the LLM at the beginning o R session. To do this you can
-use the `.lang_chat` option:
-
-``` r
-options(.lang_chat =  ellmer::chat_openai(model = "gpt-4o"))
-```
-
-Add this line to your *.Rprofile* file in order for that code to run
-every time you start R. You can call `usethis::edit_r_profile()` to open
-your .Rprofile file so you can add the option.
-
-## Using `lang`
-
-After setup, simply use `?` to trigger and display the translated
-documentation. During translation, `lang` will display its progress by
-showing which section of the documentation is currently translating:
-
-``` r
-> ?lm
-Translating: Title
-```
-
-If your environment is set to use the Spanish language, the help pane
-should display this:
 
 <img src="man/figures/lm-spanish.png" align="center" width="100%"
 alt="Screenshot of the lm function's help page in Spanish"/>
 
+After setup, simply use `?` to trigger and display the translated
+documentation. During translation, `lang` will display its progress by
+showing which section of the documentation is currently translating.
+During the R session, if you request the same R function’s help more
+than one time, then `lang` will use its cached results, which will run
+immediately.
+
 R enforces the printed name of each section, so they cannot be
-translated. So titles such as Description, Usage and Arguments will
-always remain untranslated.
+translated. This means that titles such as “Description”, “Usage” and
+“Arguments” will always remain untranslated.
 
-## How it works
+### LLM connections
 
-The language that the help documentation will be translated to, is
-determined by one of the following two environment variables. In order
-of priority, the variables are:
+There are two ways to define the LLM in `lang_use()`:
 
-1.  `LANGUAGE`
-2.  `LANG`
+1.  Use an [`ellmer`](https://ellmer.tidyverse.org/) chat object:
+
+    ``` r
+    lang_use(backend = ellmer::chat_openai(model = "gpt-4o"))
+    ```
+
+2.  Use local LLMs available through [Ollama](https://ollama.com/). Pass
+    `"ollama"` as the `backend` argument, and specify which installed
+    model to use:
+
+    ``` r
+    lang_use(backend = "ollama", model = "llama3.2", seed = 100)
+    ```
+
+    Under the hood, `lang` uses the
+    [`ollamar`](https://hauselin.github.io/ollama-r/) package to
+    integrate with Ollama. Any additional arguments, such as `seed` as
+    shown above, will be passed as-is to `ollamar`’s `chat()` function.
+
+### Target language
+
+In order of priority, these are the ways how `lang` determines the
+language it will translate to:
+
+1.  Value in `.lang` when calling `lang_use()`
+2.  `LANGUAGE` environment variable
+3.  `LANG` environment variable
 
 It is likely that your `LANG` variable already defaults to your locale.
 For example, mine is set to: `en_US.UTF-8` (That means English, United
@@ -93,12 +102,70 @@ States). For someone in France, the locale would be something such as
 calling `?` will result in translating the function’s help documentation
 into French.
 
-It uses the `mall` package as the integration point with the LLM. Under
-the hood, it runs `llm_vec_translate()` multiple times to translate the
-most common sections of the help documentation (e.g.: Title,
-Description, Details, Arguments, etc.). If `lang` determines that your
-environment is set to use English, it will simply display the original
-documentation.
+If both environment variables are set, and are different from each
+other, `lang` will display a one-time message indicating which value it
+will use. If the target language is English, `lang` will re-route help
+calls back to base R.
+
+To check the current target language at any point during the R session,
+simply run: `lang_use()`, with no arguments, and it will print out the
+current settings, which include language:
+
+``` r
+lang_use()
+#> — `lang` session
+#> Backend: 'OpenAI' via `ellmer`
+#> Model: gpt-4o
+#> Language: spanish
+```
+
+## Tips
+
+### Caching
+
+By default, `lang` will cache the translations it performs in a
+temporary folder. If R is restarted, a new folder will be used.
+
+If you notice that you are translating the same function’s help over and
+over, and across different R sessions, then fixing the cache location
+would be helpful. Use `.cache` to define the folder:
+
+``` r
+lang::lang_use(
+  backend = "ollama", 
+  model = "llama3.2", 
+  .cache = "~/help-translations/", 
+  .lang = "spanish"
+  )
+```
+
+### Auto-initialize at startup
+
+If `lang` becomes a regular part of your workflow, and running
+`lang_use()` at the beginning of every R session becomes cumbersome,
+then consider letting R connect at start up.
+
+If present, the *.Rprofile* file runs at the beginning of any R session.
+If you wish to automatically set the model and language to use, add a
+call to `llm_use()` to this file. You can call
+`usethis::edit_r_profile()` to open your .Rprofile file so you can add
+the option.
+
+Here is an example of such a call that could be used in the .Rprofile
+file:
+
+``` r
+lang::lang_use(
+  backend = "ollama", 
+  model = "llama3.2", 
+  .cache = "~/help-translations/", 
+  .lang = "spanish",
+  .silent = TRUE
+  )
+```
+
+In the example, we set `.silent` to `TRUE` so that there is no message
+every the R session is restarted.
 
 ## Considerations
 

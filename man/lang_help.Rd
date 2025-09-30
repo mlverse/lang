@@ -19,7 +19,8 @@ lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 \description{
 Translates a given topic into a target language. It uses the \code{lang} argument
 to determine which language to translate to. If not passed, this function will
-look for a target language in the LANG and LANGUAGE environment variables to
+look for a target language in the LANG and LANGUAGE environment variables, or
+if something has been passed to the \code{.lang} argument in \code{lang_use()}, to
 determine the target language. If the target language is English, no translation
 will be processed, so the help returned will be the original package's
 documentation.

@@ -13,8 +13,14 @@ Allows us to specify the back-end provider, model to use during the current R se
 
 ## Usage
 ```r
-
-lang_use(backend = NULL, model = NULL, .cache = NULL, ...)
+lang_use(
+  backend = NULL,
+  model = NULL,
+  .cache = NULL,
+  .lang = NULL,
+  .silent = FALSE,
+  ...
+)
 ```
 
 ## Arguments
@@ -23,12 +29,17 @@ lang_use(backend = NULL, model = NULL, .cache = NULL, ...)
 | backend | "ollama" or an `ellmer` `Chat` object. If using "ollama", `mall` will use is out-of-the-box integration with that back-end. Defaults to "ollama". |
 | model | The name of model supported by the back-end provider |
 | .cache | The path to save model results, so they can be re-used if the same operation is ran again. To turn off, set this argument to an empty character: `""`. It defaults to a temp folder. If this argument is left `NULL` when calling this function, no changes to the path will be made. |
+| .lang | Target language to translate to. This will override values found in the LANG and LANGUAGE environment variables. |
+| .silent | Boolean flag that controls if there is or not output to the console. Defaults to FALSE. |
 | ... | Additional arguments that this function will pass down to the integrating function. In the case of Ollama, it will pass those arguments to `ollamar::chat()`. |
-
 
 
 ## Value
 Console output of the current LLM setup to be used during the R session.
+
+
+
+
 
 
 ## Examples
@@ -41,8 +52,16 @@ lang_use(ellmer::chat_openai(model = "gpt-4o"))
 # Using Ollama directly
 lang_use("ollama", "llama3.2", seed = 100)
 
-# Turn off cache by setting it to ""
+# Turn off cache by setting `.cache` to ""
 lang_use("ollama", "llama3.2", seed = 100, .cache = "")
+
+# Use `.lang` to set the target language to translate to,
+# it will be set for the current R session
+lang_use("ollama", "llama3.2", .lang = "spanish")
+
+# Use `.silent` to avoid console output
+lang_use("ollama", "llama3.2", .lang = "spanish", .silent = TRUE)
+
+# To see current settings, simply call the function
+lang_use()
 ```
-
-
