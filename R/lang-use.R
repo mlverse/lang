@@ -96,6 +96,9 @@ lang_use_impl <- function(
       provider <- backend$get_provider()
       backend_str <- glue("'{provider@name}' via `ellmer`")
       model_str <- provider@model
+    } else if (is.null(backend)) {
+      backend_str <- "[Unset]"
+      model_str <- ca[["model"]]    
     } else {
       backend_str <- "Ollama"
       model_str <- ca[["model"]]
@@ -107,7 +110,9 @@ lang_use_impl <- function(
     }
     cli_inform("{symbol$em_dash} {col_cyan('`lang`')} session")
     cli_inform(glue("{col_green('Backend:')} {backend_str}"))
-    cli_inform(glue("{col_green('Model:')} {model_str}"))
+    if(!is.null(model_str)) {
+      cli_inform(glue("{col_green('Model:')} {model_str}"))  
+    }
     if (path_dir(ca[[".cache"]]) != path_dir(temp_lang)) {
       cli_inform(glue("{col_green('Cache:')} {cache_str}"))
     }
