@@ -1,3 +1,12 @@
+# Empty lang_use() returns 'unset'
+
+    Code
+      lang_use()
+    Message
+      --- `lang` session
+      Backend: [Unset]
+      Language: en_US.UTF-8
+
 # lang_use() works
 
     Code
