@@ -1,7 +1,7 @@
 skip_on_os("windows")
 
 test_that("shim_lang_help works", {
-  withr::with_envvar(c("LANGUAGE" = "spanish", LANG = NA), {
+  withr::with_envvar(c(LANGUAGE = "spanish", LANG = NA), {
     x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
     expect_snapshot(shim_lang_help("llm_classify", "mall", type = "text"))
   })
@@ -11,9 +11,9 @@ test_that("shim_lang_question works", {
   withr::with_options(
     list(help_type = "text"),
     {
-      withr::with_envvar(c("LANGUAGE" = "en", LANG = NA), {
+      withr::with_envvar(c(LANGUAGE = "en", LANG = NA), {
         x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
-        expect_snapshot(shim_lang_question("llm_classify", "mall"))
+        expect_snapshot(shim_lang_question(llm_classify, mall))
       })
     }
   )
@@ -23,7 +23,7 @@ test_that("Shim works as expected", {
   withr::with_options(
     list(help_type = "text"),
     {
-      withr::with_envvar(c("LANGUAGE" = "es", LANG = NA), {
+      withr::with_envvar(c(LANGUAGE = "es", LANG = NA), {
         x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
         expect_snapshot(shim_lang_question(mall::llm_classify))
       })
@@ -51,7 +51,7 @@ test_that("Shim is able to be attached", {
   withr::with_options(
     list(help_type = "text"),
     {
-      withr::with_envvar(c("LANGUAGE" = "spanish", LANG = NA), {
+      withr::with_envvar(c(LANGUAGE = "spanish", LANG = NA), {
         x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
         expect_snapshot(help(llm_classify))
         expect_snapshot(shim_lang_question(llm_classify))
@@ -65,10 +65,19 @@ test_that("end_lang() works", {
 })
 
 test_that("Conflicting language message shows up", {
-  withr::with_envvar(c("LANGUAGE" = "spanish", LANG = "english"), {
+  withr::with_envvar(c(LANGUAGE = "spanish", LANG = "english"), {
     x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
     .lang_env$choose <- NULL
     .lang_env[["session"]]$.lang <- NULL
     expect_snapshot(which_lang(choose = TRUE))
+  })
+})
+
+test_that("No vars and arg returns 'english'", {
+  withr::with_envvar(c(LANGUAGE = NA, LANG = NA), {
+    x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+    .lang_env$choose <- NULL
+    .lang_env[["session"]]$.lang <- NULL
+    expect_equal(which_lang(), "english")
   })
 })

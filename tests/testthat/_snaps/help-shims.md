@@ -87,7 +87,7 @@
 # shim_lang_question works
 
     Code
-      shim_lang_question("llm_classify", "mall")
+      shim_lang_question(llm_classify, mall)
     Output
       _C_a_t_e_g_o_r_i_z_e _d_a_t_a _a_s _o_n_e _o_f _o_p_t_i_o_n_s _g_i_v_e_n
       
