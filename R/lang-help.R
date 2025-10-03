@@ -206,19 +206,16 @@ rd_prep_translate <- function(x, lang, rs) {
   } else {
     rd_text <- rd_extract_text(x)
   }
+  add_prompt <- paste(
+    "Do not translate anything between single",
+    "quotes. Do not translate the words: NULL,",
+    "TRUE, FALSE, NA, Nan"
+  )
   tag_text <- rs$run(
-    function(x, language) {
-      mall::llm_vec_translate(
-        x = x,
-        language = language,
-        additional_prompt = paste(
-          "Do not translate anything between single",
-          "quotes. Do not translate the words: NULL,",
-          "TRUE, FALSE, NA, Nan"
-        )
-      )
+    function(x, y, z) {
+      mall::llm_vec_translate(x = x, language = y, additional_prompt = z)
     },
-    args = list(x = rd_text, language = lang)
+    args = list(x = rd_text, y = lang, z = add_prompt)
   )
   tag_text <- rd_code_markers(tag_text)
   tag_text <- gsub("`", "", tag_text)
