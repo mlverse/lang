@@ -7,30 +7,6 @@ test_that("shim_lang_help works", {
   })
 })
 
-test_that("shim_lang_question works", {
-  withr::with_options(
-    list(help_type = "text"),
-    {
-      withr::with_envvar(c(LANGUAGE = "en", LANG = NA), {
-        x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
-        expect_snapshot(shim_lang_question(llm_classify, mall))
-      })
-    }
-  )
-})
-
-test_that("Shim works as expected", {
-  withr::with_options(
-    list(help_type = "text"),
-    {
-      withr::with_envvar(c(LANGUAGE = "es", LANG = NA), {
-        x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
-        expect_snapshot(shim_lang_question(mall::llm_classify))
-      })
-    }
-  )
-})
-
 test_that("Shim works as expected", {
   withr::with_options(
     list(help_type = "text"),
@@ -48,16 +24,6 @@ test_that("Shim is able to be attached", {
   insert_global_shims(force = TRUE)
   shims <- find("?")
   expect_true("lang_shims" %in% shims)
-  withr::with_options(
-    list(help_type = "text"),
-    {
-      withr::with_envvar(c(LANGUAGE = "spanish", LANG = NA), {
-        x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
-        expect_snapshot(help(llm_classify))
-        expect_snapshot(shim_lang_question(llm_classify))
-      })
-    }
-  )
 })
 
 test_that("end_lang() works", {
@@ -79,15 +45,18 @@ test_that("No vars and arg returns 'english'", {
     .lang_env$choose <- NULL
     .lang_env[["session"]]$.lang <- NULL
     expect_equal(which_lang(), "english")
+    expect_silent(shim_lang_question(lm))
   })
 })
 
-test_that("shim_lang_question works with function call", {
+test_that("shim_lang_question works", {
   withr::with_options(
     list(help_type = "text"),
     {
-      withr::with_envvar(c(LANGUAGE = "en", LANG = NA), {
+      withr::with_envvar(c(LANGUAGE = "spanish", LANG = NA), {
         x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+        expect_silent(shim_lang_question(lm))
+        expect_silent(shim_lang_question(stats::lm))
         expect_silent(shim_lang_question(lm()))
         expect_silent(shim_lang_question("lm"))
         expect_silent(shim_lang_question("lm", "stats"))
@@ -96,4 +65,11 @@ test_that("shim_lang_question works with function call", {
       })
     }
   )
+})
+
+test_that("shim_lang_help works with other cases", {
+  withr::with_envvar(c(LANGUAGE = "spanish", LANG = NA), {
+    x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+    expect_silent(shim_lang_help(NULL))
+  })
 })

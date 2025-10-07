@@ -35,7 +35,13 @@ lang_help <- function(topic,
 
   if (is.null(package)) {
     # Gets the path to installed help file
-    help_path <- as.character(utils::help(topic, help_type = "text"))
+    help_path <- callr::r(
+      function(x) {
+        as.character(utils::help(x, help_type = "text"))
+      },
+      args = list(x = topic)
+    )
+    
     # Tracks back two levels to figure out package name: .../[pkg]/help/[topic]
     help_pkg <- path_dir(path_dir(help_path))
     # Extracts name of package by using the name of its source folder

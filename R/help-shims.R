@@ -24,6 +24,10 @@ shim_lang_help <- function(topic, package = NULL, ...) {
   # Reproduce help's NSE for topic - try to eval it and see if it's a string
   topic_name <- substitute(topic)
 
+  if(is.null(topic)) {
+    topic <- deparse(topic)
+  }
+  
   is_string <- tryCatch(
     error = function(...) FALSE,
     {
@@ -31,6 +35,7 @@ shim_lang_help <- function(topic, package = NULL, ...) {
       is_string(topic)
     }
   )
+  
   topic_str <- NULL
   if (is_string) {
     topic_str <- topic
@@ -78,41 +83,41 @@ shim_lang_help <- function(topic, package = NULL, ...) {
 #' @rdname help
 #' @name ?
 shim_lang_question <- function(e1, e2) {
-  pkg <- NULL
-  # Get string version of e1, for find_topic
   e1_expr <- substitute(e1)
-  if (is.name(e1_expr)) {
-    # Called with a bare symbol, like ?foo
+  if(en_lang()) {
+    re_route <- FALSE
+  } else if (is.name(e1_expr)) {
+    # ?foo
+    re_route <- TRUE
     topic <- as.character(e1_expr)
     pkg <- NULL
   } else if (is.call(e1_expr)) {
     if (identical(e1_expr[[1]], quote(`?`))) {
-      # ??foo
-      topic <- NULL
-      pkg <- NULL
+      # ??foo --- Will not translate
+      re_route <- FALSE
     } else if (identical(e1_expr[[1]], quote(`::`))) {
       # ?bar::foo
+      re_route <- TRUE
       topic <- as.character(e1_expr[[3]])
       pkg <- as.character(e1_expr[[2]])
     } else {
       # ?foo(12)
+      re_route <- TRUE
       topic <- deparse(e1_expr[[1]])
       pkg <- NULL
     }
   } else if (is.character(e1_expr)) {
+    # ?"foo"
+    re_route <- TRUE
     topic <- e1
     pkg <- NULL
   } else {
-    cli::cli_abort("Unknown input.")
+    cli_abort("Unknown input.")
   }
-  if (!en_lang() && !is.null(topic)) {
+  if (re_route) {
     lang_help(topic, pkg)
   } else {
-    if (is_missing(e2)) {
-      eval(as.call(list(utils::`?`, substitute(e1))))
-    } else {
-      help(substitute(e1), substitute(e2))
-    }
+    eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
   }
 }
 
