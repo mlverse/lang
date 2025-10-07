@@ -81,3 +81,19 @@ test_that("No vars and arg returns 'english'", {
     expect_equal(which_lang(), "english")
   })
 })
+
+test_that("shim_lang_question works with function call", {
+  withr::with_options(
+    list(help_type = "text"),
+    {
+      withr::with_envvar(c(LANGUAGE = "en", LANG = NA), {
+        x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+        expect_silent(shim_lang_question(lm()))
+        expect_silent(shim_lang_question("lm"))
+        expect_silent(shim_lang_question("lm", "stats"))
+        expect_error(shim_lang_question(1), "Unknown input")
+        expect_null(insert_global_shims())
+      })
+    }
+  )
+})
