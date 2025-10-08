@@ -6,6 +6,7 @@
 #' @import mall
 #' @import cli
 #' @import fs
+#' @import rstudioapi
 .lang_env <- new.env()
 .lang_env$session <- list()
 .lang_env$choose <- NULL

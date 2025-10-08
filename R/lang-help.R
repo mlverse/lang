@@ -11,7 +11,7 @@
 #' @param topic The topic to search for
 #' @param package The R package to look for the topic
 #' @param lang Language to translate the help to
-#' @param type Produce "html" or "text" output for the help. It default to
+#' @param type Produce "html" or "text" output for the help. It defaults to
 #' `getOption("help_type")`
 #' @examples
 #' \donttest{
@@ -63,16 +63,18 @@ lang_help <- function(topic,
 #' @export
 print.lang_topic <- function(x, ...) {
   type <- arg_match0(x$type %||% "text", c("text", "html"))
-  if (type == "html" && rstudioapi_available()) {
-    return(rstudioapi::callFun("previewRd", x$path))
+  if (type == "html") {
+    if(is_installed("rstudioapi") && isAvailable()) {
+      return(callFun("previewRd", x$path)) 
+    } else {
+      html_file <- file_temp(ext = "html")
+      writeLines(capture.output(Rd2HTML(x$path)), html_file)
+      browseURL(html_file)
+    }
   }
   if (type == "text") {
     Rd2txt(x$path)
   }
-}
-
-rstudioapi_available <- function() {
-  is_installed("rstudioapi") && rstudioapi::isAvailable()
 }
 
 rd_translate <- function(topic, package, lang) {

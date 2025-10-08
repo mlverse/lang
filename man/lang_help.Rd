@@ -13,7 +13,7 @@ lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 
 \item{lang}{Language to translate the help to}
 
-\item{type}{Produce "html" or "text" output for the help. It default to
+\item{type}{Produce "html" or "text" output for the help. It defaults to
 \code{getOption("help_type")}}
 }
 \description{
