@@ -21,13 +21,7 @@
 #' @name help
 #' @usage # help(topic, package = NULL, ...)
 shim_lang_help <- function(topic, package = NULL, ...) {
-  # Reproduce help's NSE for topic - try to eval it and see if it's a string
   topic_name <- substitute(topic)
-
-  if(is.null(topic)) {
-    topic <- deparse(topic)
-  }
-  
   is_string <- tryCatch(
     error = function(...) FALSE,
     {
@@ -35,7 +29,7 @@ shim_lang_help <- function(topic, package = NULL, ...) {
       is_string(topic)
     }
   )
-  
+
   topic_str <- NULL
   if (is_string) {
     topic_str <- topic
@@ -43,23 +37,19 @@ shim_lang_help <- function(topic, package = NULL, ...) {
   } else if (missing(topic_name)) {
     # Leave the vars missing
   } else if (is_null(topic_name)) {
-    topic_str <- NULL
+    topic_str <- deparse(topic_name)
     topic_name <- NULL
   } else {
     topic_str <- deparse(substitute(topic))
     if (length(topic_str) != 1) {
-      cli::cli_abort("{.arg topic} must be a name.")
+      cli_abort("{.arg topic} must be a name.")
     }
   }
 
-  # help's NSE for package is slightly simpler
   package_name <- substitute(package)
   if (is_symbol(package_name)) {
     package_str <- as_string(package_name)
   } else {
-    # Complex expression, just evaluate it (#266). The value is
-    # injected in `utils::help(package = )` below, causing it to be
-    # interpreted as is.
     package_str <- package
     package_name <- package
   }
@@ -84,40 +74,35 @@ shim_lang_help <- function(topic, package = NULL, ...) {
 #' @name ?
 shim_lang_question <- function(e1, e2) {
   e1_expr <- substitute(e1)
-  if(en_lang()) {
-    re_route <- FALSE
-  } else if (is.name(e1_expr)) {
-    # ?foo
-    re_route <- TRUE
-    topic <- as.character(e1_expr)
-    pkg <- NULL
-  } else if (is.call(e1_expr)) {
-    if (identical(e1_expr[[1]], quote(`?`))) {
-      # ??foo --- Will not translate
-      re_route <- FALSE
-    } else if (identical(e1_expr[[1]], quote(`::`))) {
-      # ?bar::foo
-      re_route <- TRUE
-      topic <- as.character(e1_expr[[3]])
-      pkg <- as.character(e1_expr[[2]])
-    } else {
-      # ?foo(12)
-      re_route <- TRUE
-      topic <- deparse(e1_expr[[1]])
-      pkg <- NULL
-    }
-  } else if (is.character(e1_expr)) {
-    # ?"foo"
-    re_route <- TRUE
-    topic <- e1
-    pkg <- NULL
-  } else {
-    cli_abort("Unknown input.")
-  }
-  if (re_route) {
-    lang_help(topic, pkg)
-  } else {
+  # ??foo -- Will not translate
+  # Using `ifelse` because if its not a call, then `e1_expr` cannot be subset
+  is_vague <- ifelse(is_call(e1_expr), identical(e1_expr[[1]], quote(`?`)), FALSE)
+  if (en_lang() | is_vague) {
+    # Passing as-is if language is English, or there is a `??` call
     eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
+  } else {
+    pkg <- NULL
+    if (is.name(e1_expr)) {
+      # ?foo
+      topic <- as.character(e1_expr)
+    } else if (is.call(e1_expr)) {
+      if (identical(e1_expr[[1]], quote(`::`))) {
+        # ?bar::foo
+        topic <- as.character(e1_expr[[3]])
+        pkg <- as.character(e1_expr[[2]])
+      } else {
+        # ?foo(12)
+        topic <- deparse(e1_expr[[1]])
+      }
+    } else if (is.character(e1_expr)) {
+      # ?"foo"
+      topic <- e1
+    } else if (is.null(e1) && is_missing(e2)) {
+      topic <- deparse(e1)
+    } else {
+      cli_abort("Unknown input.")
+    }
+    lang_help(topic, pkg)
   }
 }
 

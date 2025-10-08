@@ -7,13 +7,14 @@
 lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 }
 \arguments{
-\item{topic}{The topic to search for}
+\item{topic}{A character vector of the topic to search for.}
 
-\item{package}{The R package to look for the topic}
+\item{package}{The R package to look for the topic, if not provided the
+function will attempt to find the topic based on the loaded packages.}
 
-\item{lang}{Language to translate the help to}
+\item{lang}{A character vector language to translate the topic to}
 
-\item{type}{Produce "html" or "text" output for the help. It default to
+\item{type}{Produce "html" or "text" output for the help. It defaults to
 \code{getOption("help_type")}}
 }
 \description{

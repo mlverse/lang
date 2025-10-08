@@ -8,10 +8,11 @@
 #' will be processed, so the help returned will be the original package's
 #' documentation.
 #'
-#' @param topic The topic to search for
-#' @param package The R package to look for the topic
-#' @param lang Language to translate the help to
-#' @param type Produce "html" or "text" output for the help. It default to
+#' @param topic A character vector of the topic to search for.
+#' @param package The R package to look for the topic, if not provided the 
+#' function will attempt to find the topic based on the loaded packages. 
+#' @param lang A character vector language to translate the topic to
+#' @param type Produce "html" or "text" output for the help. It defaults to
 #' `getOption("help_type")`
 #' @examples
 #' \donttest{
@@ -35,13 +36,7 @@ lang_help <- function(topic,
 
   if (is.null(package)) {
     # Gets the path to installed help file
-    help_path <- callr::r(
-      function(x) {
-        as.character(utils::help(x, help_type = "text"))
-      },
-      args = list(x = topic)
-    )
-    
+    help_path <- as.character(utils::help(topic, help_type = "text"))
     # Tracks back two levels to figure out package name: .../[pkg]/help/[topic]
     help_pkg <- path_dir(path_dir(help_path))
     # Extracts name of package by using the name of its source folder
@@ -63,16 +58,18 @@ lang_help <- function(topic,
 #' @export
 print.lang_topic <- function(x, ...) {
   type <- arg_match0(x$type %||% "text", c("text", "html"))
-  if (type == "html" && rstudioapi_available()) {
-    return(rstudioapi::callFun("previewRd", x$path))
+  if (type == "html") {
+    if (is_installed("rstudioapi") && isAvailable()) {
+      return(callFun("previewRd", x$path))
+    } else {
+      html_file <- file_temp(ext = "html")
+      writeLines(capture.output(Rd2HTML(x$path)), html_file)
+      browseURL(html_file)
+    }
   }
   if (type == "text") {
     Rd2txt(x$path)
   }
-}
-
-rstudioapi_available <- function() {
-  is_installed("rstudioapi") && rstudioapi::isAvailable()
 }
 
 rd_translate <- function(topic, package, lang) {
@@ -177,7 +174,7 @@ rd_translate <- function(topic, package, lang) {
   rs$close()
   cli_progress_update()
   rd_text <- paste0(as.character(rd_content), collapse = "")
-  topic_path <- fs::path(tempdir(), topic_name, ext = "Rd")
+  topic_path <- path(tempdir(), topic_name, ext = "Rd")
   writeLines(rd_text, topic_path)
   topic_path
 }

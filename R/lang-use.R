@@ -1,7 +1,9 @@
 #' Specifies the LLM provider and model to use during the R session
 #' @description
 #' Allows us to specify the back-end provider, model to use during the current
-#' R session.
+#' R session. The target language is not processed by the function, as in 
+#' converting "english" to "en" for example. The value is passed directly to
+#' the LLM, and it lets the LLM interpret the target language. 
 #' @param backend "ollama" or an `ellmer` `Chat` object. If using "ollama",
 #' `mall` will use is out-of-the-box integration with that back-end. Defaults
 #' to "ollama".
@@ -14,7 +16,7 @@
 #' character: `""`. It defaults to a temp folder. If this argument is left
 #' `NULL` when calling this function, no changes to the path will be made.
 #' @param .lang Target language to translate to. This will override values found
-#' in the LANG and LANGUAGE environment variables.
+#' in the LANG and LANGUAGE environment variables. 
 #' @param .silent Boolean flag that controls if there is or not output to the
 #' console. Defaults to FALSE.
 #' @returns Console output of the current LLM setup to be used during the
@@ -88,17 +90,16 @@ lang_use_impl <- function(
     ca[["args"]] <- args
   }
   .lang_env$session <- ca
+  backend_str <- NULL
+  model_str <- NULL
   if (.is_internal) {
     return(ca)
   } else if (!.silent) {
     backend <- ca[["backend"]]
     if (inherits(backend, "Chat")) {
       provider <- backend$get_provider()
-      backend_str <- glue("'{provider@name}' via `ellmer`")
+      backend_str <- provider@name
       model_str <- provider@model
-    } else if (is.null(backend)) {
-      backend_str <- "[Unset]"
-      model_str <- ca[["model"]]
     } else {
       backend_str <- "Ollama"
       model_str <- ca[["model"]]
@@ -109,15 +110,15 @@ lang_use_impl <- function(
       cache_str <- ca[[".cache"]]
     }
     current_lang <- which_lang(.lang, choose = TRUE)
-    cli_inform("{symbol$em_dash} {col_cyan('`lang`')} session")
-    cli_inform(glue("{col_green('Backend:')} {backend_str}"))
-    if (!is.null(model_str)) {
-      cli_inform(glue("{col_green('Model:')} {model_str}"))
+    if (!is.null(model_str) && !is.null(backend_str)) {
+      cli_inform("{.field Model:} {model_str} {.field via} {backend_str}")
+    } else {
+      cli_inform("{.field Model not set}")
     }
+    cli_inform("{.field Lang: } {current_lang}")
     if (path_dir(ca[[".cache"]]) != path_dir(temp_lang)) {
-      cli_inform(glue("{col_green('Cache:')} {cache_str}"))
-    }
-    cli_inform(glue("{col_green('Language:')} {current_lang}"))
+      cli_inform("{.field Cache:} {cache_str}")
+    }    
   }
   invisible()
 }

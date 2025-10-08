@@ -1,16 +1,29 @@
 skip_on_os("windows")
 
 test_that("shim_lang_help works", {
-  withr::with_envvar(c(LANGUAGE = "spanish", LANG = NA), {
-    x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
-    expect_snapshot(shim_lang_help("llm_classify", "mall", type = "text"))
-  })
+  invisible(
+    lang_use_impl("simulate_llm", "echo", .is_internal = TRUE, .lang = "spanish")
+  )
+  expect_silent(shim_lang_help(NULL))
+  expect_silent(shim_lang_help(NULL, base))
+  expect_silent(shim_lang_help(NULL, "base"))
+  expect_silent(shim_lang_help("NULL", base))
+  expect_silent(shim_lang_help("NULL", "base"))
+  expect_silent(shim_lang_help(mtcars))
+  expect_silent(shim_lang_help("mtcars"))
+  expect_silent(shim_lang_help(mtcars, datasets))
+  expect_silent(shim_lang_help("mtcars", "datasets"))
+  invisible(
+    lang_use_impl("simulate_llm", "echo", .is_internal = TRUE, .lang = "english")
+  )
+  expect_silent(shim_lang_help(mtcars))
 })
 
 test_that("Shim is able to be attached", {
   insert_global_shims(force = TRUE)
   shims <- find("?")
   expect_true("lang_shims" %in% shims)
+  expect_null(insert_global_shims())
 })
 
 test_that("en_lang() works", {
@@ -49,12 +62,12 @@ test_that("shim_lang_question works", {
       expect_silent(shim_lang_question("lm"))
       expect_silent(shim_lang_question("lm", "stats"))
       expect_error(shim_lang_question(1), "Unknown input")
-      expect_null(insert_global_shims())
-      expect_silent(shim_lang_help(NULL))
+      expect_silent(shim_lang_question(NULL))
+      expect_silent(shim_lang_question(base::`NULL`))
       expect_identical(
         shim_lang_question(?lm),
         utils::`?`(?lm)
-      )      
+      )
     }
   )
 })
