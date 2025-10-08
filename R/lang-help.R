@@ -41,7 +41,7 @@ lang_help <- function(topic,
       },
       args = list(x = topic)
     )
-    
+
     # Tracks back two levels to figure out package name: .../[pkg]/help/[topic]
     help_pkg <- path_dir(path_dir(help_path))
     # Extracts name of package by using the name of its source folder
@@ -64,8 +64,8 @@ lang_help <- function(topic,
 print.lang_topic <- function(x, ...) {
   type <- arg_match0(x$type %||% "text", c("text", "html"))
   if (type == "html") {
-    if(is_installed("rstudioapi") && isAvailable()) {
-      return(callFun("previewRd", x$path)) 
+    if (is_installed("rstudioapi") && isAvailable()) {
+      return(callFun("previewRd", x$path))
     } else {
       html_file <- file_temp(ext = "html")
       writeLines(capture.output(Rd2HTML(x$path)), html_file)

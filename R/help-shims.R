@@ -29,7 +29,7 @@ shim_lang_help <- function(topic, package = NULL, ...) {
       is_string(topic)
     }
   )
-  
+
   topic_str <- NULL
   if (is_string) {
     topic_str <- topic
@@ -76,8 +76,8 @@ shim_lang_question <- function(e1, e2) {
   e1_expr <- substitute(e1)
   # ??foo -- Will not translate
   # Using `ifelse` because if its not a call, then `e1_expr` cannot be subset
-  is_vague <- ifelse(is_call(e1_expr), identical(e1_expr[[1]], quote(`?`)) , FALSE) 
-  if(en_lang() | is_vague) {
+  is_vague <- ifelse(is_call(e1_expr), identical(e1_expr[[1]], quote(`?`)), FALSE)
+  if (en_lang() | is_vague) {
     # Passing as-is if language is English, or there is a `??` call
     eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
   } else {
@@ -97,9 +97,9 @@ shim_lang_question <- function(e1, e2) {
     } else if (is.character(e1_expr)) {
       # ?"foo"
       topic <- e1
-    } else if(is.null(e1) && is_missing(e2)) {
+    } else if (is.null(e1) && is_missing(e2)) {
       topic <- deparse(e1)
-    }else {
+    } else {
       cli_abort("Unknown input.")
     }
     lang_help(topic, pkg)
