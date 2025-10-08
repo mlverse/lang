@@ -179,7 +179,7 @@ rd_translate <- function(topic, package, lang) {
   rs$close()
   cli_progress_update()
   rd_text <- paste0(as.character(rd_content), collapse = "")
-  topic_path <- fs::path(tempdir(), topic_name, ext = "Rd")
+  topic_path <- path(tempdir(), topic_name, ext = "Rd")
   writeLines(rd_text, topic_path)
   topic_path
 }

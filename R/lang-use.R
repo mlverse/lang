@@ -88,17 +88,16 @@ lang_use_impl <- function(
     ca[["args"]] <- args
   }
   .lang_env$session <- ca
+  backend_str <- NULL
+  model_str <- NULL
   if (.is_internal) {
     return(ca)
   } else if (!.silent) {
     backend <- ca[["backend"]]
     if (inherits(backend, "Chat")) {
       provider <- backend$get_provider()
-      backend_str <- glue("'{provider@name}' via `ellmer`")
+      backend_str <- provider@name
       model_str <- provider@model
-    } else if (is.null(backend)) {
-      backend_str <- "[Unset]"
-      model_str <- ca[["model"]]
     } else {
       backend_str <- "Ollama"
       model_str <- ca[["model"]]
@@ -109,15 +108,15 @@ lang_use_impl <- function(
       cache_str <- ca[[".cache"]]
     }
     current_lang <- which_lang(.lang, choose = TRUE)
-    cli_inform("{symbol$em_dash} {col_cyan('`lang`')} session")
-    cli_inform(glue("{col_green('Backend:')} {backend_str}"))
-    if (!is.null(model_str)) {
-      cli_inform(glue("{col_green('Model:')} {model_str}"))
+    if (!is.null(model_str) && !is.null(backend_str)) {
+      cli_inform("{.field Model:} {model_str} {.field via} {backend_str}")
+    } else {
+      cli_inform("{.field Model not set}")
     }
+    cli_inform("{.field Lang: } {current_lang}")
     if (path_dir(ca[[".cache"]]) != path_dir(temp_lang)) {
-      cli_inform(glue("{col_green('Cache:')} {cache_str}"))
-    }
-    cli_inform(glue("{col_green('Language:')} {current_lang}"))
+      cli_inform("{.field Cache:} {cache_str}")
+    }    
   }
   invisible()
 }

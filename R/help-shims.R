@@ -42,7 +42,7 @@ shim_lang_help <- function(topic, package = NULL, ...) {
   } else {
     topic_str <- deparse(substitute(topic))
     if (length(topic_str) != 1) {
-      cli::cli_abort("{.arg topic} must be a name.")
+      cli_abort("{.arg topic} must be a name.")
     }
   }
 
