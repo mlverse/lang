@@ -21,13 +21,7 @@
 #' @name help
 #' @usage # help(topic, package = NULL, ...)
 shim_lang_help <- function(topic, package = NULL, ...) {
-  # Reproduce help's NSE for topic - try to eval it and see if it's a string
   topic_name <- substitute(topic)
-
-  if(is.null(topic)) {
-    topic <- deparse(topic)
-  }
-  
   is_string <- tryCatch(
     error = function(...) FALSE,
     {
@@ -43,7 +37,7 @@ shim_lang_help <- function(topic, package = NULL, ...) {
   } else if (missing(topic_name)) {
     # Leave the vars missing
   } else if (is_null(topic_name)) {
-    topic_str <- NULL
+    topic_str <- deparse(topic_name)
     topic_name <- NULL
   } else {
     topic_str <- deparse(substitute(topic))
@@ -52,14 +46,10 @@ shim_lang_help <- function(topic, package = NULL, ...) {
     }
   }
 
-  # help's NSE for package is slightly simpler
   package_name <- substitute(package)
   if (is_symbol(package_name)) {
     package_str <- as_string(package_name)
   } else {
-    # Complex expression, just evaluate it (#266). The value is
-    # injected in `utils::help(package = )` below, causing it to be
-    # interpreted as is.
     package_str <- package
     package_name <- package
   }
