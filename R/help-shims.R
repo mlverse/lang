@@ -84,40 +84,35 @@ shim_lang_help <- function(topic, package = NULL, ...) {
 #' @name ?
 shim_lang_question <- function(e1, e2) {
   e1_expr <- substitute(e1)
-  if(en_lang()) {
-    re_route <- FALSE
-  } else if (is.name(e1_expr)) {
-    # ?foo
-    re_route <- TRUE
-    topic <- as.character(e1_expr)
-    pkg <- NULL
-  } else if (is.call(e1_expr)) {
-    if (identical(e1_expr[[1]], quote(`?`))) {
-      # ??foo --- Will not translate
-      re_route <- FALSE
-    } else if (identical(e1_expr[[1]], quote(`::`))) {
-      # ?bar::foo
-      re_route <- TRUE
-      topic <- as.character(e1_expr[[3]])
-      pkg <- as.character(e1_expr[[2]])
-    } else {
-      # ?foo(12)
-      re_route <- TRUE
-      topic <- deparse(e1_expr[[1]])
-      pkg <- NULL
-    }
-  } else if (is.character(e1_expr)) {
-    # ?"foo"
-    re_route <- TRUE
-    topic <- e1
-    pkg <- NULL
-  } else {
-    cli_abort("Unknown input.")
-  }
-  if (re_route) {
-    lang_help(topic, pkg)
-  } else {
+  # ??foo -- Will not translate
+  # Using `ifelse` because if its not a call, then `e1_expr` cannot be subset
+  is_vague <- ifelse(is_call(e1_expr), identical(e1_expr[[1]], quote(`?`)) , FALSE) 
+  if(en_lang() | is_vague) {
+    # Passing as-is if language is English, or there is a `??` call
     eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
+  } else {
+    pkg <- NULL
+    if (is.name(e1_expr)) {
+      # ?foo
+      topic <- as.character(e1_expr)
+    } else if (is.call(e1_expr)) {
+      if (identical(e1_expr[[1]], quote(`::`))) {
+        # ?bar::foo
+        topic <- as.character(e1_expr[[3]])
+        pkg <- as.character(e1_expr[[2]])
+      } else {
+        # ?foo(12)
+        topic <- deparse(e1_expr[[1]])
+      }
+    } else if (is.character(e1_expr)) {
+      # ?"foo"
+      topic <- e1
+    } else if(is.null(e1) && is_missing(e2)) {
+      topic <- deparse(e1)
+    }else {
+      cli_abort("Unknown input.")
+    }
+    lang_help(topic, pkg)
   }
 }
 

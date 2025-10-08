@@ -11,6 +11,7 @@ test_that("Shim is able to be attached", {
   insert_global_shims(force = TRUE)
   shims <- find("?")
   expect_true("lang_shims" %in% shims)
+  expect_null(insert_global_shims())
 })
 
 test_that("en_lang() works", {
@@ -49,8 +50,8 @@ test_that("shim_lang_question works", {
       expect_silent(shim_lang_question("lm"))
       expect_silent(shim_lang_question("lm", "stats"))
       expect_error(shim_lang_question(1), "Unknown input")
-      expect_null(insert_global_shims())
-      expect_silent(shim_lang_help(NULL))
+      expect_silent(shim_lang_question(NULL))
+      expect_silent(shim_lang_question(base::`NULL`))
       expect_identical(
         shim_lang_question(?lm),
         utils::`?`(?lm)
