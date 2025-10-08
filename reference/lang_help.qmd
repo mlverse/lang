@@ -22,7 +22,7 @@ lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 | topic | The topic to search for |
 | package | The R package to look for the topic |
 | lang | Language to translate the help to |
-| type | Produce "html" or "text" output for the help. It default to `getOption("help_type")` |
+| type | Produce "html" or "text" output for the help. It defaults to `getOption("help_type")` |
 
 
 
@@ -33,9 +33,14 @@ lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 
 ## Examples
 ```{r}
+
+
 library(lang)
 
 lang_use("ollama", "llama3.2", seed = 100)
 
 lang_help("lang_help", lang = "spanish", type = "text")
+
+
+
 ```

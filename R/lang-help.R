@@ -8,9 +8,10 @@
 #' will be processed, so the help returned will be the original package's
 #' documentation.
 #'
-#' @param topic The topic to search for
-#' @param package The R package to look for the topic
-#' @param lang Language to translate the help to
+#' @param topic A character vector of the topic to search for.
+#' @param package The R package to look for the topic, if not provided the 
+#' function will attempt to find the topic based on the loaded packages. 
+#' @param lang A character vector language to translate the topic to
 #' @param type Produce "html" or "text" output for the help. It defaults to
 #' `getOption("help_type")`
 #' @examples
@@ -35,13 +36,7 @@ lang_help <- function(topic,
 
   if (is.null(package)) {
     # Gets the path to installed help file
-    help_path <- callr::r(
-      function(x) {
-        as.character(utils::help(x, help_type = "text"))
-      },
-      args = list(x = topic)
-    )
-
+    help_path <- as.character(utils::help(topic, help_type = "text"))
     # Tracks back two levels to figure out package name: .../[pkg]/help/[topic]
     help_pkg <- path_dir(path_dir(help_path))
     # Extracts name of package by using the name of its source folder

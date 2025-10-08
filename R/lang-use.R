@@ -1,7 +1,9 @@
 #' Specifies the LLM provider and model to use during the R session
 #' @description
 #' Allows us to specify the back-end provider, model to use during the current
-#' R session.
+#' R session. The target language is not processed by the function, as in 
+#' converting "english" to "en" for example. The value is passed directly to
+#' the LLM, and it lets the LLM interpret the target language. 
 #' @param backend "ollama" or an `ellmer` `Chat` object. If using "ollama",
 #' `mall` will use is out-of-the-box integration with that back-end. Defaults
 #' to "ollama".
@@ -14,7 +16,7 @@
 #' character: `""`. It defaults to a temp folder. If this argument is left
 #' `NULL` when calling this function, no changes to the path will be made.
 #' @param .lang Target language to translate to. This will override values found
-#' in the LANG and LANGUAGE environment variables.
+#' in the LANG and LANGUAGE environment variables. 
 #' @param .silent Boolean flag that controls if there is or not output to the
 #' console. Defaults to FALSE.
 #' @returns Console output of the current LLM setup to be used during the
