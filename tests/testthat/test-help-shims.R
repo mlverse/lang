@@ -57,16 +57,16 @@ test_that("shim_lang_question works", {
         lang_use_impl("simulate_llm", "echo", .is_internal = TRUE, .lang = "spanish")
       )
       expect_silent(shim_lang_question(lm))
-      expect_silent(shim_lang_question(stats::lm))
-      expect_silent(shim_lang_question(lm()))
-      expect_silent(shim_lang_question("lm"))
-      expect_silent(shim_lang_question("lm", "stats"))
+      expect_silent(shim_lang_question(datasets::mtcars))
+      expect_silent(shim_lang_question(mtcars()))
+      expect_silent(shim_lang_question("mtcars"))
+      expect_silent(shim_lang_question("mtcars", "stats"))
       expect_error(shim_lang_question(1), "Unknown input")
       expect_silent(shim_lang_question(NULL))
       expect_silent(shim_lang_question(base::`NULL`))
       expect_identical(
-        shim_lang_question(?lm),
-        utils::`?`(?lm)
+        shim_lang_question(?mtcars),
+        utils::`?`(?mtcars)
       )
     }
   )
