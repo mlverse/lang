@@ -1,9 +1,9 @@
 #' Specifies the LLM provider and model to use during the R session
 #' @description
 #' Allows us to specify the back-end provider, model to use during the current
-#' R session. The target language is not processed by the function, as in 
+#' R session. The target language is not processed by the function, as in
 #' converting "english" to "en" for example. The value is passed directly to
-#' the LLM, and it lets the LLM interpret the target language. 
+#' the LLM, and it lets the LLM interpret the target language.
 #' @param backend "ollama" or an `ellmer` `Chat` object. If using "ollama",
 #' `mall` will use is out-of-the-box integration with that back-end. Defaults
 #' to "ollama".
@@ -16,7 +16,7 @@
 #' character: `""`. It defaults to a temp folder. If this argument is left
 #' `NULL` when calling this function, no changes to the path will be made.
 #' @param .lang Target language to translate to. This will override values found
-#' in the LANG and LANGUAGE environment variables. 
+#' in the LANG and LANGUAGE environment variables.
 #' @param .silent Boolean flag that controls if there is or not output to the
 #' console. Defaults to FALSE.
 #' @returns Console output of the current LLM setup to be used during the
@@ -101,7 +101,13 @@ lang_use_impl <- function(
       backend_str <- provider@name
       model_str <- provider@model
     } else {
-      backend_str <- "Ollama"
+      if (is.null(backend)) {
+        backend_str <- NULL
+      } else if (backend == "ollama") {
+        backend_str <- "Ollama"
+      } else {
+        backend_str <- backend
+      }
       model_str <- ca[["model"]]
     }
     if (ca[[".cache"]] == "") {
@@ -118,7 +124,7 @@ lang_use_impl <- function(
     cli_inform("{.field Lang: } {current_lang}")
     if (path_dir(ca[[".cache"]]) != path_dir(temp_lang)) {
       cli_inform("{.field Cache:} {cache_str}")
-    }    
+    }
   }
   invisible()
 }

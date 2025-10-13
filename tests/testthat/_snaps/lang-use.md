@@ -11,7 +11,7 @@
     Code
       lang_use("simulate_llm", "echo", .cache = "path/to/cache", .lang = "test")
     Message
-      Model: echo via Ollama
+      Model: echo via simulate_llm
       Lang: test
       Cache: path/to/cache
 
@@ -29,7 +29,7 @@
     Code
       lang_use("simulate_llm", "echo", temp = 0.8, .cache = "path/to/cache", .lang = "test")
     Message
-      Model: echo via Ollama
+      Model: echo via simulate_llm
       Lang: test
       Cache: path/to/cache
 
@@ -38,7 +38,7 @@
     Code
       lang_use("simulate_llm", "echo", .cache = "", .lang = "test")
     Message
-      Model: echo via Ollama
+      Model: echo via simulate_llm
       Lang: test
       Cache: [Disabled]
 

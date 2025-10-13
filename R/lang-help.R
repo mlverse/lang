@@ -9,8 +9,8 @@
 #' documentation.
 #'
 #' @param topic A character vector of the topic to search for.
-#' @param package The R package to look for the topic, if not provided the 
-#' function will attempt to find the topic based on the loaded packages. 
+#' @param package The R package to look for the topic, if not provided the
+#' function will attempt to find the topic based on the loaded packages.
 #' @param lang A character vector language to translate the topic to
 #' @param type Produce "html" or "text" output for the help. It defaults to
 #' `getOption("help_type")`
