@@ -29,11 +29,9 @@ lang_help <- function(topic,
                       lang = NULL,
                       type = getOption("help_type")) {
   lang <- which_lang(lang, choose = TRUE)
-
   if (en_lang(lang)) {
     abort("Language already set to English, use `help()`")
   }
-
   if (is.null(package)) {
     # Gets the path to installed help file
     help_path <- as.character(utils::help(topic, help_type = "text"))
@@ -41,8 +39,21 @@ lang_help <- function(topic,
     help_pkg <- path_dir(path_dir(help_path))
     # Extracts name of package by using the name of its source folder
     package <- path_file(help_pkg)
+    # Ensures the correct topic file is pulled (geom_col is inside geom_bar)
+    topic <- path_file(help_path)
   }
-  topic_path <- rd_translate(topic, package, lang)
+  db <- Rd_db(package)
+  rd_content <- db[[path(topic, ext = "Rd")]]
+  if (is.null(rd_content)) {
+    help_path <- as.character(utils::help(
+      topic = topic,
+      package = eval(package),
+      help_type = "text"
+    ))
+    topic <- path_file(help_path)
+    rd_content <- db[[path(topic, ext = "Rd")]]
+  }
+  topic_path <- rd_translate(rd_content, lang)
   structure(
     list(
       topic = topic,
@@ -72,9 +83,7 @@ print.lang_topic <- function(x, ...) {
   }
 }
 
-rd_translate <- function(topic, package, lang) {
-  db <- Rd_db(package)
-  rd_content <- db[[path(topic, ext = "Rd")]]
+rd_translate <- function(rd_content, lang) {
   tag_text <- NULL
   tag_name <- NULL
   tag_label <- NULL
@@ -97,9 +106,9 @@ rd_translate <- function(topic, package, lang) {
     args = list(x = use_args)
   )
   standard_tags <- c(
-    "\\title", "\\description", "\\value", 
+    "\\title", "\\description", "\\value",
     "\\details", "\\seealso", "\\note", "\\author"
-    )
+  )
   non_standard_tags <- c("\\section", "\\arguments", "\\examples")
   all_tags <- as.character(lapply(rd_content, function(x) attr(x, "Rd_tag")))
   filter_obj <- lapply(
