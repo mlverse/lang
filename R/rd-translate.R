@@ -31,7 +31,7 @@ rd_translate <- function(rd_content, lang) {
     function(x) rd_content[all_tags == x]
   )
   section_no <- 0
-  cli_progress_bar(
+  cli_progress_bar_int(
     total = as.integer(object.size(filter_obj)),
     format = "[{section_no}/{length(filter_obj)}] {pb_bar} {pb_percent} | {tag_label}"
   )
@@ -46,7 +46,7 @@ rd_translate <- function(rd_content, lang) {
       tag_label <- tag_name
       if (tag_name %in% standard_tags) {
         tag_label <- tag_to_label(tag_name)
-        cli_progress_update()
+        cli_progress_update_int()
         rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
       }
       if (tag_name == "\\section") {
@@ -63,11 +63,11 @@ rd_translate <- function(rd_content, lang) {
           rd_k <- rd_i[[k]]
           if (length(rd_k) > 1) {
             tag_label <- glue("Arguments: `{rd_extract_text(rd_k[[1]])}`")
-            cli_progress_update()
+            cli_progress_update_int()
             rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
           }
           obj_progress <- obj_progress + as.integer(object.size(rd_k))
-          cli_progress_update(set = obj_progress)
+          cli_progress_update_int(set = obj_progress)
         }
       }
       if (tag_name == "\\examples") {
@@ -88,7 +88,7 @@ rd_translate <- function(rd_content, lang) {
       }
       if (tag_name != "\\arguments") {
         obj_progress <- obj_progress + as.integer(object.size(rd_i))
-        cli_progress_update(set = obj_progress)
+        cli_progress_update_int(set = obj_progress)
       }
     }
     if (tag_name == "\\name") {
@@ -97,7 +97,7 @@ rd_translate <- function(rd_content, lang) {
   }
   tag_name <- NULL
   rs$close()
-  cli_progress_update()
+  cli_progress_update_int()
   rd_text <- paste0(as.character(rd_content), collapse = "")
   topic_path <- path(tempdir(), topic_name, ext = "Rd")
   writeLines(rd_text, topic_path)
@@ -244,4 +244,16 @@ tag_to_label <- function(x) {
     x <- as.character(match)
   }
   to_title(x)
+}
+
+cli_progress_bar_int <- function(...) {
+  if (interactive()) {
+    cli_progress_bar(...)
+  }
+}
+
+cli_progress_update_int <- function(...) {
+  if (interactive()) {
+    cli_progress_update(...)
+  }
 }

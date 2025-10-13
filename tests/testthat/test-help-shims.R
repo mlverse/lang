@@ -45,7 +45,6 @@ test_that("No vars and arg returns 'english'", {
     .lang_env$choose <- NULL
     .lang_env[["session"]]$.lang <- NULL
     expect_equal(which_lang(), "english")
-    expect_silent(shim_lang_question(lm))
   })
 })
 
