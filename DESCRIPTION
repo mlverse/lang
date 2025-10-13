@@ -1,7 +1,7 @@
 Package: lang
 Title: Using an Large Language Model of your choice, it translates the R
     help documentation to a specific language
-Version: 0.0.0.9006
+Version: 0.0.0.9007
 Authors@R: 
     person("Edgar", "Ruiz", , "edgar@posit.co", role = c("aut", "cre"))
 Description: Use an 'LLM' to translate a function's help documentation on-the-fly.

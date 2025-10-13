@@ -6,6 +6,14 @@
       Model not set
       Lang: english
 
+# lang_use() works with 'ollama'
+
+    Code
+      lang_use("ollama", "model")
+    Message
+      Model: model via Ollama
+      Lang: english
+
 # lang_use() works
 
     Code

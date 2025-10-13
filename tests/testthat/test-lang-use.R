@@ -5,6 +5,12 @@ test_that("Empty lang_use() returns 'unset'", {
   )
 })
 
+test_that("lang_use() works with 'ollama'", {
+  expect_snapshot(
+    lang_use("ollama", "model")
+  )
+})
+
 test_that("lang_use() works", {
   expect_snapshot(
     lang_use("simulate_llm", "echo", .cache = "path/to/cache", .lang = "test")

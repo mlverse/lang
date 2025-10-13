@@ -84,3 +84,18 @@
            )
            
 
+---
+
+    Could not find `nothere`
+    i Tip: Make sure the containing package is loaded, and the topic is spelled correctly
+
+---
+
+    Package `notpkg` not found
+    i Tip: Make sure package name is spelled correctly
+
+---
+
+    `nothere` could not be found in `mall`
+    i Tip: Make sure both are spelled correctly
+
