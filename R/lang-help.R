@@ -35,16 +35,30 @@ lang_help <- function(topic,
   if (is.null(package)) {
     # Gets the path to installed help file
     help_path <- as.character(utils::help(topic, help_type = "text"))
+    if (length(help_path) == 0) {
+      cli_abort(c(
+        "Could not find {.field `{topic}`}",
+        "i" = "{.emph Tip: Make sure it is spelled correctly}"
+      ))
+    }
     # Tracks back two levels to figure out package name: .../[pkg]/help/[topic]
     help_pkg <- path_dir(path_dir(help_path))
     # Extracts name of package by using the name of its source folder
     package <- path_file(help_pkg)
     # Ensures the correct topic file is pulled (geom_col is inside geom_bar)
     topic <- path_file(help_path)
+  } else {
+    pkg_exists <- find.package(package, quiet = TRUE)
+    if (length(pkg_exists) == 0) {
+      cli_abort(c(
+        "Package {.pkg `{package}`} not found",
+        "i" = "{.emph Tip: Make sure package name is spelled correctly}"
+      ))
+    }
   }
   db <- Rd_db(package)
   rd_content <- db[[path(topic, ext = "Rd")]]
-  # If topic cannot be found, it will try and see if the topiic is aliased
+  # If topic cannot be found, it will try and see if the topic is aliased
   # (geom_col is inside geom_bar)
   if (is.null(rd_content)) {
     # Uses help() to find the actual name of the Rd file that contains
@@ -54,7 +68,13 @@ lang_help <- function(topic,
       package = eval(package),
       help_type = "text"
     ))
-    # Updates the topic name 
+    if (length(help_path) == 0) {
+      cli_abort(c(
+        "{.field `{topic}`} could not be found in {.pkg `{package}`}",
+        "i" = "{.emph Tip: Make sure both are spelled correctly}"
+      ))
+    }
+    # Updates the topic name
     topic <- path_file(help_path)
     rd_content <- db[[path(topic, ext = "Rd")]]
   }
