@@ -35,7 +35,7 @@ rd_translate <- function(rd_content, lang) {
     total = as.integer(object.size(filter_obj)),
     format = "[{section_no}/{length(filter_obj)}] {pb_bar} {pb_percent} | {tag_label}"
   )
-  
+
   obj_progress <- 0
   for (i in seq_along(rd_content)) {
     rd_i <- rd_content[[i]]
@@ -117,7 +117,7 @@ rd_comment_translate <- function(x, lang, rs) {
       )
       rd_char <- paste0("# ", rd_char, "\n")
     } else {
-      
+
     }
     rd_char <- gsub("%", "\\\\%", rd_char)
     attributes(rd_char) <- attributes(x)
@@ -133,6 +133,9 @@ rd_prep_translate <- function(x, lang, rs) {
     rd_text <- paste(rd_extract, collapse = " ")
   } else {
     rd_text <- rd_extract_text(x)
+    if (is.null(rd_text)) {
+      return(x)
+    }
   }
   add_prompt <- paste(
     "Do not translate anything between single",
@@ -169,8 +172,11 @@ rd_extract_text <- function(x, collapse = TRUE) {
   temp_rd <- tempfile(fileext = ".Rd")
   writeLines(rd_text, temp_rd)
   suppressWarnings(
-    rd_txt <- capture.output(Rd2txt(temp_rd, fragment = TRUE))
+    rd_txt <- try(capture.output(Rd2txt(temp_rd, fragment = TRUE)), silent = TRUE)
   )
+  if (inherits(rd_txt, "try-error")) {
+    return(NULL)
+  }
   rd_txt <- gsub(paste0(return_mask, return_mask), "\n\n\n\n", rd_txt)
   rd_txt <- gsub(return_mask, " ", rd_txt)
   if (collapse) {
