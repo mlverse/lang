@@ -96,7 +96,10 @@ rd_translate <- function(topic, package, lang) {
     },
     args = list(x = use_args)
   )
-  standard_tags <- c("\\title", "\\description", "\\value", "\\details", "\\seealso")
+  standard_tags <- c(
+    "\\title", "\\description", "\\value", 
+    "\\details", "\\seealso", "\\note", "\\author"
+    )
   non_standard_tags <- c("\\section", "\\arguments", "\\examples")
   all_tags <- as.character(lapply(rd_content, function(x) attr(x, "Rd_tag")))
   filter_obj <- lapply(

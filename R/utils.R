@@ -24,7 +24,8 @@ tag_to_label <- function(x) {
     "usage" = "Usage",
     "output" = "Output",
     "returns" = "Returns",
-    "return" = "Return"
+    "return" = "Return",
+    "seealso" = "See Also"
   )
   match <- tag_labels[names(tag_labels) == x]
   if (length(match) > 0) {
