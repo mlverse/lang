@@ -8,6 +8,15 @@ test_that("Interaction with LLM works", {
   expect_error(
     lang_help("llm_classify", "mall", lang = "english", type = "text")
   )
+  expect_snapshot_error(
+    lang_help("nothere", lang = "spanish", type = "text")
+  )
+  expect_snapshot_error(
+    lang_help("nothere", "notpkg", lang = "spanish", type = "text")
+  )
+  expect_snapshot_error(
+    lang_help("nothere", "mall", lang = "spanish", type = "text")
+  )
   skip_on_os("windows")
   expect_silent(
     lang_help("lm", lang = "spanish", type = "text")
