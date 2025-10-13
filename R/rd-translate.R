@@ -246,14 +246,14 @@ tag_to_label <- function(x) {
   to_title(x)
 }
 
-cli_progress_bar_int <- function(...) {
+cli_progress_bar_int <- function(..., envir = parent.frame()) {
   if (interactive()) {
-    cli_progress_bar(...)
+    cli_progress_bar(..., .envir = envir)
   }
 }
 
-cli_progress_update_int <- function(...) {
+cli_progress_update_int <- function(..., envir = parent.frame()) {
   if (interactive()) {
-    cli_progress_update(...)
+    cli_progress_update(..., .envir = envir)
   }
 }
