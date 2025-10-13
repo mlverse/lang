@@ -44,12 +44,17 @@ lang_help <- function(topic,
   }
   db <- Rd_db(package)
   rd_content <- db[[path(topic, ext = "Rd")]]
+  # If topic cannot be found, it will try and see if the topiic is aliased
+  # (geom_col is inside geom_bar)
   if (is.null(rd_content)) {
+    # Uses help() to find the actual name of the Rd file that contains
+    # the function
     help_path <- as.character(utils::help(
       topic = topic,
       package = eval(package),
       help_type = "text"
     ))
+    # Updates the topic name 
     topic <- path_file(help_path)
     rd_content <- db[[path(topic, ext = "Rd")]]
   }
