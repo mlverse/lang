@@ -17,6 +17,10 @@ function will attempt to find the topic based on the loaded packages.}
 \item{type}{Produce "html" or "text" output for the help. It defaults to
 \code{getOption("help_type")}}
 }
+\value{
+Original or translated version of the help documentation in the
+output type specified
+}
 \description{
 Translates a given topic into a target language. It uses the \code{lang} argument
 to determine which language to translate to. If not passed, this function will

@@ -14,6 +14,8 @@
 #' @param lang A character vector language to translate the topic to
 #' @param type Produce "html" or "text" output for the help. It defaults to
 #' `getOption("help_type")`
+#' @returns Original or translated version of the help documentation in the
+#' output type specified 
 #' @examples
 #' \donttest{
 #' library(lang)
