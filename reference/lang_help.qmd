@@ -19,12 +19,14 @@ lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 ## Arguments
 |Arguments|Description|
 |---|---|
-| topic | The topic to search for |
-| package | The R package to look for the topic |
-| lang | Language to translate the help to |
+| topic | A character vector of the topic to search for. |
+| package | The R package to look for the topic, if not provided the function will attempt to find the topic based on the loaded packages. |
+| lang | A character vector language to translate the topic to |
 | type | Produce "html" or "text" output for the help. It defaults to `getOption("help_type")` |
 
 
+## Value
+Original or translated version of the help documentation in the output type specified
 
 
 
