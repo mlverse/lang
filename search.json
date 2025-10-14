@@ -21,34 +21,6 @@
     "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\ntopic\nA name or character string specifying the help topic.\n\n\npackage\nA name or character string specifying the package in which to search for the help topic. If NULL, search all packages.\n\n\n…\nAdditional arguments to pass to utils::help().\n\n\ne1\nFirst argument to pass along to utils::?. | | e2 | Second argument to pass along to utils::?."
   },
   {
-    "objectID": "reference/lang_help.html#description",
-    "href": "reference/lang_help.html#description",
-    "title": "Translates help documentation to another language",
-    "section": "Description",
-    "text": "Description\nTranslates a given topic into a target language. It uses the lang argument to determine which language to translate to. If not passed, this function will look for a target language in the LANG and LANGUAGE environment variables, or if something has been passed to the .lang argument in lang_use(), to determine the target language. If the target language is English, no translation will be processed, so the help returned will be the original package’s documentation."
-  },
-  {
-    "objectID": "reference/lang_help.html#usage",
-    "href": "reference/lang_help.html#usage",
-    "title": "Translates help documentation to another language",
-    "section": "Usage",
-    "text": "Usage\nlang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))"
-  },
-  {
-    "objectID": "reference/lang_help.html#arguments",
-    "href": "reference/lang_help.html#arguments",
-    "title": "Translates help documentation to another language",
-    "section": "Arguments",
-    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\ntopic\nThe topic to search for\n\n\npackage\nThe R package to look for the topic\n\n\nlang\nLanguage to translate the help to\n\n\ntype\nProduce “html” or “text” output for the help. It defaults to getOption(\"help_type\")"
-  },
-  {
-    "objectID": "reference/lang_help.html#examples",
-    "href": "reference/lang_help.html#examples",
-    "title": "Translates help documentation to another language",
-    "section": "Examples",
-    "text": "Examples\n\n\n\nlibrary(lang)\n\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: en_US.UTF-8\n\nlang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt; [1/7] ■■                                 4% | Title\n#&gt; [2/7] ■■■■■■■■■■■■                      37% | Description\n#&gt; [4/7] ■■■■■■■■■■■■■■■■■■■■■■■■■■■       88% | \\examples\n#&gt; \"_\bT_\br_\ba_\bd_\bu_\bc_\be _\bl_\ba _\bd_\bo_\bc_\bu_\bm_\be_\bn_\bt_\ba_\bc_\bi_\bó_\bn _\bd_\be _\ba_\by_\bu_\bd_\ba _\ba _\bo_\bt_\br_\bo _\bi_\bd_\bi_\bo_\bm_\ba\"\n#&gt; \n#&gt; _\bD_\be_\bs_\bc_\br_\bi_\bp_\bt_\bi_\bo_\bn:\n#&gt; \n#&gt;      Aqui se puede traducir un tema dado a un idioma objetivo. Utiliza\n#&gt;      el 'lang' argumento para determinar cuál idioma traducir. Si no se\n#&gt;      pasa, esta función buscará un idioma objetivo en las variables de\n#&gt;      entorno LANG y LANGUAGE, o si algo ha sido pasado al '.lang'\n#&gt;      argumento en 'lang_use()', para determinar el idioma objetivo. Si\n#&gt;      el idioma objetivo es inglés, no se procesará la traducción, por\n#&gt;      lo que se devolverá el ayuda original del paquete.\n#&gt; \n#&gt; _\bU_\bs_\ba_\bg_\be:\n#&gt; \n#&gt;      lang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))\n#&gt;      \n#&gt; _\bA_\br_\bg_\bu_\bm_\be_\bn_\bt_\bs:\n#&gt; \n#&gt;    topic: El tema a buscar\n#&gt; \n#&gt;  package: El paquete R para buscar el tema.\n#&gt; \n#&gt;     lang: ¿De qué idioma necesita traducir la ayuda?\n#&gt; \n#&gt;     type: Producir \"html\" o \"text\" como salida para la ayuda. Se\n#&gt;           establece por defecto en 'getOption(\"help_type\")'.\n#&gt; \n#&gt; _\bE_\bx_\ba_\bm_\bp_\bl_\be_\bs:\n#&gt; \n#&gt;      library(lang)\n#&gt;      \n#&gt;      lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt;      \n#&gt;      lang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt;"
-  },
-  {
     "objectID": "reference/index.html",
     "href": "reference/index.html",
     "title": "Package index",
@@ -95,7 +67,7 @@
     "href": "reference/lang_use.html#description",
     "title": "Specifies the LLM provider and model to use during the R session",
     "section": "Description",
-    "text": "Description\nAllows us to specify the back-end provider, model to use during the current R session."
+    "text": "Description\nAllows us to specify the back-end provider, model to use during the current R session. The target language is not processed by the function, as in converting “english” to “en” for example. The value is passed directly to the LLM, and it lets the LLM interpret the target language."
   },
   {
     "objectID": "reference/lang_use.html#usage",
@@ -126,31 +98,38 @@
     "text": "Examples\n\n\n\nlibrary(lang)\n\n# Using an `ellmer` chat object\nlang_use(ellmer::chat_openai(model = \"gpt-4o\"))\n#&gt; Model: gpt-4o via OpenAI\n#&gt; Lang: en_US.UTF-8\n\n# Using Ollama directly\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: en_US.UTF-8\n\n# Turn off cache by setting `.cache` to \"\"\nlang_use(\"ollama\", \"llama3.2\", seed = 100, .cache = \"\")\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: en_US.UTF-8\n#&gt; Cache: [Disabled]\n\n# Use `.lang` to set the target language to translate to,\n# it will be set for the current R session\nlang_use(\"ollama\", \"llama3.2\", .lang = \"spanish\")\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: spanish\n#&gt; Cache: [Disabled]\n\n# Use `.silent` to avoid console output\nlang_use(\"ollama\", \"llama3.2\", .lang = \"spanish\", .silent = TRUE)\n\n# To see current settings, simply call the function\nlang_use()\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: spanish\n#&gt; Cache: [Disabled]"
   },
   {
-    "objectID": "reference/reexports.html#description",
-    "href": "reference/reexports.html#description",
-    "title": "Objects exported from other packages",
+    "objectID": "reference/lang_help.html#description",
+    "href": "reference/lang_help.html#description",
+    "title": "Translates help documentation to another language",
     "section": "Description",
-    "text": "Description\nThese objects are imported from other packages. Follow the links below to see their documentation. mall llm_use"
+    "text": "Description\nTranslates a given topic into a target language. It uses the lang argument to determine which language to translate to. If not passed, this function will look for a target language in the LANG and LANGUAGE environment variables, or if something has been passed to the .lang argument in lang_use(), to determine the target language. If the target language is English, no translation will be processed, so the help returned will be the original package’s documentation."
   },
   {
-    "objectID": "reference/to_iso639.html#description",
-    "href": "reference/to_iso639.html#description",
-    "title": "Convert to and from ISO 639 language code",
-    "section": "Description",
-    "text": "Description\nConvert to and from ISO 639 language code"
-  },
-  {
-    "objectID": "reference/to_iso639.html#usage",
-    "href": "reference/to_iso639.html#usage",
-    "title": "Convert to and from ISO 639 language code",
+    "objectID": "reference/lang_help.html#usage",
+    "href": "reference/lang_help.html#usage",
+    "title": "Translates help documentation to another language",
     "section": "Usage",
-    "text": "Usage\nto_iso639(lang, silent = TRUE)\n\nfrom_iso639(iso)"
+    "text": "Usage\nlang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))"
   },
   {
-    "objectID": "reference/to_iso639.html#arguments",
-    "href": "reference/to_iso639.html#arguments",
-    "title": "Convert to and from ISO 639 language code",
+    "objectID": "reference/lang_help.html#arguments",
+    "href": "reference/lang_help.html#arguments",
+    "title": "Translates help documentation to another language",
     "section": "Arguments",
-    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\nlang\nName of the language to be converted\n\n\nsilent\nFlag to indicate if the function should return a message with the result. If there is no match, it will be an error message\n\n\niso\nThe two-letter ISO 639 code to search"
+    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\ntopic\nA character vector of the topic to search for.\n\n\npackage\nThe R package to look for the topic, if not provided the function will attempt to find the topic based on the loaded packages.\n\n\nlang\nA character vector language to translate the topic to\n\n\ntype\nProduce “html” or “text” output for the help. It defaults to getOption(\"help_type\")"
+  },
+  {
+    "objectID": "reference/lang_help.html#value",
+    "href": "reference/lang_help.html#value",
+    "title": "Translates help documentation to another language",
+    "section": "Value",
+    "text": "Value\nOriginal or translated version of the help documentation in the output type specified"
+  },
+  {
+    "objectID": "reference/lang_help.html#examples",
+    "href": "reference/lang_help.html#examples",
+    "title": "Translates help documentation to another language",
+    "section": "Examples",
+    "text": "Examples\n\n\n\nlibrary(lang)\n\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: en_US.UTF-8\n\nlang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt; \"_\bT_\br_\ba_\bd_\bu_\bc_\be _\bl_\ba _\bd_\bo_\bc_\bu_\bm_\be_\bn_\bt_\ba_\bc_\bi_\bó_\bn _\bd_\be _\ba_\by_\bu_\bd_\ba _\ba _\bo_\bt_\br_\bo _\bi_\bd_\bi_\bo_\bm_\ba\"\n#&gt; \n#&gt; _\bD_\be_\bs_\bc_\br_\bi_\bp_\bt_\bi_\bo_\bn:\n#&gt; \n#&gt;      Aqui se puede traducir un tema dado a un idioma objetivo. Utiliza\n#&gt;      la argumento 'lang' para determinar qué idioma usar para la\n#&gt;      traducción. Si no se pasa, esta función buscará un idioma objetivo\n#&gt;      en las variables de entorno LANG y LANGUAGE, o si se ha pasado\n#&gt;      algo a la función '.lang' en 'lang_use()', para determinar el\n#&gt;      idioma objetivo. Si el idioma objetivo es inglés, no se procesará\n#&gt;      ninguna traducción, por lo que la ayuda devuelta será la\n#&gt;      documentación original del paquete.\n#&gt; \n#&gt; _\bU_\bs_\ba_\bg_\be:\n#&gt; \n#&gt;      lang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))\n#&gt;      \n#&gt; _\bA_\br_\bg_\bu_\bm_\be_\bn_\bt_\bs:\n#&gt; \n#&gt;    topic: Caracter vector de el tema a buscar.\n#&gt; \n#&gt;  package: El paquete de R para buscar el tema, si no se proporciona la\n#&gt;           función intentará encontrar el tema basado en los paquetes\n#&gt;           cargados.\n#&gt; \n#&gt;     lang: Un carácter vector de idioma para traducir el tema a.\n#&gt; \n#&gt;     type: Producir \"html\" o \"text\" como salida para la ayuda. Se\n#&gt;           establece por defecto en 'getOption(\"help_type\")'.\n#&gt; \n#&gt; _\bE_\bx_\ba_\bm_\bp_\bl_\be_\bs:\n#&gt; \n#&gt;      library(lang)\n#&gt;      \n#&gt;      lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt;      \n#&gt;      lang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt;"
   }
 ]

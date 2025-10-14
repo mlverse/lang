@@ -2,34 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mlverse.github.io/lang/reference/help.html</loc>
-    <lastmod>2025-10-13T21:33:32.017Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/lang_help.html</loc>
-    <lastmod>2025-10-13T21:33:32.017Z</lastmod>
+    <lastmod>2025-10-14T19:52:23.327Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/index.html</loc>
-    <lastmod>2025-10-13T21:33:32.017Z</lastmod>
+    <lastmod>2025-10-14T19:52:23.327Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/index.html</loc>
-    <lastmod>2025-10-13T21:33:32.007Z</lastmod>
+    <lastmod>2025-10-14T19:52:23.317Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/LICENSE.html</loc>
-    <lastmod>2025-10-13T21:33:32.006Z</lastmod>
+    <lastmod>2025-10-14T19:52:23.316Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/lang_use.html</loc>
-    <lastmod>2025-10-13T21:33:32.017Z</lastmod>
+    <lastmod>2025-10-14T19:52:23.327Z</lastmod>
   </url>
   <url>
-    <loc>https://mlverse.github.io/lang/reference/reexports.html</loc>
-    <lastmod>2025-10-13T21:33:32.017Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/to_iso639.html</loc>
-    <lastmod>2025-10-13T21:33:32.017Z</lastmod>
+    <loc>https://mlverse.github.io/lang/reference/lang_help.html</loc>
+    <lastmod>2025-10-14T19:52:23.327Z</lastmod>
   </url>
 </urlset>
