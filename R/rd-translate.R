@@ -127,16 +127,10 @@ rd_comment_translate <- function(x, lang, rs) {
 }
 
 rd_prep_translate <- function(x, lang, rs) {
-  if (any(lapply(x, length) == 2)) {
-    rd_extract <- lapply(x, rd_extract_text, collapse = FALSE)
-    rd_extract <- lapply(rd_extract, paste, collapse = " ")
-    rd_text <- paste(rd_extract, collapse = " ")
-  } else {
-    rd_text <- rd_extract_text(x)
-    if (is.null(rd_text)) {
-      return(x)
-    }
-  }
+  tools::Rd2txt_options(width = Inf)
+  txt <- capture.output(Rd2txt(x, fragment = TRUE))
+  txt <- gsub("_\b", "", txt)
+  rd_text <- paste0(txt, collapse = "\n\n")
   add_prompt <- paste(
     "Do not translate anything between single quotes.",
     "Try to retain original format, such as indentation, bullets and spacing.",
@@ -149,8 +143,11 @@ rd_prep_translate <- function(x, lang, rs) {
     },
     args = list(x = rd_text, y = lang, z = add_prompt)
   )
-  tag_text <- rd_code_markers(tag_text)
-  tag_text <- gsub("`", "", tag_text)
+  #tag_text <- rd_code_markers(tag_text)
+  #tag_text <- gsub("`", "", tag_text)
+  tag_text <- gsub("\U2018", "\\\\code{", tag_text)
+  tag_text <- gsub("\U2019", "}", tag_text)
+  print(tag_text)
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])
   if (!is.null(attrs)) {
@@ -190,8 +187,9 @@ rd_extract_text <- function(x, collapse = TRUE) {
 }
 
 rd_code_markers <- function(x) {
+  x <- gsub("\U2018", "'", x)
+  x <- gsub("\U2019", "'", x)
   split_out <- strsplit(x, "'")[[1]]
-  split_out
   new_txt <- NULL
   start_code <- TRUE
   for (i in seq_along(split_out)) {
