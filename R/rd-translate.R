@@ -141,7 +141,8 @@ rd_prep_translate <- function(x, lang, rs) {
     "Do not translate anything between single quotes.",
     "Try to retain original format, such as indentation, bullets and spacing.",
     "The line breaks must to be identical to the original.",
-    "Do not translate the words: NULL, TRUE, FALSE, NA, Nan"
+    "Do not translate the words: NULL, TRUE, FALSE, NA, Nan",
+    "Do not expand on the subject, simply translate the original text"
   )
   tag_text <- rs$run(
     function(x, y, z) {
