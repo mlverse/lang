@@ -138,9 +138,10 @@ rd_prep_translate <- function(x, lang, rs) {
     }
   }
   add_prompt <- paste(
-    "Do not translate anything between single",
-    "quotes. Do not translate the words: NULL,",
-    "TRUE, FALSE, NA, Nan"
+    "Do not translate anything between single quotes.",
+    "Try to retain original format, such as indentation, bullets and spacing.",
+    "The line breaks must to be identical to the original.",
+    "Do not translate the words: NULL, TRUE, FALSE, NA, Nan"
   )
   tag_text <- rs$run(
     function(x, y, z) {
