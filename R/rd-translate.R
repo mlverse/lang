@@ -21,10 +21,10 @@ rd_translate <- function(rd_content, lang) {
     args = list(x = use_args)
   )
   standard_tags <- c(
-    "\\title", "\\description", "\\value",
+    "\\title", "\\description", "\\arguments", "\\value",
     "\\details", "\\seealso", "\\note", "\\author"
   )
-  non_standard_tags <- c("\\section", "\\arguments", "\\examples")
+  non_standard_tags <- c("\\section", "\\examples")
   all_tags <- as.character(lapply(rd_content, function(x) attr(x, "Rd_tag")))
   filter_obj <- lapply(
     c(standard_tags, non_standard_tags),
@@ -47,7 +47,25 @@ rd_translate <- function(rd_content, lang) {
       if (tag_name %in% standard_tags) {
         tag_label <- tag_to_label(tag_name)
         cli_progress_update_int()
-        rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
+        if(any(lapply(rd_i, attr, "Rd_tag") == "\\item")) {
+          for (k in seq_along(rd_i)) {
+            rd_k <- rd_i[[k]]
+            if (length(rd_k) > 1) {
+              rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
+            } else {
+              item_translation <- suppressWarnings(
+                try(rd_prep_translate(rd_k, lang, rs), silent = TRUE)
+              )
+              if(!inherits(item_translation, "try-error")) {
+                rd_content[[i]][[k]] <- item_translation  
+              }
+            }
+            obj_progress <- obj_progress + as.integer(object.size(rd_k))
+            cli_progress_update_int(set = obj_progress)
+          }          
+        } else {
+          rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)          
+        }
       }
       if (tag_name == "\\section") {
         tag_full <- rd_extract_text(rd_i[[1]])
@@ -57,18 +75,6 @@ rd_translate <- function(rd_content, lang) {
         tag_label <- paste0("Section: '", tag_full, "'")
         rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang, rs)
         rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang, rs)
-      }
-      if (tag_name == "\\arguments") {
-        for (k in seq_along(rd_i)) {
-          rd_k <- rd_i[[k]]
-          if (length(rd_k) > 1) {
-            tag_label <- glue("Arguments: `{rd_extract_text(rd_k[[1]])}`")
-            cli_progress_update_int()
-            rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
-          }
-          obj_progress <- obj_progress + as.integer(object.size(rd_k))
-          cli_progress_update_int(set = obj_progress)
-        }
       }
       if (tag_name == "\\examples") {
         for (k in seq_along(rd_i)) {
@@ -143,11 +149,8 @@ rd_prep_translate <- function(x, lang, rs) {
     },
     args = list(x = rd_text, y = lang, z = add_prompt)
   )
-  #tag_text <- rd_code_markers(tag_text)
-  #tag_text <- gsub("`", "", tag_text)
   tag_text <- gsub("\U2018", "\\\\code{", tag_text)
   tag_text <- gsub("\U2019", "}", tag_text)
-  print(tag_text)
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])
   if (!is.null(attrs)) {
@@ -247,12 +250,12 @@ tag_to_label <- function(x) {
 
 cli_progress_bar_int <- function(..., envir = parent.frame()) {
   if (interactive()) {
-    cli_progress_bar(..., .envir = envir)
+    #cli_progress_bar(..., .envir = envir)
   }
 }
 
 cli_progress_update_int <- function(..., envir = parent.frame()) {
   if (interactive()) {
-    cli_progress_update(..., .envir = envir)
+    #cli_progress_update(..., .envir = envir)
   }
 }
