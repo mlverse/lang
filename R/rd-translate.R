@@ -178,29 +178,6 @@ rd_extract_text <- function(x, rs) {
   paste0(txt, collapse = "\n\n")
 }
 
-rd_code_markers <- function(x) {
-  x <- gsub("\U2018", "'", x)
-  x <- gsub("\U2019", "'", x)
-  split_out <- strsplit(x, "'")[[1]]
-  new_txt <- NULL
-  start_code <- TRUE
-  for (i in seq_along(split_out)) {
-    if (start_code) {
-      if (i == length(split_out)) {
-        code_txt <- NULL
-      } else {
-        code_txt <- "\\code{"
-      }
-      start_code <- FALSE
-    } else {
-      code_txt <- "}"
-      start_code <- TRUE
-    }
-    new_txt <- c(new_txt, split_out[[i]], code_txt)
-  }
-  paste0(new_txt, collapse = "")
-}
-
 to_title <- function(x) {
   split_x <- strsplit(x, " ")[[1]]
   split_title <- lapply(
