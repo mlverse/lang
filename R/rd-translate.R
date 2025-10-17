@@ -27,7 +27,7 @@ rd_translate <- function(rd_content, lang) {
   )
   section_no <- 0
   obj_total <- as.integer(object.size(filter_obj))
-  cli_progress_bar_int(
+  progress_bar_init(
     total = obj_total,
     format = "[{section_no}/{length(filter_obj)}] {pb_bar} {pb_percent} | {tag_label}"
   )
@@ -41,11 +41,12 @@ rd_translate <- function(rd_content, lang) {
       tag_label <- tag_name
       if (tag_name %in% standard_tags) {
         tag_label <- tag_to_label(tag_name)
-        cli_progress_update_int()
+        progress_bar_update()
         if (any(lapply(rd_i, attr, "Rd_tag") == "\\item")) {
           for (k in seq_along(rd_i)) {
             rd_k <- rd_i[[k]]
             if (length(rd_k) > 1) {
+              tag_label <- glue("{tag_to_label(tag_name)} - '{as.character(rd_k[[1]])}'")
               rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
             } else {
               item_translation <- suppressWarnings(
@@ -55,9 +56,11 @@ rd_translate <- function(rd_content, lang) {
                 rd_content[[i]][[k]] <- item_translation
               }
             }
+            progress_bar_update(rd_k)
           }
         } else {
           rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
+          progress_bar_update(rd_i)
         }
       }
       if (tag_name == "\\section") {
@@ -65,11 +68,16 @@ rd_translate <- function(rd_content, lang) {
         if (nchar(tag_full > 17)) {
           tag_full <- paste0(substr(tag_full, 1, 17), "...")
         }
-        tag_label <- paste0("Section: '", tag_full, "'")
+        tag_label <- glue("Section: '{tag_full}'")
+        progress_bar_update()
         rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang, rs)
+        progress_bar_update(rd_i[[1]])
         rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang, rs)
+        progress_bar_update(rd_i[[2]])
       }
       if (tag_name == "\\examples") {
+        tag_label <- "Examples"
+        progress_bar_update()
         for (k in seq_along(rd_i)) {
           rd_k <- rd_i[[k]]
           k_attrs <- attributes(rd_k)
@@ -82,19 +90,17 @@ rd_translate <- function(rd_content, lang) {
           }
           attributes(rd_k) <- k_attrs
           rd_i[[k]] <- rd_k
+          progress_bar_update(rd_k)
         }
         rd_content[[i]] <- rd_i
       }
-      obj_progress <- obj_progress + as.integer(object.size(rd_i))
-      if (obj_progress > obj_total) {
-        obj_progress <- obj_total
-      }
-      cli_progress_update_int(set = obj_progress)
     }
     if (tag_name == "\\name") {
       topic_name <- rd_i
     }
   }
+  cli_progress_done()
+  cli_alert_success("{.pkg lang} - {.emph Translation complete}")
   tag_name <- NULL
   rs$close()
   rd_text <- paste0(as.character(rd_content), collapse = "")
@@ -231,14 +237,28 @@ tag_to_label <- function(x) {
   to_title(x)
 }
 
-cli_progress_bar_int <- function(..., envir = parent.frame()) {
+progress_bar_init <- function(total, format, envir = parent.frame()) {
   if (interactive()) {
-    cli_progress_bar(..., .envir = envir)
+    .lang_env$size <- total
+    .lang_env$progress <- 0
+    cli_progress_bar(total = total, format = format, .envir = envir)
   }
 }
 
-cli_progress_update_int <- function(..., envir = parent.frame()) {
+progress_bar_update <- function(obj = NULL, envir = parent.frame()) {
   if (interactive()) {
-    cli_progress_update(..., .envir = envir)
+    if (is.null(obj)) {
+      set <- NULL
+    } else {
+      total_size <- .lang_env$size
+      curr_progress <- as.integer(object.size(obj)) + .lang_env$progress
+      if (curr_progress > total_size) {
+        .lang_env$progress <- total_size
+      } else {
+        .lang_env$progress <- curr_progress
+      }
+      set <- .lang_env$progress
+    }
+    cli_progress_update(set = set, .envir = envir)
   }
 }
