@@ -7,8 +7,7 @@
       
       _D_e_s_c_r_i_p_t_i_o_n:
       
-           Use a Large Language Model (LLM) to classify the provided text as
-           one of the options provided via the 'labels' argument.
+           Use a Large Language Model (LLM) to classify the provided text as one of the options provided via the 'labels' argument.
       
       _U_s_a_g_e:
       
@@ -24,30 +23,23 @@
            
       _A_r_g_u_m_e_n_t_s:
       
-         .data: A 'data.frame' or 'tbl' object that contains the text to be
-                analyzed
+         .data: A 'data.frame' or 'tbl' object that contains the text to be analyzed
       
            col: The name of the field to analyze, supports 'tidy-eval'
       
-        labels: A character vector with at least 2 labels to classify the
-                text as
+        labels: A character vector with at least 2 labels to classify the text as
       
-      pred_name: A character vector with the name of the new column where the
-                prediction will be placed
+      pred_name: A character vector with the name of the new column where the prediction will be placed
       
       additional_prompt: Inserts this text into the prompt sent to the LLM
       
              x: A vector that contains the text to be analyzed
       
-       preview: It returns the R call that would have been used to run the
-                prediction. It only returns the first record in 'x'. Defaults
-                to 'FALSE' Applies to vector function only.
+       preview: It returns the R call that would have been used to run the prediction. It only returns the first record in 'x'. Defaults to 'FALSE' Applies to vector function only.
       
       _V_a_l_u_e:
       
-           'llm_classify' returns a 'data.frame' or 'tbl' object.
-           'llm_vec_classify' returns a vector that is the same length as
-           'x'.
+           'llm_classify' returns a 'data.frame' or 'tbl' object. 'llm_vec_classify' returns a vector that is the same length as 'x'.
       
       _E_x_a_m_p_l_e_s:
       
