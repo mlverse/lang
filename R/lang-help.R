@@ -15,7 +15,7 @@
 #' @param type Produce "html" or "text" output for the help. It defaults to
 #' `getOption("help_type")`
 #' @returns Original or translated version of the help documentation in the
-#' output type specified 
+#' output type specified
 #' @examples
 #' \donttest{
 #' library(lang)

@@ -18,7 +18,7 @@ test_that("Interaction with LLM works", {
     lang_help("nothere", "mall", lang = "spanish", type = "text")
   )
   skip_on_os("windows")
-  expect_silent(
+  expect_message(
     lang_help("lm", lang = "spanish", type = "text")
   )
 })

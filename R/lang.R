@@ -1,4 +1,4 @@
-#' @importFrom utils capture.output object.size browseURL
+#' @importFrom utils capture.output object.size browseURL head
 #' @importFrom withr local_tempdir with_dir
 #' @import rstudioapi
 #' @import tools

@@ -4,15 +4,15 @@ test_that("shim_lang_help works", {
   invisible(
     lang_use_impl("simulate_llm", "echo", .is_internal = TRUE, .lang = "spanish")
   )
-  expect_silent(shim_lang_help(NULL))
-  expect_silent(shim_lang_help(NULL, base))
-  expect_silent(shim_lang_help(NULL, "base"))
-  expect_silent(shim_lang_help("NULL", base))
-  expect_silent(shim_lang_help("NULL", "base"))
-  expect_silent(shim_lang_help(mtcars))
-  expect_silent(shim_lang_help("mtcars"))
-  expect_silent(shim_lang_help(mtcars, datasets))
-  expect_silent(shim_lang_help("mtcars", "datasets"))
+  expect_message(shim_lang_help(NULL))
+  expect_message(shim_lang_help(NULL, base))
+  expect_message(shim_lang_help(NULL, "base"))
+  expect_message(shim_lang_help("NULL", base))
+  expect_message(shim_lang_help("NULL", "base"))
+  expect_message(shim_lang_help(mtcars))
+  expect_message(shim_lang_help("mtcars"))
+  expect_message(shim_lang_help(mtcars, datasets))
+  expect_message(shim_lang_help("mtcars", "datasets"))
   invisible(
     lang_use_impl("simulate_llm", "echo", .is_internal = TRUE, .lang = "english")
   )
@@ -32,7 +32,9 @@ test_that("en_lang() works", {
 
 test_that("Conflicting language message shows up", {
   withr::with_envvar(c(LANGUAGE = "spanish", LANG = "english"), {
-    x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+    invisible(
+      lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+    )
     .lang_env$choose <- NULL
     .lang_env[["session"]]$.lang <- NULL
     expect_snapshot(which_lang(choose = TRUE))
@@ -41,7 +43,9 @@ test_that("Conflicting language message shows up", {
 
 test_that("No vars and arg returns 'english'", {
   withr::with_envvar(c(LANGUAGE = NA, LANG = NA), {
-    x <- lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+    invisible(
+      lang_use_impl("simulate_llm", "echo", .is_internal = TRUE)
+    )
     .lang_env$choose <- NULL
     .lang_env[["session"]]$.lang <- NULL
     expect_equal(which_lang(), "english")
@@ -55,14 +59,14 @@ test_that("shim_lang_question works", {
       invisible(
         lang_use_impl("simulate_llm", "echo", .is_internal = TRUE, .lang = "spanish")
       )
-      expect_silent(shim_lang_question(lm))
-      expect_silent(shim_lang_question(datasets::mtcars))
-      expect_silent(shim_lang_question(mtcars()))
-      expect_silent(shim_lang_question("mtcars"))
-      expect_silent(shim_lang_question("mtcars", "stats"))
+      expect_message(shim_lang_question(lm))
+      expect_message(shim_lang_question(datasets::mtcars))
+      expect_message(shim_lang_question(mtcars()))
+      expect_message(shim_lang_question("mtcars"))
+      expect_message(shim_lang_question("mtcars", "stats"))
       expect_error(shim_lang_question(1), "Unknown input")
-      expect_silent(shim_lang_question(NULL))
-      expect_silent(shim_lang_question(base::`NULL`))
+      expect_message(shim_lang_question(NULL))
+      expect_message(shim_lang_question(base::`NULL`))
       expect_identical(
         shim_lang_question(?mtcars),
         utils::`?`(?mtcars)

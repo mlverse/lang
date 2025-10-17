@@ -1,7 +1,4 @@
 rd_translate <- function(rd_content, lang) {
-  tag_text <- NULL
-  tag_name <- NULL
-  tag_label <- NULL
   rs <- callr::r_session$new()
   on.exit(rs$close())
   lang_args <- lang_use_impl(.is_internal = TRUE)
@@ -15,27 +12,25 @@ rd_translate <- function(rd_content, lang) {
     use_args <- c(use_args, args)
   }
   use_lang <- rs$run(
-    function(x) {
-      rlang::exec(mall::llm_use, !!!x)
-    },
+    function(x) rlang::exec(mall::llm_use, !!!x),
     args = list(x = use_args)
   )
   standard_tags <- c(
-    "\\title", "\\description", "\\value",
+    "\\title", "\\description", "\\arguments", "\\value",
     "\\details", "\\seealso", "\\note", "\\author"
   )
-  non_standard_tags <- c("\\section", "\\arguments", "\\examples")
+  non_standard_tags <- c("\\section", "\\examples")
   all_tags <- as.character(lapply(rd_content, function(x) attr(x, "Rd_tag")))
   filter_obj <- lapply(
     c(standard_tags, non_standard_tags),
     function(x) rd_content[all_tags == x]
   )
   section_no <- 0
-  cli_progress_bar_int(
-    total = as.integer(object.size(filter_obj)),
+  obj_total <- as.integer(object.size(filter_obj))
+  progress_bar_init(
+    total = obj_total,
     format = "[{section_no}/{length(filter_obj)}] {pb_bar} {pb_percent} | {tag_label}"
   )
-
   obj_progress <- 0
   for (i in seq_along(rd_content)) {
     rd_i <- rd_content[[i]]
@@ -45,32 +40,41 @@ rd_translate <- function(rd_content, lang) {
       tag_label <- NULL
       tag_label <- tag_name
       if (tag_name %in% standard_tags) {
-        tag_label <- tag_to_label(tag_name)
-        cli_progress_update_int()
-        rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
+        progress_bar_update(tag_to_label(tag_name))
+        if (any(lapply(rd_i, attr, "Rd_tag") == "\\item")) {
+          for (k in seq_along(rd_i)) {
+            rd_k <- rd_i[[k]]
+            if (length(rd_k) > 1) {
+              tag_label <- glue("{tag_to_label(tag_name)} - '{as.character(rd_k[[1]])}'")
+              rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
+            } else {
+              item_translation <- suppressWarnings(
+                try(rd_prep_translate(rd_k, lang, rs), silent = TRUE)
+              )
+              if (!inherits(item_translation, "try-error")) {
+                rd_content[[i]][[k]] <- item_translation
+              }
+            }
+            progress_bar_update(obj = rd_k)
+          }
+        } else {
+          rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
+          progress_bar_update(obj = rd_i)
+        }
       }
       if (tag_name == "\\section") {
-        tag_full <- rd_extract_text(rd_i[[1]])
+        tag_full <- rd_extract_text(rd_i[[1]], rs)
         if (nchar(tag_full > 17)) {
           tag_full <- paste0(substr(tag_full, 1, 17), "...")
         }
-        tag_label <- paste0("Section: '", tag_full, "'")
+        progress_bar_update(glue("Section: '{tag_full}'"))
         rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang, rs)
+        progress_bar_update(obj = rd_i[[1]])
         rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang, rs)
-      }
-      if (tag_name == "\\arguments") {
-        for (k in seq_along(rd_i)) {
-          rd_k <- rd_i[[k]]
-          if (length(rd_k) > 1) {
-            tag_label <- glue("Arguments: `{rd_extract_text(rd_k[[1]])}`")
-            cli_progress_update_int()
-            rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
-          }
-          obj_progress <- obj_progress + as.integer(object.size(rd_k))
-          cli_progress_update_int(set = obj_progress)
-        }
+        progress_bar_update(obj = rd_i[[2]])
       }
       if (tag_name == "\\examples") {
+        progress_bar_update("Examples")
         for (k in seq_along(rd_i)) {
           rd_k <- rd_i[[k]]
           k_attrs <- attributes(rd_k)
@@ -83,21 +87,19 @@ rd_translate <- function(rd_content, lang) {
           }
           attributes(rd_k) <- k_attrs
           rd_i[[k]] <- rd_k
+          progress_bar_update(obj = rd_k)
         }
         rd_content[[i]] <- rd_i
-      }
-      if (tag_name != "\\arguments") {
-        obj_progress <- obj_progress + as.integer(object.size(rd_i))
-        cli_progress_update_int(set = obj_progress)
       }
     }
     if (tag_name == "\\name") {
       topic_name <- rd_i
     }
   }
+  cli_progress_done()
+  cli_alert_success("{.pkg lang} - {.emph Translation complete}")
   tag_name <- NULL
   rs$close()
-  cli_progress_update_int()
   rd_text <- paste0(as.character(rd_content), collapse = "")
   topic_path <- path(tempdir(), topic_name, ext = "Rd")
   writeLines(rd_text, topic_path)
@@ -127,20 +129,13 @@ rd_comment_translate <- function(x, lang, rs) {
 }
 
 rd_prep_translate <- function(x, lang, rs) {
-  if (any(lapply(x, length) == 2)) {
-    rd_extract <- lapply(x, rd_extract_text, collapse = FALSE)
-    rd_extract <- lapply(rd_extract, paste, collapse = " ")
-    rd_text <- paste(rd_extract, collapse = " ")
-  } else {
-    rd_text <- rd_extract_text(x)
-    if (is.null(rd_text)) {
-      return(x)
-    }
-  }
+  txt <- rd_extract_text(x, rs)
+  rd_text <- gsub("\U2018", "'", txt)
+  rd_text <- gsub("\U2019", "'", rd_text)
   add_prompt <- paste(
-    "Do not translate anything between single",
-    "quotes. Do not translate the words: NULL,",
-    "TRUE, FALSE, NA, Nan"
+    "Do not translate anything between single quotes.",
+    "Do not translate the words: NULL, TRUE, FALSE, NA, Nan.",
+    "Do not expand on the subject, simply translate the original text"
   )
   tag_text <- rs$run(
     function(x, y, z) {
@@ -148,8 +143,16 @@ rd_prep_translate <- function(x, lang, rs) {
     },
     args = list(x = rd_text, y = lang, z = add_prompt)
   )
-  tag_text <- rd_code_markers(tag_text)
-  tag_text <- gsub("`", "", tag_text)
+  funcs <- unlist(strsplit(txt, "\U2018"))
+  funcs <- lapply(funcs, strsplit, "\U2019")
+  funcs <- lapply(funcs, unlist)
+  funcs <- funcs[as.numeric(lapply(funcs, length)) == 2]
+  funcs <- lapply(funcs, head, 1)
+  for (func in funcs) {
+    func <- sub("\\(", "\\\\(", func)
+    func <- sub("\\)", "\\\\)", func)
+    tag_text <- sub(paste0("'", func, "'"), paste0("\\\\code{", func, "}"), tag_text)
+  }
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])
   if (!is.null(attrs)) {
@@ -160,54 +163,16 @@ rd_prep_translate <- function(x, lang, rs) {
   obj
 }
 
-rd_extract_text <- function(x, collapse = TRUE) {
-  attributes(x) <- NULL
-  class(x) <- "Rd"
-  rd_text <- as.character(x)
-  if (collapse) {
-    rd_text <- paste0(as.character(x), collapse = "")
-  }
-  return_mask <- "\\(\\(\\(return\\)\\)\\)"
-  rd_text <- gsub("\n", return_mask, rd_text)
-  temp_rd <- tempfile(fileext = ".Rd")
-  writeLines(rd_text, temp_rd)
-  suppressWarnings(
-    rd_txt <- try(capture.output(Rd2txt(temp_rd, fragment = TRUE)), silent = TRUE)
+rd_extract_text <- function(x, rs) {
+  txt <- rs$run(
+    function(x) {
+      tools::Rd2txt_options(width = Inf)
+      capture.output(tools::Rd2txt(x, fragment = TRUE))
+    },
+    args = list(x = x)
   )
-  if (inherits(rd_txt, "try-error")) {
-    return(NULL)
-  }
-  rd_txt <- gsub(paste0(return_mask, return_mask), "\n\n\n\n", rd_txt)
-  rd_txt <- gsub(return_mask, " ", rd_txt)
-  if (collapse) {
-    rd_txt[rd_txt == ""] <- "\n\n"
-    rd_txt <- paste0(rd_txt, collapse = " ")
-  }
-  rd_txt <- gsub("\U2018", "'", rd_txt)
-  rd_txt <- gsub("\U2019", "'", rd_txt)
-  rd_txt
-}
-
-rd_code_markers <- function(x) {
-  split_out <- strsplit(x, "'")[[1]]
-  split_out
-  new_txt <- NULL
-  start_code <- TRUE
-  for (i in seq_along(split_out)) {
-    if (start_code) {
-      if (i == length(split_out)) {
-        code_txt <- NULL
-      } else {
-        code_txt <- "\\code{"
-      }
-      start_code <- FALSE
-    } else {
-      code_txt <- "}"
-      start_code <- TRUE
-    }
-    new_txt <- c(new_txt, split_out[[i]], code_txt)
-  }
-  paste0(new_txt, collapse = "")
+  txt <- gsub("_\b", "", txt)
+  paste0(txt, collapse = "\n\n")
 }
 
 to_title <- function(x) {
@@ -246,14 +211,31 @@ tag_to_label <- function(x) {
   to_title(x)
 }
 
-cli_progress_bar_int <- function(..., envir = parent.frame()) {
+progress_bar_init <- function(total, format, envir = parent.frame()) {
   if (interactive()) {
-    cli_progress_bar(..., .envir = envir)
+    .lang_env$size <- total
+    .lang_env$progress <- 0
+    cli_progress_bar(total = total, format = format, .envir = envir)
   }
 }
 
-cli_progress_update_int <- function(..., envir = parent.frame()) {
+progress_bar_update <- function(txt = NULL, obj = NULL, envir = parent.frame()) {
   if (interactive()) {
-    cli_progress_update(..., .envir = envir)
+    if (is.null(obj)) {
+      set <- NULL
+    } else {
+      total_size <- .lang_env$size
+      curr_progress <- as.integer(object.size(obj)) + .lang_env$progress
+      if (curr_progress > total_size) {
+        .lang_env$progress <- total_size
+      } else {
+        .lang_env$progress <- curr_progress
+      }
+      set <- .lang_env$progress
+    }
+    if (!is.null(txt)) {
+      envir$tag_label <- txt
+    }
+    cli_progress_update(set = set, .envir = envir)
   }
 }
