@@ -47,7 +47,7 @@ rd_translate <- function(rd_content, lang) {
       if (tag_name %in% standard_tags) {
         tag_label <- tag_to_label(tag_name)
         cli_progress_update_int()
-        if(any(lapply(rd_i, attr, "Rd_tag") == "\\item")) {
+        if (any(lapply(rd_i, attr, "Rd_tag") == "\\item")) {
           for (k in seq_along(rd_i)) {
             rd_k <- rd_i[[k]]
             if (length(rd_k) > 1) {
@@ -56,15 +56,15 @@ rd_translate <- function(rd_content, lang) {
               item_translation <- suppressWarnings(
                 try(rd_prep_translate(rd_k, lang, rs), silent = TRUE)
               )
-              if(!inherits(item_translation, "try-error")) {
-                rd_content[[i]][[k]] <- item_translation  
+              if (!inherits(item_translation, "try-error")) {
+                rd_content[[i]][[k]] <- item_translation
               }
             }
             obj_progress <- obj_progress + as.integer(object.size(rd_k))
             cli_progress_update_int(set = obj_progress)
-          }          
+          }
         } else {
-          rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)          
+          rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
         }
       }
       if (tag_name == "\\section") {
@@ -136,12 +136,12 @@ rd_prep_translate <- function(x, lang, rs) {
   tools::Rd2txt_options(width = Inf)
   txt <- capture.output(Rd2txt(x, fragment = TRUE))
   txt <- gsub("_\b", "", txt)
-  rd_text <- paste0(txt, collapse = "\n\n")
+  txt <- paste0(txt, collapse = "\n\n")
+  rd_text <- gsub("\U2018", "'", txt)
+  rd_text <- gsub("\U2019", "'", rd_text)
   add_prompt <- paste(
     "Do not translate anything between single quotes.",
-    "Try to retain original format, such as indentation, bullets and spacing.",
-    "The line breaks must to be identical to the original.",
-    "Do not translate the words: NULL, TRUE, FALSE, NA, Nan",
+    "Do not translate the words: NULL, TRUE, FALSE, NA, Nan.",
     "Do not expand on the subject, simply translate the original text"
   )
   tag_text <- rs$run(
@@ -150,8 +150,16 @@ rd_prep_translate <- function(x, lang, rs) {
     },
     args = list(x = rd_text, y = lang, z = add_prompt)
   )
-  tag_text <- gsub("\U2018", "\\\\code{", tag_text)
-  tag_text <- gsub("\U2019", "}", tag_text)
+  funcs <- unlist(strsplit(txt, "\U2018"))
+  funcs <- lapply(funcs, strsplit, "\U2019")
+  funcs <- lapply(funcs, unlist)
+  funcs <- funcs[as.numeric(lapply(funcs, length)) == 2]
+  funcs <- lapply(funcs, head, 1)
+  for (func in funcs) {
+    func <- sub("\\(", "\\\\(", func)
+    func <- sub("\\)", "\\\\)", func)
+    tag_text <- sub(paste0("'", func, "'"), paste0("\\\\code{", func, "}"), tag_text)
+  }
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])
   if (!is.null(attrs)) {
@@ -251,12 +259,12 @@ tag_to_label <- function(x) {
 
 cli_progress_bar_int <- function(..., envir = parent.frame()) {
   if (interactive()) {
-    #cli_progress_bar(..., .envir = envir)
+    # cli_progress_bar(..., .envir = envir)
   }
 }
 
 cli_progress_update_int <- function(..., envir = parent.frame()) {
   if (interactive()) {
-    #cli_progress_update(..., .envir = envir)
+    # cli_progress_update(..., .envir = envir)
   }
 }
