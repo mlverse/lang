@@ -1,7 +1,4 @@
 rd_translate <- function(rd_content, lang) {
-  tag_text <- NULL
-  tag_name <- NULL
-  tag_label <- NULL
   rs <- callr::r_session$new()
   on.exit(rs$close())
   lang_args <- lang_use_impl(.is_internal = TRUE)
@@ -15,9 +12,7 @@ rd_translate <- function(rd_content, lang) {
     use_args <- c(use_args, args)
   }
   use_lang <- rs$run(
-    function(x) {
-      rlang::exec(mall::llm_use, !!!x)
-    },
+    function(x) rlang::exec(mall::llm_use, !!!x),
     args = list(x = use_args)
   )
   standard_tags <- c(
@@ -68,7 +63,7 @@ rd_translate <- function(rd_content, lang) {
         }
       }
       if (tag_name == "\\section") {
-        tag_full <- rd_extract_text(rd_i[[1]])
+        tag_full <- rd_extract_text(rd_i[[1]], rs)
         if (nchar(tag_full > 17)) {
           tag_full <- paste0(substr(tag_full, 1, 17), "...")
         }
@@ -133,10 +128,7 @@ rd_comment_translate <- function(x, lang, rs) {
 }
 
 rd_prep_translate <- function(x, lang, rs) {
-  tools::Rd2txt_options(width = Inf)
-  txt <- capture.output(Rd2txt(x, fragment = TRUE))
-  txt <- gsub("_\b", "", txt)
-  txt <- paste0(txt, collapse = "\n\n")
+  txt <- rd_extract_text(x, rs)
   rd_text <- gsub("\U2018", "'", txt)
   rd_text <- gsub("\U2019", "'", rd_text)
   add_prompt <- paste(
@@ -170,32 +162,16 @@ rd_prep_translate <- function(x, lang, rs) {
   obj
 }
 
-rd_extract_text <- function(x, collapse = TRUE) {
-  attributes(x) <- NULL
-  class(x) <- "Rd"
-  rd_text <- as.character(x)
-  if (collapse) {
-    rd_text <- paste0(as.character(x), collapse = "")
-  }
-  return_mask <- "\\(\\(\\(return\\)\\)\\)"
-  rd_text <- gsub("\n", return_mask, rd_text)
-  temp_rd <- tempfile(fileext = ".Rd")
-  writeLines(rd_text, temp_rd)
-  suppressWarnings(
-    rd_txt <- try(capture.output(Rd2txt(temp_rd, fragment = TRUE)), silent = TRUE)
+rd_extract_text <- function(x, rs) {
+  txt <- rs$run(
+    function(x) {
+      tools::Rd2txt_options(width = Inf)
+      capture.output(tools::Rd2txt(x, fragment = TRUE))
+    },
+    args = list(x = x)
   )
-  if (inherits(rd_txt, "try-error")) {
-    return(NULL)
-  }
-  rd_txt <- gsub(paste0(return_mask, return_mask), "\n\n\n\n", rd_txt)
-  rd_txt <- gsub(return_mask, " ", rd_txt)
-  if (collapse) {
-    rd_txt[rd_txt == ""] <- "\n\n"
-    rd_txt <- paste0(rd_txt, collapse = " ")
-  }
-  rd_txt <- gsub("\U2018", "'", rd_txt)
-  rd_txt <- gsub("\U2019", "'", rd_txt)
-  rd_txt
+  txt <- gsub("_\b", "", txt)
+  paste0(txt, collapse = "\n\n")
 }
 
 rd_code_markers <- function(x) {
