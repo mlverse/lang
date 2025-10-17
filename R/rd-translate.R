@@ -40,8 +40,7 @@ rd_translate <- function(rd_content, lang) {
       tag_label <- NULL
       tag_label <- tag_name
       if (tag_name %in% standard_tags) {
-        tag_label <- tag_to_label(tag_name)
-        progress_bar_update()
+        progress_bar_update(tag_to_label(tag_name))
         if (any(lapply(rd_i, attr, "Rd_tag") == "\\item")) {
           for (k in seq_along(rd_i)) {
             rd_k <- rd_i[[k]]
@@ -56,11 +55,11 @@ rd_translate <- function(rd_content, lang) {
                 rd_content[[i]][[k]] <- item_translation
               }
             }
-            progress_bar_update(rd_k)
+            progress_bar_update(obj = rd_k)
           }
         } else {
           rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
-          progress_bar_update(rd_i)
+          progress_bar_update(obj = rd_i)
         }
       }
       if (tag_name == "\\section") {
@@ -68,16 +67,14 @@ rd_translate <- function(rd_content, lang) {
         if (nchar(tag_full > 17)) {
           tag_full <- paste0(substr(tag_full, 1, 17), "...")
         }
-        tag_label <- glue("Section: '{tag_full}'")
-        progress_bar_update()
+        progress_bar_update(glue("Section: '{tag_full}'"))
         rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang, rs)
-        progress_bar_update(rd_i[[1]])
+        progress_bar_update(obj = rd_i[[1]])
         rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang, rs)
-        progress_bar_update(rd_i[[2]])
+        progress_bar_update(obj = rd_i[[2]])
       }
       if (tag_name == "\\examples") {
-        tag_label <- "Examples"
-        progress_bar_update()
+        progress_bar_update("Examples")
         for (k in seq_along(rd_i)) {
           rd_k <- rd_i[[k]]
           k_attrs <- attributes(rd_k)
@@ -90,7 +87,7 @@ rd_translate <- function(rd_content, lang) {
           }
           attributes(rd_k) <- k_attrs
           rd_i[[k]] <- rd_k
-          progress_bar_update(rd_k)
+          progress_bar_update(obj = rd_k)
         }
         rd_content[[i]] <- rd_i
       }
@@ -222,7 +219,7 @@ progress_bar_init <- function(total, format, envir = parent.frame()) {
   }
 }
 
-progress_bar_update <- function(obj = NULL, envir = parent.frame()) {
+progress_bar_update <- function(txt = NULL, obj = NULL, envir = parent.frame()) {
   if (interactive()) {
     if (is.null(obj)) {
       set <- NULL
@@ -235,6 +232,9 @@ progress_bar_update <- function(obj = NULL, envir = parent.frame()) {
         .lang_env$progress <- curr_progress
       }
       set <- .lang_env$progress
+    }
+    if (!is.null(txt)) {
+      envir$tag_label <- txt
     }
     cli_progress_update(set = set, .envir = envir)
   }
