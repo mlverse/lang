@@ -26,11 +26,11 @@ rd_translate <- function(rd_content, lang) {
     function(x) rd_content[all_tags == x]
   )
   section_no <- 0
+  obj_total <- as.integer(object.size(filter_obj))
   cli_progress_bar_int(
-    total = as.integer(object.size(filter_obj)),
+    total = obj_total,
     format = "[{section_no}/{length(filter_obj)}] {pb_bar} {pb_percent} | {tag_label}"
   )
-
   obj_progress <- 0
   for (i in seq_along(rd_content)) {
     rd_i <- rd_content[[i]]
@@ -55,8 +55,6 @@ rd_translate <- function(rd_content, lang) {
                 rd_content[[i]][[k]] <- item_translation
               }
             }
-            obj_progress <- obj_progress + as.integer(object.size(rd_k))
-            cli_progress_update_int(set = obj_progress)
           }
         } else {
           rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
@@ -87,10 +85,11 @@ rd_translate <- function(rd_content, lang) {
         }
         rd_content[[i]] <- rd_i
       }
-      if (tag_name != "\\arguments") {
-        obj_progress <- obj_progress + as.integer(object.size(rd_i))
-        cli_progress_update_int(set = obj_progress)
+      obj_progress <- obj_progress + as.integer(object.size(rd_i))
+      if (obj_progress > obj_total) {
+        obj_progress <- obj_total
       }
+      cli_progress_update_int(set = obj_progress)
     }
     if (tag_name == "\\name") {
       topic_name <- rd_i
@@ -98,7 +97,6 @@ rd_translate <- function(rd_content, lang) {
   }
   tag_name <- NULL
   rs$close()
-  cli_progress_update_int()
   rd_text <- paste0(as.character(rd_content), collapse = "")
   topic_path <- path(tempdir(), topic_name, ext = "Rd")
   writeLines(rd_text, topic_path)
@@ -235,12 +233,12 @@ tag_to_label <- function(x) {
 
 cli_progress_bar_int <- function(..., envir = parent.frame()) {
   if (interactive()) {
-    # cli_progress_bar(..., .envir = envir)
+    cli_progress_bar(..., .envir = envir)
   }
 }
 
 cli_progress_update_int <- function(..., envir = parent.frame()) {
   if (interactive()) {
-    # cli_progress_update(..., .envir = envir)
+    cli_progress_update(..., .envir = envir)
   }
 }
