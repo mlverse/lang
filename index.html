@@ -78,9 +78,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-23208fea647c49546b90af75bb46115d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-eded4fcc2aa14415ba170f4990954335.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-23208fea647c49546b90af75bb46115d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-adc5b544d2732bb3bd57a6e6b09cf065.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-f34e9316deb5822d4f3c42633c482f11.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-adc5b544d2732bb3bd57a6e6b09cf065.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -360,7 +360,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>lang</h1>
 <!-- badges: start -->
 <p><a href="https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/mlverse/lang?branch=main"><img src="https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg" class="img-fluid" alt="Codecov test coverage"></a> <!-- badges: end --></p>
-<p>Use an <strong>LLM to translate a function’s help documentation on-the-fly</strong>. <code>lang</code> overrides the <code>?</code> and <code>help()</code> functions in your R session. If you are using RStudio or Positron, the translated help page will appear in the Help pane.</p>
+<p>Use an <strong>LLM to translate a function’s help documentation on the fly</strong>. <code>lang</code> overrides the <code>?</code> and <code>help()</code> functions in your R session. If you are using RStudio or Positron, the translated help page will appear in the ‘Help’ pane.</p>
 <section id="installing" class="level2">
 <h2 class="anchored" data-anchor-id="installing">Installing</h2>
 <p>To install the GitHub version of <code>lang</code>, use:</p>
@@ -384,8 +384,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>?lm</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1/7] ■■                                 4% | Title</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><img src="man/figures/lm-spanish.png" align="center" width="100%" alt="Screenshot of the lm function's help page in Spanish"></p>
-<p>After setup, simply use <code>?</code> to trigger and display the translated documentation. During translation, <code>lang</code> will display its progress by showing which section of the documentation is currently translating. During the R session, if you request the same R function’s help more than one time, then <code>lang</code> will use its cached results, which will run immediately.</p>
-<p>R enforces the printed name of each section, so they cannot be translated. This means that titles such as “Description”, “Usage” and “Arguments” will always remain untranslated.</p>
+<p>After setup, simply use <code>?</code> to trigger and display the translated documentation. During translation, <code>lang</code> will display its progress by showing which section of the documentation is currently translating. During the R session, if you request the same R function’s help more than one time then <code>lang</code> will use its cached results, which will run immediately.</p>
+<p>R enforces the printed names of each section, so they cannot be translated. This means that titles such as “Description”, “Usage” and “Arguments” will always remain untranslated.</p>
 <section id="llm-connections" class="level3">
 <h3 class="anchored" data-anchor-id="llm-connections">LLM connections</h3>
 <p>There are two ways to define the LLM in <code>lang_use()</code>:</p>
@@ -399,7 +399,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="target-language" class="level3">
 <h3 class="anchored" data-anchor-id="target-language">Target language</h3>
-<p>In order of priority, these are the ways how <code>lang</code> determines the language it will translate to:</p>
+<p>In order of priority, these are the ways in which <code>lang</code> determines the language it will translate to:</p>
 <ol type="1">
 <li>Value in <code>.lang</code> when calling <code>lang_use()</code></li>
 <li><code>LANGUAGE</code> environment variable</li>
@@ -409,10 +409,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If both environment variables are set, and are different from each other, <code>lang</code> will display a one-time message indicating which value it will use. If the target language is English, <code>lang</code> will re-route help calls back to base R.</p>
 <p>To check the current target language at any point during the R session, simply run: <code>lang_use()</code>, with no arguments, and it will print out the current settings, which include language:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>()</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; — `lang` session</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Backend: 'OpenAI' via `ellmer`</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model: gpt-4o</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Language: spanish</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model: gpt-4o via OpenAI</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Lang: spanish</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="tips" class="level2">
@@ -420,7 +418,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="caching" class="level3">
 <h3 class="anchored" data-anchor-id="caching">Caching</h3>
 <p>By default, <code>lang</code> will cache the translations it performs in a temporary folder. If R is restarted, a new folder will be used.</p>
-<p>If you notice that you are translating the same function’s help over and over, and across different R sessions, then fixing the cache location would be helpful. Use <code>.cache</code> to define the folder:</p>
+<p>If you notice that you are translating the same function’s help over and over and across different R sessions, then fixing the cache location would be helpful. Use <code>.cache</code> to define the folder:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lang<span class="sc">::</span><span class="fu">lang_use</span>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">backend =</span> <span class="st">"ollama"</span>, </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="st">"llama3.2"</span>, </span>
@@ -440,14 +438,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">.lang =</span> <span class="st">"spanish"</span>,</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">.silent =</span> <span class="cn">TRUE</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>In the example, we set <code>.silent</code> to <code>TRUE</code> so that there is no message every the R session is restarted.</p>
+<p>In the example, we set <code>.silent</code> to <code>TRUE</code> so that there is no message every time the R session is restarted.</p>
 </section>
 </section>
 <section id="considerations" class="level2">
 <h2 class="anchored" data-anchor-id="considerations">Considerations</h2>
 <section id="translations-are-not-perfect" class="level3">
 <h3 class="anchored" data-anchor-id="translations-are-not-perfect">Translations are not perfect</h3>
-<p>As you can imagine, the quality of translation will mostly depend on the LLM being used. This solution is meant to be as helpful as possible, but acknowledging that at this stage of LLMs, only a human curated translation will be the best solution. Having said that, I believe that even an imperfect translation could go a long way with someone who is struggling to understand how to use a specific function in a package, and may also struggle with the English language.</p>
+<p>As you can imagine, the quality of translation will mostly depend on the LLM being used. This solution is meant to be as helpful as possible, but we acknowledge that at this stage of LLMs, only a human curated translation will be the best solution. Having said that, I believe that even an imperfect translation could go a long way with someone who is struggling to understand how to use a specific function in a package and may also struggle with the English language.</p>
 </section>
 <section id="debug" class="level3">
 <h3 class="anchored" data-anchor-id="debug">Debug</h3>
