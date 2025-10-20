@@ -166,7 +166,11 @@ rd_prep_translate <- function(x, lang, rs) {
 rd_extract_text <- function(x, rs) {
   txt <- rs$run(
     function(x) {
-      tools::Rd2txt_options(width = Inf)
+      tools::Rd2txt_options(
+        width = Inf,
+        underline_titles = TRUE,
+        code_quote = TRUE
+      )
       capture.output(tools::Rd2txt(x, fragment = TRUE))
     },
     args = list(x = x)
