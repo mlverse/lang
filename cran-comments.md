@@ -1,4 +1,6 @@
-## Submission
+## Resubmission
+
+- Addresses NOTE returned by CRAN pre-test
 
 - This is a new package
 

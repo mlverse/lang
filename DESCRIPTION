@@ -1,6 +1,6 @@
 Package: lang
-Title: Using an Large Language Model of your choice, it translates the R
-    help documentation to a specific language
+Title: Using an Large Language Model of your Choice, it Translates the R Help
+    Documentation to a Specific Language'
 Version: 0.1.0
 Authors@R: 
     person("Edgar", "Ruiz", , "edgar@posit.co", role = c("aut", "cre"))
