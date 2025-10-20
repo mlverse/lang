@@ -12,10 +12,10 @@
 coverage](https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang?branch=main)
 <!-- badges: end -->
 
-Use an **LLM to translate a function’s help documentation on-the-fly**.
+Use an **LLM to translate a function’s help documentation on the fly**.
 `lang` overrides the `?` and `help()` functions in your R session. If
 you are using RStudio or Positron, the translated help page will appear
-in the Help pane.
+in the ‘Help’ pane.
 
 ## Installing
 
@@ -56,10 +56,10 @@ After setup, simply use `?` to trigger and display the translated
 documentation. During translation, `lang` will display its progress by
 showing which section of the documentation is currently translating.
 During the R session, if you request the same R function’s help more
-than one time, then `lang` will use its cached results, which will run
+than one time then `lang` will use its cached results, which will run
 immediately.
 
-R enforces the printed name of each section, so they cannot be
+R enforces the printed names of each section, so they cannot be
 translated. This means that titles such as “Description”, “Usage” and
 “Arguments” will always remain untranslated.
 
@@ -88,7 +88,7 @@ There are two ways to define the LLM in `lang_use()`:
 
 ### Target language
 
-In order of priority, these are the ways how `lang` determines the
+In order of priority, these are the ways in which `lang` determines the
 language it will translate to:
 
 1.  Value in `.lang` when calling `lang_use()`
@@ -113,10 +113,8 @@ current settings, which include language:
 
 ``` r
 lang_use()
-#> — `lang` session
-#> Backend: 'OpenAI' via `ellmer`
-#> Model: gpt-4o
-#> Language: spanish
+#> Model: gpt-4o via OpenAI
+#> Lang: spanish
 ```
 
 ## Tips
@@ -127,7 +125,7 @@ By default, `lang` will cache the translations it performs in a
 temporary folder. If R is restarted, a new folder will be used.
 
 If you notice that you are translating the same function’s help over and
-over, and across different R sessions, then fixing the cache location
+over and across different R sessions, then fixing the cache location
 would be helpful. Use `.cache` to define the folder:
 
 ``` r
@@ -165,7 +163,7 @@ lang::lang_use(
 ```
 
 In the example, we set `.silent` to `TRUE` so that there is no message
-every the R session is restarted.
+every time the R session is restarted.
 
 ## Considerations
 
@@ -173,11 +171,11 @@ every the R session is restarted.
 
 As you can imagine, the quality of translation will mostly depend on the
 LLM being used. This solution is meant to be as helpful as possible, but
-acknowledging that at this stage of LLMs, only a human curated
+we acknowledge that at this stage of LLMs, only a human curated
 translation will be the best solution. Having said that, I believe that
 even an imperfect translation could go a long way with someone who is
-struggling to understand how to use a specific function in a package,
-and may also struggle with the English language.
+struggling to understand how to use a specific function in a package and
+may also struggle with the English language.
 
 ### Debug
 
