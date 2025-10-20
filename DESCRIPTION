@@ -1,13 +1,13 @@
 Package: lang
 Title: Using an Large Language Model of your choice, it translates the R
     help documentation to a specific language
-Version: 0.0.0.9008
+Version: 0.1.0
 Authors@R: 
     person("Edgar", "Ruiz", , "edgar@posit.co", role = c("aut", "cre"))
-Description: Use an 'LLM' to translate a function's help documentation on-the-fly.
+Description: Use an 'LLM' to translate a function's help documentation on the fly.
     It  overrides the `?` and `help()` functions in your R session. If you are 
-    using RStudio or Positron, the translated help page will appear in the usual
-    help pane.
+    using 'RStudio' or 'Positron', the translated help page will appear in the usual
+    'Help' pane.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
