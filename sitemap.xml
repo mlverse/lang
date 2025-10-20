@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mlverse.github.io/lang/cran-comments.html</loc>
-    <lastmod>2025-10-20T20:01:16.081Z</lastmod>
+    <loc>https://mlverse.github.io/lang/reference/lang_use.html</loc>
+    <lastmod>2025-10-20T21:03:14.881Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/lang_help.html</loc>
-    <lastmod>2025-10-20T20:01:16.091Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/reference/lang_use.html</loc>
-    <lastmod>2025-10-20T20:01:16.091Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlverse.github.io/lang/LICENSE.html</loc>
-    <lastmod>2025-10-20T20:01:16.080Z</lastmod>
+    <lastmod>2025-10-20T21:03:14.880Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/index.html</loc>
-    <lastmod>2025-10-20T20:01:16.081Z</lastmod>
+    <lastmod>2025-10-20T21:03:14.871Z</lastmod>
   </url>
   <url>
-    <loc>https://mlverse.github.io/lang/reference/index.html</loc>
-    <lastmod>2025-10-20T20:01:16.091Z</lastmod>
+    <loc>https://mlverse.github.io/lang/LICENSE.html</loc>
+    <lastmod>2025-10-20T21:03:14.870Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/cran-comments.html</loc>
+    <lastmod>2025-10-20T21:03:14.871Z</lastmod>
   </url>
   <url>
     <loc>https://mlverse.github.io/lang/reference/help.html</loc>
-    <lastmod>2025-10-20T20:01:16.090Z</lastmod>
+    <lastmod>2025-10-20T21:03:14.880Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/lang/reference/index.html</loc>
+    <lastmod>2025-10-20T21:03:14.880Z</lastmod>
   </url>
 </urlset>
