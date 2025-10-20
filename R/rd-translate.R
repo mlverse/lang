@@ -211,8 +211,11 @@ tag_to_label <- function(x) {
   to_title(x)
 }
 
+# This is for mock testing purposes
+is_interactive <- function() interactive()
+
 progress_bar_init <- function(total, format, envir = parent.frame()) {
-  if (interactive()) {
+  if (is_interactive()) {
     .lang_env$size <- total
     .lang_env$progress <- 0
     cli_progress_bar(total = total, format = format, .envir = envir)
@@ -220,7 +223,7 @@ progress_bar_init <- function(total, format, envir = parent.frame()) {
 }
 
 progress_bar_update <- function(txt = NULL, obj = NULL, envir = parent.frame()) {
-  if (interactive()) {
+  if (is_interactive()) {
     if (is.null(obj)) {
       set <- NULL
     } else {
