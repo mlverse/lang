@@ -1,38 +1,31 @@
 [
   {
-    "objectID": "reference/lang_use.html#description",
-    "href": "reference/lang_use.html#description",
-    "title": "Specifies the LLM provider and model to use during the R session",
-    "section": "Description",
-    "text": "Description\nAllows us to specify the back-end provider, model to use during the current R session. The target language is not processed by the function, as in converting “english” to “en” for example. The value is passed directly to the LLM, and it lets the LLM interpret the target language."
+    "objectID": "cran-comments.html",
+    "href": "cran-comments.html",
+    "title": "lang",
+    "section": "",
+    "text": "Addresses manual feedback from CRAN\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
   },
   {
-    "objectID": "reference/lang_use.html#usage",
-    "href": "reference/lang_use.html#usage",
-    "title": "Specifies the LLM provider and model to use during the R session",
-    "section": "Usage",
-    "text": "Usage\nlang_use(\n  backend = NULL,\n  model = NULL,\n  .cache = NULL,\n  .lang = NULL,\n  .silent = FALSE,\n  ...\n)"
+    "objectID": "cran-comments.html#resubmission",
+    "href": "cran-comments.html#resubmission",
+    "title": "lang",
+    "section": "",
+    "text": "Addresses manual feedback from CRAN\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
   },
   {
-    "objectID": "reference/lang_use.html#arguments",
-    "href": "reference/lang_use.html#arguments",
-    "title": "Specifies the LLM provider and model to use during the R session",
-    "section": "Arguments",
-    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\nbackend\n“ollama” or an ellmer Chat object. If using “ollama”, mall will use is out-of-the-box integration with that back-end. Defaults to “ollama”.\n\n\nmodel\nThe name of model supported by the back-end provider\n\n\n.cache\nThe path to save model results, so they can be re-used if the same operation is ran again. To turn off, set this argument to an empty character: \"\". It defaults to a temp folder. If this argument is left NULL when calling this function, no changes to the path will be made.\n\n\n.lang\nTarget language to translate to. This will override values found in the LANG and LANGUAGE environment variables.\n\n\n.silent\nBoolean flag that controls if there is or not output to the console. Defaults to FALSE.\n\n\n…\nAdditional arguments that this function will pass down to the integrating function. In the case of Ollama, it will pass those arguments to ollamar::chat()."
+    "objectID": "cran-comments.html#r-cmd-checks-on-github",
+    "href": "cran-comments.html#r-cmd-checks-on-github",
+    "title": "lang",
+    "section": "R CMD checks on GitHub",
+    "text": "R CMD checks on GitHub\n\nUbuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.5.1 (2025-06-13)\nUbuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.4.3 (2025-02-28)\nUbuntu 24.04.3 LTS (x86_64, linux-gnu), R Under development (unstable) (2025-10-18 r88943)\nmacOS Sequoia 15.6.1 (aarch64, darwin20), R version 4.5.1 (2025-06-13)\nWindows Server 2022 x64 (build 26100) (x86_64, mingw32), R version 4.5.1 (2025-06-13 ucrt)"
   },
   {
-    "objectID": "reference/lang_use.html#value",
-    "href": "reference/lang_use.html#value",
-    "title": "Specifies the LLM provider and model to use during the R session",
-    "section": "Value",
-    "text": "Value\nConsole output of the current LLM setup to be used during the R session."
-  },
-  {
-    "objectID": "reference/lang_use.html#examples",
-    "href": "reference/lang_use.html#examples",
-    "title": "Specifies the LLM provider and model to use during the R session",
-    "section": "Examples",
-    "text": "Examples\n\n\n\nlibrary(lang)\n\n# Using an `ellmer` chat object\nlang_use(ellmer::chat_openai(model = \"gpt-4o\"))\n#&gt; Model: gpt-4o via OpenAI\n#&gt; Lang: en_US.UTF-8\n\n# Using Ollama directly\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: en_US.UTF-8\n\n# Turn off cache by setting `.cache` to \"\"\nlang_use(\"ollama\", \"llama3.2\", seed = 100, .cache = \"\")\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: en_US.UTF-8\n#&gt; Cache: [Disabled]\n\n# Use `.lang` to set the target language to translate to,\n# it will be set for the current R session\nlang_use(\"ollama\", \"llama3.2\", .lang = \"spanish\")\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: spanish\n#&gt; Cache: [Disabled]\n\n# Use `.silent` to avoid console output\nlang_use(\"ollama\", \"llama3.2\", .lang = \"spanish\", .silent = TRUE)\n\n# To see current settings, simply call the function\nlang_use()\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: spanish\n#&gt; Cache: [Disabled]"
+    "objectID": "cran-comments.html#r-cmd-check-results",
+    "href": "cran-comments.html#r-cmd-check-results",
+    "title": "lang",
+    "section": "R CMD check results",
+    "text": "R CMD check results\n0 errors ✔ | 0 warnings ✔ | 0 notes ✔"
   },
   {
     "objectID": "reference/lang_help.html#description",
@@ -70,6 +63,48 @@
     "text": "Examples\n\n\n\nlibrary(lang)\n\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: en_US.UTF-8\n\nlang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt; ✔ lang - Translation complete\n#&gt; _\bD_\bo_\bc_\bu_\bm_\be_\bn_\bt_\ba_\bc_\bi_\bó_\bn _\bd_\be _\ba_\by_\bu_\bd_\ba _\bp_\ba_\br_\ba _\bt_\br_\ba_\bd_\bu_\bc_\bi_\br _\ba _\bo_\bt_\br_\bo _\bi_\bd_\bi_\bo_\bm_\ba.\n#&gt; \n#&gt; _\bD_\be_\bs_\bc_\br_\bi_\bp_\bt_\bi_\bo_\bn:\n#&gt; \n#&gt;      Traduce un tema dado a una lengua objetivo. Utiliza el argumento\n#&gt;      'lang' para determinar la que traducir. Si no se pasa, esta\n#&gt;      función buscará una lengua objetivo en las variables de entorno\n#&gt;      LANG y LANGUAGE, o si algo ha sido pasado al argumento '.lang' en\n#&gt;      'lang_use()', para determinar la lengua objetivo. Si la lengua\n#&gt;      objetivo es inglés, no se procesará la traducción, por lo que el\n#&gt;      ayuda devuelto será la documentación original del paquete.\n#&gt; \n#&gt; _\bU_\bs_\ba_\bg_\be:\n#&gt; \n#&gt;      lang_help(topic, package = NULL, lang = NULL, type = getOption(\"help_type\"))\n#&gt;      \n#&gt; _\bA_\br_\bg_\bu_\bm_\be_\bn_\bt_\bs:\n#&gt; \n#&gt;    topic: vector de carácter del tema a buscar.\n#&gt; \n#&gt;  package: El paquete R para buscar el tema, si no se proporciona la\n#&gt;           función intentará encontrar el tema basado en los paquetes\n#&gt;           cargados.\n#&gt; \n#&gt;     lang: La cadena de caracteres del lenguaje para traducir el tema a\n#&gt; \n#&gt;     type: Producir \"html\" o \"text\" como salida para la ayuda. Se\n#&gt;           establece por defecto en 'getOption(\"help_type\")'.\n#&gt; \n#&gt; _\bV_\ba_\bl_\bu_\be:\n#&gt; \n#&gt;      Versión del documento de ayuda en el tipo de salida especificado\n#&gt; \n#&gt; _\bE_\bx_\ba_\bm_\bp_\bl_\be_\bs:\n#&gt; \n#&gt;      library(lang)\n#&gt;      \n#&gt;      lang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt;      \n#&gt;      lang_help(\"lang_help\", lang = \"spanish\", type = \"text\")\n#&gt;"
   },
   {
+    "objectID": "reference/lang_use.html#description",
+    "href": "reference/lang_use.html#description",
+    "title": "Specifies the LLM provider and model to use during the R session",
+    "section": "Description",
+    "text": "Description\nAllows us to specify the back-end provider, model to use during the current R session. The target language is not processed by the function, as in converting “english” to “en” for example. The value is passed directly to the LLM, and it lets the LLM interpret the target language."
+  },
+  {
+    "objectID": "reference/lang_use.html#usage",
+    "href": "reference/lang_use.html#usage",
+    "title": "Specifies the LLM provider and model to use during the R session",
+    "section": "Usage",
+    "text": "Usage\nlang_use(\n  backend = NULL,\n  model = NULL,\n  .cache = NULL,\n  .lang = NULL,\n  .silent = FALSE,\n  ...\n)"
+  },
+  {
+    "objectID": "reference/lang_use.html#arguments",
+    "href": "reference/lang_use.html#arguments",
+    "title": "Specifies the LLM provider and model to use during the R session",
+    "section": "Arguments",
+    "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\nbackend\n“ollama” or an ellmer Chat object. If using “ollama”, mall will use is out-of-the-box integration with that back-end. Defaults to “ollama”.\n\n\nmodel\nThe name of model supported by the back-end provider\n\n\n.cache\nThe path to save model results, so they can be re-used if the same operation is ran again. To turn off, set this argument to an empty character: \"\". It defaults to a temp folder. If this argument is left NULL when calling this function, no changes to the path will be made.\n\n\n.lang\nTarget language to translate to. This will override values found in the LANG and LANGUAGE environment variables.\n\n\n.silent\nBoolean flag that controls if there is or not output to the console. Defaults to FALSE.\n\n\n…\nAdditional arguments that this function will pass down to the integrating function. In the case of Ollama, it will pass those arguments to ollamar::chat()."
+  },
+  {
+    "objectID": "reference/lang_use.html#value",
+    "href": "reference/lang_use.html#value",
+    "title": "Specifies the LLM provider and model to use during the R session",
+    "section": "Value",
+    "text": "Value\nConsole output of the current LLM setup to be used during the R session."
+  },
+  {
+    "objectID": "reference/lang_use.html#examples",
+    "href": "reference/lang_use.html#examples",
+    "title": "Specifies the LLM provider and model to use during the R session",
+    "section": "Examples",
+    "text": "Examples\n\n\n\nlibrary(lang)\n\n# Using an `ellmer` chat object\nlang_use(ellmer::chat_openai(model = \"gpt-4o\"))\n#&gt; Model: gpt-4o via OpenAI\n#&gt; Lang: en_US.UTF-8\n\n# Using Ollama directly\nlang_use(\"ollama\", \"llama3.2\", seed = 100)\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: en_US.UTF-8\n\n# Turn off cache by setting `.cache` to \"\"\nlang_use(\"ollama\", \"llama3.2\", seed = 100, .cache = \"\")\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: en_US.UTF-8\n#&gt; Cache: [Disabled]\n\n# Use `.lang` to set the target language to translate to,\n# it will be set for the current R session\nlang_use(\"ollama\", \"llama3.2\", .lang = \"spanish\")\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: spanish\n#&gt; Cache: [Disabled]\n\n# Use `.silent` to avoid console output\nlang_use(\"ollama\", \"llama3.2\", .lang = \"spanish\", .silent = TRUE)\n\n# To see current settings, simply call the function\nlang_use()\n#&gt; Model: llama3.2 via Ollama\n#&gt; Lang: spanish\n#&gt; Cache: [Disabled]"
+  },
+  {
+    "objectID": "LICENSE.html",
+    "href": "LICENSE.html",
+    "title": "MIT License",
+    "section": "",
+    "text": "MIT License\nCopyright (c) 2024 lang authors\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+  },
+  {
     "objectID": "index.html#installing",
     "href": "index.html#installing",
     "title": "lang",
@@ -98,39 +133,11 @@
     "text": "Considerations\n\nTranslations are not perfect\nAs you can imagine, the quality of translation will mostly depend on the LLM being used. This solution is meant to be as helpful as possible, but we acknowledge that at this stage of LLMs, only a human curated translation will be the best solution. Having said that, I believe that even an imperfect translation could go a long way with someone who is struggling to understand how to use a specific function in a package and may also struggle with the English language.\n\n\nDebug\nIf the original English help page displays, check your environment variables:\nSys.getenv(\"LANG\")\n#&gt; [1] \"en_US.UTF-8\"\nSys.getenv(\"LANGUAGE\")\n#&gt; [1] \"\"\nIn my case, lang recognizes that the environment is set to English, because of the en code in the variable. If your LANG variable is set to en_... then no translation will occur.\nIf this is your case, set the LANGUAGE variable to your preference. You can use the full language name, such as ‘spanish’, or ‘french’, etc. You can use Sys.setenv(LANGUAGE = \"[my language]\"), or, for a more permanent solution, add the entry to your your .Renviron file (usethis::edit_r_environ()).\n\n\nInteraction with mall\nlang uses the mall package to produce the translations. To avoid conflicts in the setup and use of both packages during the R session, lang runs mall in a separate R process which is only alive while translating the documentation. This means that you can have a specific LLM setup for lang, and a different one for mall during your R session."
   },
   {
-    "objectID": "LICENSE.html",
-    "href": "LICENSE.html",
-    "title": "MIT License",
+    "objectID": "reference/index.html",
+    "href": "reference/index.html",
+    "title": "Package index",
     "section": "",
-    "text": "MIT License\nCopyright (c) 2024 lang authors\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-  },
-  {
-    "objectID": "cran-comments.html",
-    "href": "cran-comments.html",
-    "title": "lang",
-    "section": "",
-    "text": "Addresses NOTE returned by CRAN pre-test\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
-  },
-  {
-    "objectID": "cran-comments.html#resubmission",
-    "href": "cran-comments.html#resubmission",
-    "title": "lang",
-    "section": "",
-    "text": "Addresses NOTE returned by CRAN pre-test\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
-  },
-  {
-    "objectID": "cran-comments.html#r-cmd-checks-on-github",
-    "href": "cran-comments.html#r-cmd-checks-on-github",
-    "title": "lang",
-    "section": "R CMD checks on GitHub",
-    "text": "R CMD checks on GitHub\n\nUbuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.5.1 (2025-06-13)\nUbuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.4.3 (2025-02-28)\nUbuntu 24.04.3 LTS (x86_64, linux-gnu), R Under development (unstable) (2025-10-18 r88943)\nmacOS Sequoia 15.6.1 (aarch64, darwin20), R version 4.5.1 (2025-06-13)\nWindows Server 2022 x64 (build 26100) (x86_64, mingw32), R version 4.5.1 (2025-06-13 ucrt)"
-  },
-  {
-    "objectID": "cran-comments.html#r-cmd-check-results",
-    "href": "cran-comments.html#r-cmd-check-results",
-    "title": "lang",
-    "section": "R CMD check results",
-    "text": "R CMD check results\n0 errors ✔ | 0 warnings ✔ | 0 notes ✔"
+    "text": "Live translation\nlang_help()\n      Translates help documentation to another language\nlang_use()\n      Specifies the LLM provider and model to use during the R session"
   },
   {
     "objectID": "reference/help.html#description",
@@ -152,12 +159,5 @@
     "title": "Drop-in replacements for help and ? functions",
     "section": "Arguments",
     "text": "Arguments\n\n\n\n\n\n\n\nArguments\nDescription\n\n\n\n\ntopic\nA name or character string specifying the help topic.\n\n\npackage\nA name or character string specifying the package in which to search for the help topic. If NULL, search all packages.\n\n\n…\nAdditional arguments to pass to utils::help().\n\n\ne1\nFirst argument to pass along to utils::?. | | e2 | Second argument to pass along to utils::?."
-  },
-  {
-    "objectID": "reference/index.html",
-    "href": "reference/index.html",
-    "title": "Package index",
-    "section": "",
-    "text": "Live translation\nlang_help()\n      Translates help documentation to another language\nlang_use()\n      Specifies the LLM provider and model to use during the R session"
   }
 ]
