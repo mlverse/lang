@@ -1,6 +1,6 @@
 ## Resubmission
 
-- Addresses NOTE returned by CRAN pre-test
+- Addresses manual feedback from CRAN
 
 - This is a new package
 
