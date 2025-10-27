@@ -1,6 +1,6 @@
 ## Resubmission
 
-- Addresses manual feedback from CRAN
+- Updates Title to title case
 
 - This is a new package
 

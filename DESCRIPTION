@@ -1,5 +1,5 @@
 Package: lang
-Title: Translates R help documentation using Large Language models
+Title: Translates R Help Documentation using Large Language Models
 Version: 0.1.0
 Authors@R: 
     person("Edgar", "Ruiz", , "edgar@posit.co", role = c("aut", "cre"))
