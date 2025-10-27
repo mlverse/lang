@@ -4,14 +4,14 @@
     "href": "cran-comments.html",
     "title": "lang",
     "section": "",
-    "text": "Addresses manual feedback from CRAN\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
+    "text": "Updates Title to title case\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
   },
   {
     "objectID": "cran-comments.html#resubmission",
     "href": "cran-comments.html#resubmission",
     "title": "lang",
     "section": "",
-    "text": "Addresses manual feedback from CRAN\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
+    "text": "Updates Title to title case\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
   },
   {
     "objectID": "cran-comments.html#r-cmd-checks-on-github",
