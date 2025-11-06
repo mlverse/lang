@@ -10,6 +10,8 @@
 [![R-CMD-check](https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang?branch=main)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/lang)](https://CRAN.R-project.org/package=lang)
 <!-- badges: end -->
 
 Use an **LLM to translate a function’s help documentation on the fly**.
