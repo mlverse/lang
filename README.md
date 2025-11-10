@@ -21,6 +21,12 @@ in the ‘Help’ pane.
 
 ## Installing
 
+To install the CRAN version of `lang` use:
+
+``` r
+install.packages("lang")
+```
+
 To install the GitHub version of `lang`, use:
 
 ``` r

@@ -15,8 +15,9 @@ Imports:
     cli,
     fs,
     glue,
+    lifecycle,
     mall,
-    rlang,
+    rlang (>= 1.1.0),
     rstudioapi,
     tools,
     withr
