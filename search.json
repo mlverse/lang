@@ -109,7 +109,7 @@
     "href": "index.html#installing",
     "title": "lang",
     "section": "Installing",
-    "text": "Installing\nTo install the GitHub version of lang, use:\ninstall.packages(\"pak\")\npak::pak(\"mlverse/lang\")"
+    "text": "Installing\nTo install the CRAN version of lang use:\ninstall.packages(\"lang\")\nTo install the GitHub version of lang, use:\ninstall.packages(\"pak\")\npak::pak(\"mlverse/lang\")"
   },
   {
     "objectID": "index.html#using-lang",

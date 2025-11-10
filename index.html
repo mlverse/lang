@@ -355,17 +355,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<p><img src="man/figures/logo.png" align="right" alt="" width="120"></p>
+<p><img src="man/figures/logo.png" align="right" alt="lang's hex logo" width="120"></p>
 <section id="lang" class="level1">
 <h1>lang</h1>
 <!-- badges: start -->
-<p><a href="https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/mlverse/lang?branch=main"><img src="https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg" class="img-fluid" alt="Codecov test coverage"></a> <a href="https://CRAN.R-project.org/package=lang"><img src="https://www.r-pkg.org/badges/version/lang.png" class="img-fluid" alt="CRAN status"></a> <!-- badges: end --></p>
+<p><a href="https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/mlverse/lang?branch=main"><img src="https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg" class="img-fluid" alt="Codecov test coverage"></a> <a href="https://CRAN.R-project.org/package=lang"><img src="https://www.r-pkg.org/badges/version/lang.png" class="img-fluid" alt="CRAN status"></a> <a href="https://app.codecov.io/gh/mlverse/lang"><img src="https://codecov.io/gh/mlverse/lang/graph/badge.svg" class="img-fluid" alt="Codecov test coverage"></a> <!-- badges: end --></p>
 <p>Use an <strong>LLM to translate a function’s help documentation on the fly</strong>. <code>lang</code> overrides the <code>?</code> and <code>help()</code> functions in your R session. If you are using RStudio or Positron, the translated help page will appear in the ‘Help’ pane.</p>
 <section id="installing" class="level2">
 <h2 class="anchored" data-anchor-id="installing">Installing</h2>
+<p>To install the CRAN version of <code>lang</code> use:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"lang"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>To install the GitHub version of <code>lang</code>, use:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"pak"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"mlverse/lang"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"pak"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"mlverse/lang"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="using-lang" class="level2">
 <h2 class="anchored" data-anchor-id="using-lang">Using <code>lang</code></h2>
@@ -375,14 +377,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>A target language (e.g.: Spanish, French, Korean)</p></li>
 </ol>
 <p>These two can be defined using <code>lang_use()</code>. For example, the following code shows how to use OpenAI’s GPT-4o model to translate <code>lm()</code>’s help into Spanish:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lang)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-4o"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>(<span class="at">backend =</span> chat, <span class="at">.lang =</span> <span class="st">"spanish"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>?lm</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1/7] ■■                                 4% | Title</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lang)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>chat <span class="ot">&lt;-</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-4o"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>(<span class="at">backend =</span> chat, <span class="at">.lang =</span> <span class="st">"spanish"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>?lm</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1/7] ■■                                 4% | Title</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><img src="man/figures/lm-spanish.png" align="center" width="100%" alt="Screenshot of the lm function's help page in Spanish"></p>
 <p>After setup, simply use <code>?</code> to trigger and display the translated documentation. During translation, <code>lang</code> will display its progress by showing which section of the documentation is currently translating. During the R session, if you request the same R function’s help more than one time then <code>lang</code> will use its cached results, which will run immediately.</p>
 <p>R enforces the printed names of each section, so they cannot be translated. This means that titles such as “Description”, “Usage” and “Arguments” will always remain untranslated.</p>
@@ -391,9 +393,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>There are two ways to define the LLM in <code>lang_use()</code>:</p>
 <ol type="1">
 <li><p>Use an <a href="https://ellmer.tidyverse.org/"><code>ellmer</code></a> chat object:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>(<span class="at">backend =</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-4o"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>(<span class="at">backend =</span> ellmer<span class="sc">::</span><span class="fu">chat_openai</span>(<span class="at">model =</span> <span class="st">"gpt-4o"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Use local LLMs available through <a href="https://ollama.com/">Ollama</a>. Pass <code>"ollama"</code> as the <code>backend</code> argument, and specify which installed model to use:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>(<span class="at">backend =</span> <span class="st">"ollama"</span>, <span class="at">model =</span> <span class="st">"llama3.2"</span>, <span class="at">seed =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>(<span class="at">backend =</span> <span class="st">"ollama"</span>, <span class="at">model =</span> <span class="st">"llama3.2"</span>, <span class="at">seed =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Under the hood, <code>lang</code> uses the <a href="https://hauselin.github.io/ollama-r/"><code>ollamar</code></a> package to integrate with Ollama. Any additional arguments, such as <code>seed</code> as shown above, will be passed as-is to <code>ollamar</code>’s <code>chat()</code> function.</p></li>
 </ol>
 </section>
@@ -408,9 +410,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>It is likely that your <code>LANG</code> variable already defaults to your locale. For example, mine is set to: <code>en_US.UTF-8</code> (That means English, United States). For someone in France, the locale would be something such as <code>fr_FR.UTF-8</code>. Llama3.2, recognizes these UTF locales, and using <code>lang</code>, calling <code>?</code> will result in translating the function’s help documentation into French.</p>
 <p>If both environment variables are set, and are different from each other, <code>lang</code> will display a one-time message indicating which value it will use. If the target language is English, <code>lang</code> will re-route help calls back to base R.</p>
 <p>To check the current target language at any point during the R session, simply run: <code>lang_use()</code>, with no arguments, and it will print out the current settings, which include language:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>()</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model: gpt-4o via OpenAI</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Lang: spanish</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lang_use</span>()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model: gpt-4o via OpenAI</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Lang: spanish</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="tips" class="level2">
@@ -419,25 +421,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="caching">Caching</h3>
 <p>By default, <code>lang</code> will cache the translations it performs in a temporary folder. If R is restarted, a new folder will be used.</p>
 <p>If you notice that you are translating the same function’s help over and over and across different R sessions, then fixing the cache location would be helpful. Use <code>.cache</code> to define the folder:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lang<span class="sc">::</span><span class="fu">lang_use</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">backend =</span> <span class="st">"ollama"</span>, </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="st">"llama3.2"</span>, </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">.cache =</span> <span class="st">"~/help-translations/"</span>, </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">.lang =</span> <span class="st">"spanish"</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lang<span class="sc">::</span><span class="fu">lang_use</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">backend =</span> <span class="st">"ollama"</span>, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="st">"llama3.2"</span>, </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">.cache =</span> <span class="st">"~/help-translations/"</span>, </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">.lang =</span> <span class="st">"spanish"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="auto-initialize-at-startup" class="level3">
 <h3 class="anchored" data-anchor-id="auto-initialize-at-startup">Auto-initialize at startup</h3>
 <p>If <code>lang</code> becomes a regular part of your workflow, and running <code>lang_use()</code> at the beginning of every R session becomes cumbersome, then consider letting R connect at start up.</p>
 <p>If present, the <em>.Rprofile</em> file runs at the beginning of any R session. If you wish to automatically set the model and language to use, add a call to <code>llm_use()</code> to this file. You can call <code>usethis::edit_r_profile()</code> to open your .Rprofile file so you can add the option.</p>
 <p>Here is an example of such a call that could be used in the .Rprofile file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lang<span class="sc">::</span><span class="fu">lang_use</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">backend =</span> <span class="st">"ollama"</span>, </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="st">"llama3.2"</span>, </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">.cache =</span> <span class="st">"~/help-translations/"</span>, </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">.lang =</span> <span class="st">"spanish"</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">.silent =</span> <span class="cn">TRUE</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lang<span class="sc">::</span><span class="fu">lang_use</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">backend =</span> <span class="st">"ollama"</span>, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="st">"llama3.2"</span>, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">.cache =</span> <span class="st">"~/help-translations/"</span>, </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">.lang =</span> <span class="st">"spanish"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">.silent =</span> <span class="cn">TRUE</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In the example, we set <code>.silent</code> to <code>TRUE</code> so that there is no message every time the R session is restarted.</p>
 </section>
 </section>
@@ -450,10 +452,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="debug" class="level3">
 <h3 class="anchored" data-anchor-id="debug">Debug</h3>
 <p>If the original English help page displays, check your environment variables:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANG"</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "en_US.UTF-8"</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANGUAGE"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANG"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "en_US.UTF-8"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANGUAGE"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In my case, <code>lang</code> recognizes that the environment is set to English, because of the <code>en</code> code in the variable. If your <code>LANG</code> variable is set to <code>en_...</code> then no translation will occur.</p>
 <p>If this is your case, set the <code>LANGUAGE</code> variable to your preference. You can use the full language name, such as ‘spanish’, or ‘french’, etc. You can use <code>Sys.setenv(LANGUAGE = "[my language]")</code>, or, for a more permanent solution, add the entry to your your .Renviron file (<code>usethis::edit_r_environ()</code>).</p>
 </section>
