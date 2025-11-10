@@ -133,9 +133,10 @@ which_lang <- function(lang = NULL, choose = FALSE) {
     env_lang <- Sys.getenv("LANG", unset = NA)
     env_language <- Sys.getenv("LANGUAGE", unset = NA)
     lang <- c(LANG = env_lang, LANGUAGE = env_language)
-    lang <- lang[!is.na(lang)]
-    lang <- lang[lang != "C"]
-    lang <- lang[!startsWith(lang, "C.")]
+    lang <- lang |>
+      discard(is.na) |>
+      discard(\(x) x == "C") |>
+      discard(\(x) startsWith(x, "C."))
     if (length(lang) > 1 && choose) {
       if (unique(length(lang) > 1) && is.null(.lang_env$choose)) {
         cli_bullets(

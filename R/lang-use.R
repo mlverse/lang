@@ -48,12 +48,13 @@
 #'
 #' @export
 lang_use <- function(
-    backend = NULL,
-    model = NULL,
-    .cache = NULL,
-    .lang = NULL,
-    .silent = FALSE,
-    ...) {
+  backend = NULL,
+  model = NULL,
+  .cache = NULL,
+  .lang = NULL,
+  .silent = FALSE,
+  ...
+) {
   lang_use_impl(
     backend = backend,
     model = model,
@@ -66,13 +67,14 @@ lang_use <- function(
 }
 
 lang_use_impl <- function(
-    backend = NULL,
-    model = NULL,
-    .cache = NULL,
-    .is_internal = FALSE,
-    .lang = NULL,
-    .silent = FALSE,
-    ...) {
+  backend = NULL,
+  model = NULL,
+  .cache = NULL,
+  .is_internal = FALSE,
+  .lang = NULL,
+  .silent = FALSE,
+  ...
+) {
   args <- list(...)
   ca <- .lang_env$session
   if (!is.null(getOption(".lang_chat"))) {
