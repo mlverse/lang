@@ -18,13 +18,14 @@ chat <- chat_openai(model = "gpt-4o")
 lang_use(backend = chat, .lang = "spanish")
 ```
 
-<img src="man/figures/logo.png" align="right" alt="" width="120" />
+<img src="man/figures/logo.png" align="right" alt="lang's hex logo" width="120" />
 
 # lang 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mlverse/lang/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/lang)](https://CRAN.R-project.org/package=lang)
+[![Codecov test coverage](https://codecov.io/gh/mlverse/lang/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang)
 <!-- badges: end -->
 
 Use an **LLM to translate a function's help documentation on the fly**. `lang` 
@@ -33,6 +34,12 @@ RStudio or Positron, the translated help page will appear in the 'Help'
 pane. 
 
 ## Installing
+
+To install the CRAN version of `lang` use:
+
+```r
+install.packages("lang")
+```
 
 To install the GitHub version of `lang`, use:
 

@@ -64,7 +64,7 @@ test_that("shim_lang_question works", {
       expect_message(shim_lang_question(mtcars()))
       expect_message(shim_lang_question("mtcars"))
       expect_message(shim_lang_question("mtcars", "stats"))
-      expect_error(shim_lang_question(1), "Unknown input")
+      expect_snapshot(shim_lang_question(1), error = TRUE)
       expect_message(shim_lang_question(NULL))
       expect_message(shim_lang_question(base::`NULL`))
       expect_identical(

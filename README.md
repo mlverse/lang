@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<img src="man/figures/logo.png" align="right" alt="" width="120" />
+<img src="man/figures/logo.png" align="right" alt="lang's hex logo" width="120" />
 
 # lang
 
@@ -12,6 +12,8 @@
 coverage](https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/lang)](https://CRAN.R-project.org/package=lang)
+[![Codecov test
+coverage](https://codecov.io/gh/mlverse/lang/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang)
 <!-- badges: end -->
 
 Use an **LLM to translate a function’s help documentation on the fly**.
@@ -20,6 +22,12 @@ you are using RStudio or Positron, the translated help page will appear
 in the ‘Help’ pane.
 
 ## Installing
+
+To install the CRAN version of `lang` use:
+
+``` r
+install.packages("lang")
+```
 
 To install the GitHub version of `lang`, use:
 
