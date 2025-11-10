@@ -12,6 +12,8 @@
 coverage](https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/lang)](https://CRAN.R-project.org/package=lang)
+[![Codecov test
+coverage](https://codecov.io/gh/mlverse/lang/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang)
 <!-- badges: end -->
 
 Use an **LLM to translate a function’s help documentation on the fly**.

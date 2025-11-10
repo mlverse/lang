@@ -3,13 +3,14 @@ Title: Translates R Help Documentation using Large Language Models
 Version: 0.1.0
 Authors@R: 
     person("Edgar", "Ruiz", , "edgar@posit.co", role = c("aut", "cre"))
-Description: Translates R help documentation on the fly by using a Large 
-    Language model of your choice. If you are using 'RStudio' or 'Positron'
-    the translated help will appear in the help pane. 
+Description: Translates R help documentation on the fly by using a Large
+    Language model of your choice. If you are using 'RStudio' or
+    'Positron' the translated help will appear in the help pane.
 License: MIT + file LICENSE
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
+URL: https://mlverse.github.io/lang/, https://github.com/mlverse/lang
+BugReports: https://github.com/mlverse/lang/issues
+Depends: 
+    R (>= 4.1)
 Imports: 
     callr,
     cli,
@@ -22,11 +23,10 @@ Imports:
     tools,
     withr
 Suggests: 
-    testthat (>= 3.0.0),
-    ellmer
+    ellmer,
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://mlverse.github.io/lang/, https://github.com/mlverse/lang
 Config/usethis/last-upkeep: 2025-11-10
-BugReports: https://github.com/mlverse/lang/issues
-Depends: 
-    R (>= 4.1)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
