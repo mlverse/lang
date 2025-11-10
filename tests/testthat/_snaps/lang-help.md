@@ -88,16 +88,36 @@
 
 ---
 
-    Could not find `nothere`
-    i Tip: Make sure the containing package is loaded, and the topic is spelled correctly
+    Code
+      lang_help("llm_classify", "mall", lang = "english", type = "text")
+    Condition
+      Error in `lang_help()`:
+      ! Language already set to English, use `help()`
 
 ---
 
-    Package `notpkg` not found
-    i Tip: Make sure package name is spelled correctly
+    Code
+      lang_help("nothere", lang = "spanish", type = "text")
+    Condition
+      Error in `lang_help()`:
+      ! Could not find `nothere`
+      i Tip: Make sure the containing package is loaded, and the topic is spelled correctly
 
 ---
 
-    `nothere` could not be found in `mall`
-    i Tip: Make sure both are spelled correctly
+    Code
+      lang_help("nothere", "notpkg", lang = "spanish", type = "text")
+    Condition
+      Error in `lang_help()`:
+      ! Package `notpkg` not found
+      i Tip: Make sure package name is spelled correctly
+
+---
+
+    Code
+      lang_help("nothere", "mall", lang = "spanish", type = "text")
+    Condition
+      Error in `lang_help()`:
+      ! `nothere` could not be found in `mall`
+      i Tip: Make sure both are spelled correctly
 

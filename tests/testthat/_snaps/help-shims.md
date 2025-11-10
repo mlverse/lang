@@ -9,3 +9,11 @@
     Output
       [1] "spanish"
 
+# shim_lang_question works
+
+    Code
+      shim_lang_question(1)
+    Condition
+      Error in `shim_lang_question()`:
+      ! Unknown input.
+

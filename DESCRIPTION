@@ -28,3 +28,5 @@ Config/testthat/edition: 3
 URL: https://mlverse.github.io/lang/, https://github.com/mlverse/lang
 Config/usethis/last-upkeep: 2025-11-10
 BugReports: https://github.com/mlverse/lang/issues
+Depends: 
+    R (>= 4.1)
