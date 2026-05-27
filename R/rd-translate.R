@@ -16,8 +16,14 @@ rd_translate <- function(rd_content, lang) {
     args = list(x = use_args)
   )
   standard_tags <- c(
-    "\\title", "\\description", "\\arguments", "\\value",
-    "\\details", "\\seealso", "\\note", "\\author"
+    "\\title",
+    "\\description",
+    "\\arguments",
+    "\\value",
+    "\\details",
+    "\\seealso",
+    "\\note",
+    "\\author"
   )
   non_standard_tags <- c("\\section", "\\examples")
   all_tags <- rd_content |>
@@ -47,8 +53,14 @@ rd_translate <- function(rd_content, lang) {
           for (k in seq_along(rd_i)) {
             rd_k <- rd_i[[k]]
             if (length(rd_k) > 1) {
-              tag_label <- glue("{tag_to_label(tag_name)} - '{as.character(rd_k[[1]])}'")
-              rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
+              tag_label <- glue(
+                "{tag_to_label(tag_name)} - '{as.character(rd_k[[1]])}'"
+              )
+              rd_content[[i]][[k]][[2]] <- rd_prep_translate(
+                rd_k[[2]],
+                lang,
+                rs
+              )
             } else {
               item_translation <- suppressWarnings(
                 try(rd_prep_translate(rd_k, lang, rs), silent = TRUE)
@@ -116,7 +128,9 @@ rd_comment_translate <- function(x, lang, rs) {
       n_char <- ifelse(last_char == "\n", 1, 0)
       rd_char <- substr(rd_char, 3, nchar(rd_char) - n_char)
       rd_char <- rs$run(
-        function(x, language) mall::llm_vec_translate(x = x, language = language),
+        function(x, language) {
+          mall::llm_vec_translate(x = x, language = language)
+        },
         args = list(x = rd_char, language = lang)
       )
       rd_char <- paste0("# ", rd_char, "\n")
@@ -153,7 +167,11 @@ rd_prep_translate <- function(x, lang, rs) {
   for (func in funcs) {
     func <- sub("\\(", "\\\\(", func)
     func <- sub("\\)", "\\\\)", func)
-    tag_text <- sub(paste0("'", func, "'"), paste0("\\\\code{", func, "}"), tag_text)
+    tag_text <- sub(
+      paste0("'", func, "'"),
+      paste0("\\\\code{", func, "}"),
+      tag_text
+    )
   }
   obj <- list(tag_text)
   attrs <- attributes(x[[1]])
@@ -230,7 +248,11 @@ progress_bar_init <- function(total, format, envir = parent.frame()) {
   }
 }
 
-progress_bar_update <- function(txt = NULL, obj = NULL, envir = parent.frame()) {
+progress_bar_update <- function(
+  txt = NULL,
+  obj = NULL,
+  envir = parent.frame()
+) {
   if (is_interactive()) {
     if (is.null(obj)) {
       set <- NULL

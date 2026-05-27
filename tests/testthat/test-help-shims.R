@@ -2,7 +2,12 @@ skip_on_os("windows")
 
 test_that("shim_lang_help works", {
   invisible(
-    lang_use_impl("simulate_llm", "echo", .is_internal = TRUE, .lang = "spanish")
+    lang_use_impl(
+      "simulate_llm",
+      "echo",
+      .is_internal = TRUE,
+      .lang = "spanish"
+    )
   )
   expect_message(shim_lang_help(NULL))
   expect_message(shim_lang_help(NULL, base))
@@ -14,7 +19,12 @@ test_that("shim_lang_help works", {
   expect_message(shim_lang_help(mtcars, datasets))
   expect_message(shim_lang_help("mtcars", "datasets"))
   invisible(
-    lang_use_impl("simulate_llm", "echo", .is_internal = TRUE, .lang = "english")
+    lang_use_impl(
+      "simulate_llm",
+      "echo",
+      .is_internal = TRUE,
+      .lang = "english"
+    )
   )
   expect_silent(shim_lang_help(mtcars))
 })
@@ -57,7 +67,12 @@ test_that("shim_lang_question works", {
     list(help_type = "text"),
     {
       invisible(
-        lang_use_impl("simulate_llm", "echo", .is_internal = TRUE, .lang = "spanish")
+        lang_use_impl(
+          "simulate_llm",
+          "echo",
+          .is_internal = TRUE,
+          .lang = "spanish"
+        )
       )
       expect_message(shim_lang_question(lm))
       expect_message(shim_lang_question(datasets::mtcars))

@@ -26,7 +26,13 @@ test_that("lang_use() works with ellmer", {
 
 test_that("lang_use() works with additional arguments", {
   expect_snapshot(
-    lang_use("simulate_llm", "echo", temp = 0.8, .cache = "path/to/cache", .lang = "test")
+    lang_use(
+      "simulate_llm",
+      "echo",
+      temp = 0.8,
+      .cache = "path/to/cache",
+      .lang = "test"
+    )
   )
 })
 

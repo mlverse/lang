@@ -26,10 +26,12 @@
 #' }
 #'
 #' @export
-lang_help <- function(topic,
-                      package = NULL,
-                      lang = NULL,
-                      type = getOption("help_type")) {
+lang_help <- function(
+  topic,
+  package = NULL,
+  lang = NULL,
+  type = getOption("help_type")
+) {
   lang <- which_lang(lang, choose = TRUE)
   if (en_lang(lang)) {
     abort("Language already set to English, use `help()`")
