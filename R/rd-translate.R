@@ -1,10 +1,14 @@
 lang_rs_refresh <- function(rs) {
   lang_args <- lang_use_impl(.is_internal = TRUE)
-  use_args <- list(
-    backend = lang_args[["backend"]],
-    model = lang_args[["model"]],
-    .cache = lang_args[[".cache"]]
-  )
+  backend <- lang_args[["backend"]]
+  use_args <- list(.cache = lang_args[[".cache"]])
+  if (!is.null(backend)) {
+    use_args[["backend"]] <- backend
+  }
+  # Chat objects have their model built in; passing model separately is an error
+  if (!inherits(backend, "Chat")) {
+    use_args[["model"]] <- lang_args[["model"]]
+  }
   args <- lang_args[["args"]]
   if (length(args) > 0) {
     use_args <- c(use_args, args)

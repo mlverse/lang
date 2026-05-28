@@ -45,6 +45,6 @@ test_that("lang_use() works with disabled cache", {
 test_that("Warning is displayed if .lang_chat is set", {
   withr::with_options(
     list(.lang_chat = 3),
-    expect_warning(lang_use())
+    expect_warning(lang_use(.silent = TRUE))
   )
 })

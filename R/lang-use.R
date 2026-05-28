@@ -83,7 +83,7 @@ lang_use_impl <- function(
 ) {
   args <- list(...)
   ca <- .lang_env$session
-  if (!is.null(getOption(".lang_chat"))) {
+  if (!.is_internal && !is.null(getOption(".lang_chat"))) {
     cli_warn(c(
       "Option `.lang_chat` is no longer supported",
       "Use `lang::lang_use([backend])` in your .RProfile file instead"
@@ -104,7 +104,10 @@ lang_use_impl <- function(
   if (.is_internal) {
     return(ca)
   }
-  if (!is.null(ca[["backend"]])) {
+  # Pre-warm the subprocess for string backends (e.g. "ollama", "simulate_llm").
+  # Chat objects are skipped: they can't be serialized to the subprocess and
+  # will be configured lazily on the first help() call via lang_rs_get().
+  if (!is.null(ca[["backend"]]) && !inherits(ca[["backend"]], "Chat")) {
     rs <- .lang_env$rs
     if (!is.null(rs) && rs$is_alive()) {
       if (rs$get_state() == "starting") {
