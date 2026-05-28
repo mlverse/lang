@@ -41,6 +41,7 @@ lang_rs_get <- function() {
   }
   rs <- callr::r_session$new()
   .lang_env$rs <- rs
+  rs$poll_process(10000L)
   lang_rs_refresh(rs)
   .lang_env$rs_hash <- lang_rs_hash()
   rs
@@ -63,16 +64,17 @@ rd_translate <- function(rd_content, lang, context_size) {
   if (context_size >= 1L) {
     full_doc_text <- rd_flatten(lst)
     progress_bar_update("Context: Summarizing")
-    # Summarize + translate in one IPC round-trip
-    context_summary <- rs$run(
-      function(text, n, lang) {
-        en_summary <- mall::llm_vec_summarize(text, max_words = n)
-        mall::llm_vec_translate(en_summary, language = lang)
-      },
-      args = list(text = full_doc_text, n = context_size, lang = lang)
+    summary_en <- rs$run(
+      function(text, n) mall::llm_vec_summarize(text, max_words = n),
+      args = list(text = full_doc_text, n = context_size)
     )
-    section_no <- section_no + 2L
+    section_no <- section_no + 1L
     progress_bar_update("Context: Translating summary")
+    context_summary <- rs$run(
+      function(x, lang) mall::llm_vec_translate(x, language = lang),
+      args = list(x = summary_en, lang = lang)
+    )
+    section_no <- section_no + 1L
   } else {
     context_summary <- NULL
   }

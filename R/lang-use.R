@@ -111,10 +111,12 @@ lang_use_impl <- function(
     rs <- .lang_env$rs
     if (!is.null(rs) && rs$is_alive()) {
       if (rs$get_state() == "starting") {
-        rs$poll_process(5000L)
+        rs$poll_process(10000L)
       }
-      lang_rs_refresh(rs)
-      .lang_env$rs_hash <- lang_rs_hash()
+      if (rs$get_state() == "idle") {
+        lang_rs_refresh(rs)
+        .lang_env$rs_hash <- lang_rs_hash()
+      }
     } else {
       lang_rs_get()
     }
