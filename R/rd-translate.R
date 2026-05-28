@@ -271,7 +271,7 @@ rd_translate <- function(rd_content, lang, context_size) {
 
   if (!is.null(lst$examples)) {
     section_no <- section_no + 1L
-    progress_bar_update("Examples")
+    progress_bar_update("Examples", obj = lst$examples)
   }
 
   cli_progress_done()
@@ -373,6 +373,9 @@ rd_trans_size <- function(lst) {
     s <- lst[[sec_idx[[i]]]]
     size <- size + as.integer(object.size(s$title))
     size <- size + as.integer(object.size(s$contents))
+  }
+  if (!is.null(lst$examples)) {
+    size <- size + as.integer(object.size(lst$examples))
   }
   size
 }
@@ -491,6 +494,7 @@ progress_bar_update <- function(
     if (!is.null(txt)) {
       envir$tag_label <- txt
     }
+    print(paste(txt, " - object size:", set))
     cli_progress_update(set = set, .envir = envir)
   }
 }
