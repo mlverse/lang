@@ -1,5 +1,9 @@
 .onLoad <- function(libname, pkgname) {
   insert_global_shims(force = TRUE)
+  tryCatch(
+    .lang_env$rs <- callr::r_session$new(wait = FALSE),
+    error = function(e) NULL
+  )
 }
 
 

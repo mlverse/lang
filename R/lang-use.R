@@ -103,7 +103,20 @@ lang_use_impl <- function(
   model_str <- NULL
   if (.is_internal) {
     return(ca)
-  } else if (!.silent) {
+  }
+  if (!is.null(ca[["backend"]])) {
+    rs <- .lang_env$rs
+    if (!is.null(rs) && rs$is_alive()) {
+      if (rs$get_state() == "starting") {
+        rs$poll_process(5000L)
+      }
+      lang_rs_refresh(rs)
+      .lang_env$rs_hash <- lang_rs_hash()
+    } else {
+      lang_rs_get()
+    }
+  }
+  if (!.silent) {
     backend <- ca[["backend"]]
     if (inherits(backend, "Chat")) {
       provider <- backend$get_provider()

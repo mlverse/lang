@@ -68,7 +68,10 @@ lang_help <- function(
       ))
     }
   }
-  db <- Rd_db(package)
+  db <- .lang_env$rd_db_cache[[package]] %||%
+    {
+      .lang_env$rd_db_cache[[package]] <- Rd_db(package)
+    }
   rd_content <- db[[path(topic, ext = "Rd")]]
   # If topic cannot be found, it will try and see if the topic is aliased
   # (geom_col is inside geom_bar)
