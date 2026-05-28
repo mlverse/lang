@@ -41,7 +41,6 @@ lang_rs_get <- function() {
   }
   rs <- callr::r_session$new()
   .lang_env$rs <- rs
-  rs$poll_process(10000L)
   lang_rs_refresh(rs)
   .lang_env$rs_hash <- lang_rs_hash()
   rs
