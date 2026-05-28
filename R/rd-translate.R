@@ -1,4 +1,4 @@
-rd_translate <- function(rd_content, lang) {
+rd_translate <- function(rd_content, lang, max_words = 100) {
   rs <- callr::r_session$new()
   on.exit(rs$close())
   lang_args <- lang_use_impl(.is_internal = TRUE)
@@ -29,11 +29,26 @@ rd_translate <- function(rd_content, lang) {
   obj_total <- filter_obj |>
     object.size() |>
     as.integer()
+  full_doc_text <- rd_extract_full_text(rd_content)
   progress_bar_init(
     total = obj_total,
     format = "[{section_no}/{length(filter_obj)}] {pb_bar} {pb_percent} | {tag_label}"
   )
   obj_progress <- 0
+  if (max_words >= 1) {
+    progress_bar_update("Context: Summarizing")
+    summary_en <- rs$run(
+      function(text, n) mall::llm_vec_summarize(text, max_words = n),
+      args = list(text = full_doc_text, n = max_words)
+    )
+    progress_bar_update("Context: Translating summary")
+    context_summary <- rs$run(
+      function(x, lang) mall::llm_vec_translate(x, language = lang),
+      args = list(x = summary_en, lang = lang)
+    )
+  } else {
+    context_summary <- NULL
+  }
   for (i in seq_along(rd_content)) {
     rd_i <- rd_content[[i]]
     tag_name <- attr(rd_i, "Rd_tag")
@@ -48,10 +63,10 @@ rd_translate <- function(rd_content, lang) {
             rd_k <- rd_i[[k]]
             if (length(rd_k) > 1) {
               tag_label <- glue("{tag_to_label(tag_name)} - '{as.character(rd_k[[1]])}'")
-              rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs)
+              rd_content[[i]][[k]][[2]] <- rd_prep_translate(rd_k[[2]], lang, rs, context_summary)
             } else {
               item_translation <- suppressWarnings(
-                try(rd_prep_translate(rd_k, lang, rs), silent = TRUE)
+                try(rd_prep_translate(rd_k, lang, rs, context_summary), silent = TRUE)
               )
               if (!inherits(item_translation, "try-error")) {
                 rd_content[[i]][[k]] <- item_translation
@@ -60,7 +75,7 @@ rd_translate <- function(rd_content, lang) {
             progress_bar_update(obj = rd_k)
           }
         } else {
-          rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs)
+          rd_content[[i]] <- rd_prep_translate(rd_i, lang, rs, context_summary)
           progress_bar_update(obj = rd_i)
         }
       }
@@ -70,9 +85,9 @@ rd_translate <- function(rd_content, lang) {
           tag_full <- paste0(substr(tag_full, 1, 17), "...")
         }
         progress_bar_update(glue("Section: '{tag_full}'"))
-        rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang, rs)
+        rd_content[[i]][[1]] <- rd_prep_translate(rd_i[[1]], lang, rs, context_summary)
         progress_bar_update(obj = rd_i[[1]])
-        rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang, rs)
+        rd_content[[i]][[2]] <- rd_prep_translate(rd_i[[2]], lang, rs, context_summary)
         progress_bar_update(obj = rd_i[[2]])
       }
       if (tag_name == "\\examples") {
@@ -82,10 +97,10 @@ rd_translate <- function(rd_content, lang) {
           k_attrs <- attributes(rd_k)
           rd_char <- as.character(rd_k)
           if (inherits(rd_k, "list")) {
-            rd_k <- map(rd_char, rd_comment_translate, lang, rs)
+            rd_k <- map(rd_char, rd_comment_translate, lang, rs, context_summary)
           }
           if (inherits(rd_k, "character")) {
-            rd_k <- rd_comment_translate(rd_char, lang, rs)
+            rd_k <- rd_comment_translate(rd_char, lang, rs, context_summary)
           }
           attributes(rd_k) <- k_attrs
           rd_i[[k]] <- rd_k
@@ -108,16 +123,27 @@ rd_translate <- function(rd_content, lang) {
   topic_path
 }
 
-rd_comment_translate <- function(x, lang, rs) {
+rd_comment_translate <- function(x, lang, rs, context_summary = NULL) {
   rd_char <- as.character(x)
   if (length(rd_char) == 1) {
     if (substr(rd_char, 1, 2) == "# ") {
       last_char <- substr(rd_char, nchar(rd_char), nchar(rd_char))
       n_char <- ifelse(last_char == "\n", 1, 0)
       rd_char <- substr(rd_char, 3, nchar(rd_char) - n_char)
+      context_block <- if (!is.null(context_summary)) {
+        paste0(
+          "For context, here is a short summary of the full help page in the target language:\n\n",
+          context_summary,
+          "\n\n"
+        )
+      } else {
+        ""
+      }
       rd_char <- rs$run(
-        function(x, language) mall::llm_vec_translate(x = x, language = language),
-        args = list(x = rd_char, language = lang)
+        function(x, language, context) {
+          mall::llm_vec_translate(x = x, language = language, additional_prompt = context)
+        },
+        args = list(x = rd_char, language = lang, context = context_block)
       )
       rd_char <- paste0("# ", rd_char, "\n")
     } else {}
@@ -128,11 +154,21 @@ rd_comment_translate <- function(x, lang, rs) {
   x
 }
 
-rd_prep_translate <- function(x, lang, rs) {
+rd_prep_translate <- function(x, lang, rs, context_summary = NULL) {
   txt <- rd_extract_text(x, rs)
   rd_text <- gsub("\U2018", "'", txt)
   rd_text <- gsub("\U2019", "'", rd_text)
+  context_block <- if (!is.null(context_summary)) {
+    paste0(
+      "For context, here is a short summary of the full help page in the target language:\n\n",
+      context_summary,
+      "\n\n"
+    )
+  } else {
+    ""
+  }
   add_prompt <- paste(
+    context_block,
     "Do not translate anything between single quotes.",
     "Do not translate the words: NULL, TRUE, FALSE, NA, Nan.",
     "Do not expand on the subject, simply translate the original text"
@@ -163,6 +199,17 @@ rd_prep_translate <- function(x, lang, rs) {
   }
   attributes(obj) <- attributes(x)
   obj
+}
+
+rd_extract_full_text <- function(rd_content) {
+  tools::Rd2txt_options(
+    width = Inf,
+    underline_titles = TRUE,
+    code_quote = TRUE
+  )
+  txt <- capture.output(tools::Rd2txt(rd_content))
+  txt <- gsub("_\b", "", txt)
+  paste0(txt, collapse = "\n")
 }
 
 rd_extract_text <- function(x, rs) {
