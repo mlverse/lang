@@ -103,6 +103,23 @@ rd_translate <- function(rd_content, lang) {
     lst[[sec_idx[[i]]]]$contents <- rd_field_translate(s$contents, lang, rs)
   }
 
+  # Examples — translate # comments only
+  if (!is.null(lst$examples)) {
+    section_no <- section_no + 1L
+    progress_bar_update("Examples", obj = lst$examples)
+    ex <- lst$examples
+    if (!is.null(ex$code_run)) {
+      lst$examples$code_run <- rd_examples_translate(ex$code_run, lang, rs)
+    }
+    if (!is.null(ex$code_dont_run)) {
+      lst$examples$code_dont_run <- rd_examples_translate(
+        ex$code_dont_run,
+        lang,
+        rs
+      )
+    }
+  }
+
   cli_progress_done()
   cli_alert_success("{.pkg lang} - {.emph Translation complete}")
 
@@ -124,6 +141,23 @@ rd_field_translate <- function(x, lang, rs) {
     },
     args = list(x = paste(x, collapse = "\n"), y = lang, z = add_prompt)
   )
+}
+
+rd_examples_translate <- function(code, lang, rs) {
+  lines <- strsplit(code, "\n", fixed = TRUE)[[1L]]
+  comment_idx <- which(substr(lines, 1L, 2L) == "# ")
+  if (length(comment_idx) == 0L) {
+    return(code)
+  }
+  comment_texts <- substr(lines[comment_idx], 3L, nchar(lines[comment_idx]))
+  translated <- rs$run(
+    function(x, language) {
+      mall::llm_vec_translate(x = x, language = language)
+    },
+    args = list(x = comment_texts, language = lang)
+  )
+  lines[comment_idx] <- paste0("# ", translated)
+  paste(lines, collapse = "\n")
 }
 
 rd_count_fields <- function(lst) {
@@ -154,6 +188,9 @@ rd_count_fields <- function(lst) {
     }
   }
   n <- n + length(which(nms == "section")) * 2L
+  if (!is.null(lst$examples)) {
+    n <- n + 1L
+  }
   n
 }
 
