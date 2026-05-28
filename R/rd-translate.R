@@ -1,4 +1,4 @@
-rd_translate <- function(rd_content, lang) {
+rd_translate <- function(rd_content, lang, context_size) {
   rs <- callr::r_session$new()
   on.exit(rs$close())
   lang_args <- lang_use_impl(.is_internal = TRUE)
@@ -20,12 +20,32 @@ rd_translate <- function(rd_content, lang) {
   nms <- names(lst)
 
   section_no <- 0L
-  n_fields <- rd_count_fields(lst)
+  n_fields <- rd_count_fields(lst, context_size)
   tag_label <- ""
   progress_bar_init(
     total = rd_trans_size(lst),
     format = "[{section_no}/{n_fields}] {pb_bar} {pb_percent} | {tag_label}"
   )
+
+  if (context_size >= 1L) {
+    full_doc_text <- rd_flatten(lst)
+
+    progress_bar_update("Context: Summarizing")
+    summary_en <- rs$run(
+      function(text, n) mall::llm_vec_summarize(text, max_words = n),
+      args = list(text = full_doc_text, n = context_size)
+    )
+    section_no <- section_no + 1L
+
+    progress_bar_update("Context: Translating summary")
+    context_summary <- rs$run(
+      function(x, lang) mall::llm_vec_translate(x, language = lang),
+      args = list(x = summary_en, lang = lang)
+    )
+    section_no <- section_no + 1L
+  } else {
+    context_summary <- NULL
+  }
 
   # Prose scalar / vector fields
   for (field in c(
@@ -38,7 +58,12 @@ rd_translate <- function(rd_content, lang) {
     "seealso"
   )) {
     if (!is.null(lst[[field]])) {
-      lst[[field]] <- rd_field_translate(lst[[field]], lang, rs)
+      lst[[field]] <- rd_field_translate(
+        lst[[field]],
+        lang,
+        rs,
+        context_summary
+      )
       section_no <- section_no + 1L
       progress_bar_update(tag_to_label(field), obj = lst[[field]])
     }
@@ -50,7 +75,8 @@ rd_translate <- function(rd_content, lang) {
     lst$arguments[[i]]$description <- rd_field_translate(
       lst$arguments[[i]]$description,
       lang,
-      rs
+      rs,
+      context_summary
     )
     section_no <- section_no + 1L
     progress_bar_update(
@@ -63,7 +89,7 @@ rd_translate <- function(rd_content, lang) {
   if (!is.null(lst$value)) {
     v <- lst$value
     if (!is.null(v$intro) && nzchar(trimws(v$intro))) {
-      lst$value$intro <- rd_field_translate(v$intro, lang, rs)
+      lst$value$intro <- rd_field_translate(v$intro, lang, rs, context_summary)
       section_no <- section_no + 1L
       progress_bar_update("Value", obj = lst$value$intro)
     }
@@ -72,7 +98,8 @@ rd_translate <- function(rd_content, lang) {
       lst$value$components[[i]]$description <- rd_field_translate(
         v$components[[i]]$description,
         lang,
-        rs
+        rs,
+        context_summary
       )
       section_no <- section_no + 1L
       progress_bar_update(
@@ -81,7 +108,7 @@ rd_translate <- function(rd_content, lang) {
       )
     }
     if (!is.null(v$outro) && nzchar(trimws(v$outro))) {
-      lst$value$outro <- rd_field_translate(v$outro, lang, rs)
+      lst$value$outro <- rd_field_translate(v$outro, lang, rs, context_summary)
       section_no <- section_no + 1L
       progress_bar_update("Value", obj = lst$value$outro)
     }
@@ -95,13 +122,23 @@ rd_translate <- function(rd_content, lang) {
     if (nchar(tag_full) > 17) {
       tag_full <- paste0(substr(tag_full, 1, 17), "...")
     }
-    lst[[sec_idx[[i]]]]$title <- rd_field_translate(s$title, lang, rs)
+    lst[[sec_idx[[i]]]]$title <- rd_field_translate(
+      s$title,
+      lang,
+      rs,
+      context_summary
+    )
     section_no <- section_no + 1L
     progress_bar_update(
       glue("Section: '{tag_full}'"),
       obj = lst[[sec_idx[[i]]]]$title
     )
-    lst[[sec_idx[[i]]]]$contents <- rd_field_translate(s$contents, lang, rs)
+    lst[[sec_idx[[i]]]]$contents <- rd_field_translate(
+      s$contents,
+      lang,
+      rs,
+      context_summary
+    )
     section_no <- section_no + 1L
     progress_bar_update(
       glue("Section: '{tag_full}'"),
@@ -113,13 +150,19 @@ rd_translate <- function(rd_content, lang) {
   if (!is.null(lst$examples)) {
     ex <- lst$examples
     if (!is.null(ex$code_run)) {
-      lst$examples$code_run <- rd_examples_translate(ex$code_run, lang, rs)
+      lst$examples$code_run <- rd_examples_translate(
+        ex$code_run,
+        lang,
+        rs,
+        context_summary
+      )
     }
     if (!is.null(ex$code_dont_run)) {
       lst$examples$code_dont_run <- rd_examples_translate(
         ex$code_dont_run,
         lang,
-        rs
+        rs,
+        context_summary
       )
     }
     section_no <- section_no + 1L
@@ -135,8 +178,18 @@ rd_translate <- function(rd_content, lang) {
   tmp
 }
 
-rd_field_translate <- function(x, lang, rs) {
+rd_field_translate <- function(x, lang, rs, context_summary = NULL) {
+  context_block <- if (!is.null(context_summary)) {
+    paste0(
+      "For context, here is a short summary of the full help page in the target language:\n\n",
+      context_summary,
+      "\n\n"
+    )
+  } else {
+    ""
+  }
   add_prompt <- paste(
+    context_block,
     "Do not translate anything between single quotes.",
     "Do not translate the words: NULL, TRUE, FALSE, NA, Nan.",
     "Do not expand on the subject, simply translate the original text"
@@ -149,18 +202,31 @@ rd_field_translate <- function(x, lang, rs) {
   )
 }
 
-rd_examples_translate <- function(code, lang, rs) {
+rd_examples_translate <- function(code, lang, rs, context_summary = NULL) {
   lines <- strsplit(code, "\n", fixed = TRUE)[[1L]]
   comment_idx <- which(substr(lines, 1L, 2L) == "# ")
   if (length(comment_idx) == 0L) {
     return(code)
   }
+  context_block <- if (!is.null(context_summary)) {
+    paste0(
+      "For context, here is a short summary of the full help page in the target language:\n\n",
+      context_summary,
+      "\n\n"
+    )
+  } else {
+    ""
+  }
   comment_texts <- substr(lines[comment_idx], 3L, nchar(lines[comment_idx]))
   translated <- rs$run(
-    function(x, language) {
-      mall::llm_vec_translate(x = x, language = language)
+    function(x, language, context) {
+      mall::llm_vec_translate(
+        x = x,
+        language = language,
+        additional_prompt = context
+      )
     },
-    args = list(x = comment_texts, language = lang)
+    args = list(x = comment_texts, language = lang, context = context_block)
   )
   lines[comment_idx] <- paste0("# ", translated)
   paste(lines, collapse = "\n")
@@ -206,7 +272,7 @@ rd_trans_size <- function(lst) {
   size
 }
 
-rd_count_fields <- function(lst) {
+rd_count_fields <- function(lst, context_size = 0L) {
   nms <- names(lst)
   n <- 0L
   for (field in c(
@@ -236,6 +302,9 @@ rd_count_fields <- function(lst) {
   n <- n + length(which(nms == "section")) * 2L
   if (!is.null(lst$examples)) {
     n <- n + 1L
+  }
+  if (context_size >= 1L) {
+    n <- n + 2L
   }
   n
 }

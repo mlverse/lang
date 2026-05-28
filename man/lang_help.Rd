@@ -4,7 +4,13 @@
 \alias{lang_help}
 \title{Translates help documentation to another language}
 \usage{
-lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
+lang_help(
+  topic,
+  package = NULL,
+  lang = NULL,
+  context_size = NULL,
+  type = getOption("help_type")
+)
 }
 \arguments{
 \item{topic}{A character vector of the topic to search for.}
@@ -13,6 +19,11 @@ lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
 function will attempt to find the topic based on the loaded packages.}
 
 \item{lang}{A character vector language to translate the topic to}
+
+\item{context_size}{Maximum number of words for the context summary prepended
+to every field's translation prompt. Set to \code{0} to disable context-aware
+translation. When \code{NULL}, the value set via \code{lang_use()} is used (default
+\code{100}).}
 
 \item{type}{Produce "html" or "text" output for the help. It defaults to
 \code{getOption("help_type")}}

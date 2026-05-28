@@ -17,6 +17,9 @@
 #' `NULL` when calling this function, no changes to the path will be made.
 #' @param .lang Target language to translate to. This will override values found
 #' in the LANG and LANGUAGE environment variables.
+#' @param .context_size Maximum number of words for the context summary that is
+#' prepended to every field's translation prompt. Set to `0` to disable
+#' context-aware translation. Defaults to `100`.
 #' @param .silent Boolean flag that controls if there is or not output to the
 #' console. Defaults to FALSE.
 #' @returns Console output of the current LLM setup to be used during the
@@ -52,6 +55,7 @@ lang_use <- function(
   model = NULL,
   .cache = NULL,
   .lang = NULL,
+  .context_size = NULL,
   .silent = FALSE,
   ...
 ) {
@@ -61,6 +65,7 @@ lang_use <- function(
     .cache = .cache,
     .is_internal = FALSE,
     .lang = .lang,
+    .context_size = .context_size,
     .silent = .silent,
     ... = ...
   )
@@ -72,6 +77,7 @@ lang_use_impl <- function(
   .cache = NULL,
   .is_internal = FALSE,
   .lang = NULL,
+  .context_size = NULL,
   .silent = FALSE,
   ...
 ) {
@@ -88,6 +94,7 @@ lang_use_impl <- function(
   temp_lang <- tempfile("_lang_cache")
   ca[[".cache"]] <- .cache %||% ca[[".cache"]] %||% temp_lang
   ca[[".lang"]] <- .lang %||% ca[[".lang"]]
+  ca[["context_size"]] <- .context_size %||% ca[["context_size"]] %||% 100L
   if (length(args) > 0) {
     ca[["args"]] <- args
   }

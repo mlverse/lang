@@ -12,6 +12,10 @@
 #' @param package The R package to look for the topic, if not provided the
 #' function will attempt to find the topic based on the loaded packages.
 #' @param lang A character vector language to translate the topic to
+#' @param context_size Maximum number of words for the context summary prepended
+#' to every field's translation prompt. Set to `0` to disable context-aware
+#' translation. When `NULL`, the value set via `lang_use()` is used (default
+#' `100`).
 #' @param type Produce "html" or "text" output for the help. It defaults to
 #' `getOption("help_type")`
 #' @returns Original or translated version of the help documentation in the
@@ -30,6 +34,7 @@ lang_help <- function(
   topic,
   package = NULL,
   lang = NULL,
+  context_size = NULL,
   type = getOption("help_type")
 ) {
   lang <- which_lang(lang, choose = TRUE)
@@ -85,7 +90,8 @@ lang_help <- function(
     topic <- path_file(help_path)
     rd_content <- db[[path(topic, ext = "Rd")]]
   }
-  topic_path <- rd_translate(rd_content, lang)
+  context_size <- context_size %||% .lang_env$session[["context_size"]]
+  topic_path <- rd_translate(rd_content, lang, context_size = context_size)
   structure(
     list(
       topic = topic,

@@ -9,6 +9,7 @@ lang_use(
   model = NULL,
   .cache = NULL,
   .lang = NULL,
+  .context_size = NULL,
   .silent = FALSE,
   ...
 )
@@ -27,6 +28,10 @@ character: \code{""}. It defaults to a temp folder. If this argument is left
 
 \item{.lang}{Target language to translate to. This will override values found
 in the LANG and LANGUAGE environment variables.}
+
+\item{.context_size}{Maximum number of words for the context summary that is
+prepended to every field's translation prompt. Set to \code{0} to disable
+context-aware translation. Defaults to \code{100}.}
 
 \item{.silent}{Boolean flag that controls if there is or not output to the
 console. Defaults to FALSE.}

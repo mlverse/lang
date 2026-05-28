@@ -181,6 +181,84 @@ rd_to_list <- function(rd) {
   do.call(c, keep(map(rd_content, .rd_tag_process), function(x) length(x) > 0))
 }
 
+rd_flatten <- function(lst) {
+  lines <- character()
+  h <- function(tag) lines <<- c(lines, paste0("[[", tag, "]]"))
+  l <- function(...) lines <<- c(lines, paste0(...))
+  br <- function() lines <<- c(lines, "")
+  nms <- names(lst)
+
+  if (!is.null(lst$title)) {
+    h("title")
+    l(lst$title)
+    br()
+  }
+  if (!is.null(lst$description)) {
+    h("description")
+    for (line in lst$description) {
+      l(line)
+    }
+    br()
+  }
+  if (length(lst$arguments)) {
+    for (a in lst$arguments) {
+      l("[[", a$argument, "]]")
+      l(a$description)
+      br()
+    }
+  }
+  if (!is.null(lst$details)) {
+    h("details")
+    for (line in lst$details) {
+      l(line)
+    }
+    br()
+  }
+  if (!is.null(lst$value)) {
+    v <- lst$value
+    if (!is.null(v$intro) && nzchar(trimws(v$intro))) {
+      h("value.intro")
+      l(v$intro)
+      br()
+    }
+    if (length(v$components)) {
+      for (co in v$components) {
+        l("[[", co$component, "]]")
+        l(co$description)
+        br()
+      }
+    }
+    if (!is.null(v$outro) && nzchar(trimws(v$outro))) {
+      h("value.outro")
+      l(v$outro)
+      br()
+    }
+  }
+  sec_items <- lst[nms == "section"]
+  for (i in seq_along(sec_items)) {
+    s <- sec_items[[i]]
+    h(paste0("section.", i, ".title"))
+    l(s$title)
+    br()
+    h(paste0("section.", i, ".body"))
+    for (line in s$contents) {
+      l(line)
+    }
+    br()
+  }
+  for (field in c("author", "references", "seealso")) {
+    vals <- lst[[field]]
+    if (!is.null(vals)) {
+      h(field)
+      for (line in vals) {
+        l(line)
+      }
+      br()
+    }
+  }
+  paste(lines, collapse = "\n")
+}
+
 # Re-encode backtick spans to \code{} and escape bare %.
 .rd_clean <- function(x) {
   x <- gsub("`([^`\n]+)`", "\\\\code{\\1}", x)
