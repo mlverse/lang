@@ -19,10 +19,12 @@ rd_translate <- function(rd_content, lang) {
   lst <- rd_to_list(rd_content)
   nms <- names(lst)
 
+  section_no <- 0L
+  n_fields <- rd_count_fields(lst)
   tag_label <- ""
   progress_bar_init(
-    total = rd_count_fields(lst),
-    format = "[{pb_current}/{pb_total}] {pb_bar} {pb_percent} | {tag_label}"
+    total = as.integer(object.size(lst)),
+    format = "[{section_no}/{n_fields}] {pb_bar} {pb_percent} | {tag_label}"
   )
 
   # Prose scalar / vector fields
@@ -36,7 +38,8 @@ rd_translate <- function(rd_content, lang) {
     "seealso"
   )) {
     if (!is.null(lst[[field]])) {
-      progress_bar_update(tag_to_label(field))
+      section_no <- section_no + 1L
+      progress_bar_update(tag_to_label(field), obj = lst[[field]])
       lst[[field]] <- rd_field_translate(lst[[field]], lang, rs)
     }
   }
@@ -44,7 +47,11 @@ rd_translate <- function(rd_content, lang) {
   # Arguments
   for (i in seq_along(lst$arguments)) {
     arg_name <- lst$arguments[[i]]$argument
-    progress_bar_update(glue("Argument: '{arg_name}'"))
+    section_no <- section_no + 1L
+    progress_bar_update(
+      glue("Argument: '{arg_name}'"),
+      obj = lst$arguments[[i]]$description
+    )
     lst$arguments[[i]]$description <- rd_field_translate(
       lst$arguments[[i]]$description,
       lang,
@@ -56,12 +63,17 @@ rd_translate <- function(rd_content, lang) {
   if (!is.null(lst$value)) {
     v <- lst$value
     if (!is.null(v$intro) && nzchar(trimws(v$intro))) {
-      progress_bar_update("Value")
+      section_no <- section_no + 1L
+      progress_bar_update("Value", obj = v$intro)
       lst$value$intro <- rd_field_translate(v$intro, lang, rs)
     }
     for (i in seq_along(v$components)) {
       comp_name <- v$components[[i]]$component
-      progress_bar_update(glue("Value: '{comp_name}'"))
+      section_no <- section_no + 1L
+      progress_bar_update(
+        glue("Value: '{comp_name}'"),
+        obj = v$components[[i]]$description
+      )
       lst$value$components[[i]]$description <- rd_field_translate(
         v$components[[i]]$description,
         lang,
@@ -69,7 +81,8 @@ rd_translate <- function(rd_content, lang) {
       )
     }
     if (!is.null(v$outro) && nzchar(trimws(v$outro))) {
-      progress_bar_update("Value")
+      section_no <- section_no + 1L
+      progress_bar_update("Value", obj = v$outro)
       lst$value$outro <- rd_field_translate(v$outro, lang, rs)
     }
   }
@@ -82,9 +95,11 @@ rd_translate <- function(rd_content, lang) {
     if (nchar(tag_full) > 17) {
       tag_full <- paste0(substr(tag_full, 1, 17), "...")
     }
-    progress_bar_update(glue("Section: '{tag_full}'"))
+    section_no <- section_no + 1L
+    progress_bar_update(glue("Section: '{tag_full}'"), obj = s$title)
     lst[[sec_idx[[i]]]]$title <- rd_field_translate(s$title, lang, rs)
-    progress_bar_update(glue("Section: '{tag_full}'"))
+    section_no <- section_no + 1L
+    progress_bar_update(glue("Section: '{tag_full}'"), obj = s$contents)
     lst[[sec_idx[[i]]]]$contents <- rd_field_translate(s$contents, lang, rs)
   }
 
