@@ -4,8 +4,8 @@ test_that("Progress bar functions run without error", {
   )
   suppressMessages({
     expect_no_error(progress_bar_init(10L, ""))
-    expect_no_error(progress_bar_update("Label"))
-    expect_no_error(progress_bar_update("Label", done = TRUE))
+    expect_no_error(progress_bar_update_text("Label"))
+    expect_no_error(progress_bar_update_done("some result"))
   })
 })
 

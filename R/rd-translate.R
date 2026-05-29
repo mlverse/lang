@@ -51,28 +51,35 @@ rd_translate <- function(rd_content, lang, context_size) {
   nms <- names(lst)
 
   tag_label <- "Initializing..."
-  progress_bar_init(
-    total = rd_count_fields(lst),
-    format = "{pb_bar} {pb_percent} | {tag_label}"
-  )
 
   rs <- lang_rs_get()
 
   if (context_size >= 1L) {
     full_doc_text <- rd_flatten(lst)
-    progress_bar_update("Context: Summarizing")
+    progress_bar_init(
+      total = rd_trans_size(lst) +
+        as.integer(object.size(full_doc_text)) +
+        context_size * 8L,
+      format = "{pb_bar} {pb_percent} | {tag_label}"
+    )
+    progress_bar_update_text("Context: Summarizing")
     summary_en <- rs$run(
       function(text, n) mall::llm_vec_summarize(text, max_words = n),
       args = list(text = full_doc_text, n = context_size)
     )
-    progress_bar_update("Context: Summarizing")
-    progress_bar_update("Context: Translating summary")
+    progress_bar_update_done(full_doc_text)
+    progress_bar_update_text("Context: Translating summary")
     context_summary <- rs$run(
       function(x, lang) mall::llm_vec_translate(x, language = lang),
       args = list(x = summary_en, lang = lang)
     )
-    progress_bar_update("Context: Translating summary")
+    progress_bar_update_done(context_summary)
+    progress_bar_update_text("Translating...")
   } else {
+    progress_bar_init(
+      total = rd_trans_size(lst),
+      format = "{pb_bar} {pb_percent} | {tag_label}"
+    )
     context_summary <- NULL
   }
 
@@ -87,53 +94,53 @@ rd_translate <- function(rd_content, lang, context_size) {
     "seealso"
   )) {
     if (!is.null(lst[[field]])) {
-      progress_bar_update(tag_to_label(field))
+      progress_bar_update_text(tag_to_label(field))
       lst[[field]] <- rd_field_translate(
         lst[[field]],
         lang,
         rs,
         context_summary
       )
-      progress_bar_update(tag_to_label(field), done = TRUE)
+      progress_bar_update_done(lst[[field]])
     }
   }
 
   # Arguments
   for (i in seq_along(lst$arguments)) {
     arg_name <- lst$arguments[[i]]$argument
-    progress_bar_update(glue("Argument: '{arg_name}'"))
+    progress_bar_update_text(glue("Argument: '{arg_name}'"))
     lst$arguments[[i]]$description <- rd_field_translate(
       lst$arguments[[i]]$description,
       lang,
       rs,
       context_summary
     )
-    progress_bar_update(glue("Argument: '{arg_name}'"), done = TRUE)
+    progress_bar_update_done(lst$arguments[[i]]$description)
   }
 
   # Value
   if (!is.null(lst$value)) {
     v <- lst$value
     if (!is.null(v$intro) && nzchar(trimws(v$intro))) {
-      progress_bar_update("Value")
+      progress_bar_update_text("Value")
       lst$value$intro <- rd_field_translate(v$intro, lang, rs, context_summary)
-      progress_bar_update("Value", done = TRUE)
+      progress_bar_update_done(lst$value$intro)
     }
     for (i in seq_along(v$components)) {
       comp_name <- v$components[[i]]$component
-      progress_bar_update(glue("Value: '{comp_name}'"))
+      progress_bar_update_text(glue("Value: '{comp_name}'"))
       lst$value$components[[i]]$description <- rd_field_translate(
         v$components[[i]]$description,
         lang,
         rs,
         context_summary
       )
-      progress_bar_update(glue("Value: '{comp_name}'"), done = TRUE)
+      progress_bar_update_done(lst$value$components[[i]]$description)
     }
     if (!is.null(v$outro) && nzchar(trimws(v$outro))) {
-      progress_bar_update("Value")
+      progress_bar_update_text("Value")
       lst$value$outro <- rd_field_translate(v$outro, lang, rs, context_summary)
-      progress_bar_update("Value", done = TRUE)
+      progress_bar_update_done(lst$value$outro)
     }
   }
 
@@ -146,27 +153,27 @@ rd_translate <- function(rd_content, lang, context_size) {
       tag_full <- paste0(substr(tag_full, 1L, 17L), "...")
     }
     lbl <- glue("Section: '{tag_full}'")
-    progress_bar_update(lbl)
+    progress_bar_update_text(lbl)
     lst[[sec_idx[[i]]]]$title <- rd_field_translate(
       s$title,
       lang,
       rs,
       context_summary
     )
-    progress_bar_update(lbl, done = TRUE)
-    progress_bar_update(lbl)
+    progress_bar_update_done(lst[[sec_idx[[i]]]]$title)
+    progress_bar_update_text(lbl)
     lst[[sec_idx[[i]]]]$contents <- rd_field_translate(
       s$contents,
       lang,
       rs,
       context_summary
     )
-    progress_bar_update(lbl, done = TRUE)
+    progress_bar_update_done(lst[[sec_idx[[i]]]]$contents)
   }
 
   # Examples — translate # comments only
   if (!is.null(lst$examples)) {
-    progress_bar_update("Examples")
+    progress_bar_update_text("Examples")
     if (!is.null(lst$examples$code_run)) {
       lst$examples$code_run <- rd_examples_translate(
         lst$examples$code_run,
@@ -183,7 +190,7 @@ rd_translate <- function(rd_content, lang, context_size) {
         context_summary
       )
     }
-    progress_bar_update("Examples", done = TRUE)
+    progress_bar_update_done(lst$examples)
   }
 
   cli_progress_done()
@@ -250,6 +257,49 @@ rd_examples_translate <- function(code, lang, rs, context_summary = NULL) {
 }
 
 
+rd_trans_size <- function(lst) {
+  nms <- names(lst)
+  size <- 0L
+  for (field in c(
+    "title",
+    "description",
+    "details",
+    "note",
+    "author",
+    "references",
+    "seealso"
+  )) {
+    if (!is.null(lst[[field]])) {
+      size <- size + as.integer(object.size(lst[[field]]))
+    }
+  }
+  for (i in seq_along(lst$arguments)) {
+    size <- size + as.integer(object.size(lst$arguments[[i]]$description))
+  }
+  if (!is.null(lst$value)) {
+    v <- lst$value
+    if (!is.null(v$intro) && nzchar(trimws(v$intro))) {
+      size <- size + as.integer(object.size(v$intro))
+    }
+    for (i in seq_along(v$components)) {
+      size <- size + as.integer(object.size(v$components[[i]]$description))
+    }
+    if (!is.null(v$outro) && nzchar(trimws(v$outro))) {
+      size <- size + as.integer(object.size(v$outro))
+    }
+  }
+  sec_idx <- which(nms == "section")
+  for (i in seq_along(sec_idx)) {
+    s <- lst[[sec_idx[[i]]]]
+    size <- size + as.integer(object.size(s$title))
+    size <- size + as.integer(object.size(s$contents))
+  }
+  if (!is.null(lst$examples)) {
+    size <- size + as.integer(object.size(lst$examples))
+  }
+  size
+}
+
 rd_count_fields <- function(lst) {
   nms <- names(lst)
   n <- 0L
@@ -304,16 +354,9 @@ tag_to_label <- function(x) {
   tag_labels <- c(
     "title" = "Title",
     "description" = "Description",
-    "value" = "Value",
     "details" = "Details",
     "note" = "Note",
     "seealso" = "See Also",
-    "examples" = "Examples",
-    "arguments" = "Arguments",
-    "usage" = "Usage",
-    "output" = "Output",
-    "returns" = "Returns",
-    "return" = "Return",
     "author" = "Author",
     "references" = "References"
   )
@@ -329,6 +372,7 @@ is_interactive <- function() interactive()
 
 progress_bar_init <- function(total, format, envir = parent.frame()) {
   if (is_interactive()) {
+    .lang_env$total <- total
     .lang_env$progress <- 0L
     cli_progress_bar(
       total = total,
@@ -340,18 +384,19 @@ progress_bar_init <- function(total, format, envir = parent.frame()) {
   }
 }
 
-progress_bar_update <- function(
-  txt = NULL,
-  done = FALSE,
-  envir = parent.frame()
-) {
+progress_bar_update_text <- function(txt, envir = parent.frame()) {
   if (is_interactive()) {
-    if (done) {
-      .lang_env$progress <- .lang_env$progress + 1L
-    }
-    if (!is.null(txt)) {
-      envir$tag_label <- txt
-    }
+    envir$tag_label <- txt
+    cli_progress_update(set = .lang_env$progress, force = TRUE, .envir = envir)
+  }
+}
+
+progress_bar_update_done <- function(obj, envir = parent.frame()) {
+  if (is_interactive()) {
+    .lang_env$progress <- min(
+      .lang_env$progress + as.integer(object.size(obj)),
+      .lang_env$total
+    )
     cli_progress_update(set = .lang_env$progress, force = TRUE, .envir = envir)
   }
 }
