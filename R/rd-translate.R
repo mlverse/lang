@@ -1,51 +1,3 @@
-lang_rs_refresh <- function(rs) {
-  lang_args <- lang_use_impl(.is_internal = TRUE)
-  backend <- lang_args[["backend"]]
-  use_args <- list(.cache = lang_args[[".cache"]])
-  if (!is.null(backend)) {
-    use_args[["backend"]] <- backend
-  }
-  # Chat objects have their model built in; passing model separately is an error
-  if (!inherits(backend, "Chat")) {
-    use_args[["model"]] <- lang_args[["model"]]
-  }
-  args <- lang_args[["args"]]
-  if (length(args) > 0) {
-    use_args <- c(use_args, args)
-  }
-  rs$run(
-    function(x) rlang::exec(mall::llm_use, !!!x),
-    args = list(x = use_args)
-  )
-}
-
-lang_rs_hash <- function() {
-  s <- .lang_env$session
-  paste(s[["backend"]], s[["model"]], s[[".cache"]], collapse = "|")
-}
-
-lang_rs_get <- function() {
-  rs <- .lang_env$rs
-  if (!is.null(rs) && rs$is_alive()) {
-    if (rs$get_state() == "starting") {
-      rs$poll_process(5000L)
-    }
-    if (rs$get_state() == "idle") {
-      current_hash <- lang_rs_hash()
-      if (!identical(.lang_env$rs_hash, current_hash)) {
-        lang_rs_refresh(rs)
-        .lang_env$rs_hash <- current_hash
-      }
-      return(rs)
-    }
-  }
-  rs <- callr::r_session$new()
-  .lang_env$rs <- rs
-  lang_rs_refresh(rs)
-  .lang_env$rs_hash <- lang_rs_hash()
-  rs
-}
-
 rd_translate <- function(rd_content, lang, context_size) {
   lst <- rd_to_list(rd_content)
   nms <- names(lst)
@@ -54,10 +6,14 @@ rd_translate <- function(rd_content, lang, context_size) {
 
   rs <- lang_rs_get()
 
+  lst_size <- as.integer(object.size(lst[
+    !names(lst) %in% c("examples", "usage")
+  ]))
+
   if (context_size >= 1L) {
     full_doc_text <- rd_flatten(lst)
     progress_bar_init(
-      total = rd_trans_size(lst) +
+      total = lst_size +
         as.integer(object.size(full_doc_text)) +
         context_size * 8L,
       format = "{pb_bar} {pb_percent} | {tag_label}"
@@ -77,7 +33,7 @@ rd_translate <- function(rd_content, lang, context_size) {
     progress_bar_update_text("Translating...")
   } else {
     progress_bar_init(
-      total = rd_trans_size(lst),
+      total = lst_size,
       format = "{pb_bar} {pb_percent} | {tag_label}"
     )
     context_summary <- NULL
@@ -115,7 +71,7 @@ rd_translate <- function(rd_content, lang, context_size) {
       rs,
       context_summary
     )
-    progress_bar_update_done(lst$arguments[[i]]$description)
+    progress_bar_update_done(lst$arguments[[i]])
   }
 
   # Value
@@ -124,7 +80,6 @@ rd_translate <- function(rd_content, lang, context_size) {
     if (!is.null(v$intro) && nzchar(trimws(v$intro))) {
       progress_bar_update_text("Value")
       lst$value$intro <- rd_field_translate(v$intro, lang, rs, context_summary)
-      progress_bar_update_done(lst$value$intro)
     }
     for (i in seq_along(v$components)) {
       comp_name <- v$components[[i]]$component
@@ -135,12 +90,12 @@ rd_translate <- function(rd_content, lang, context_size) {
         rs,
         context_summary
       )
-      progress_bar_update_done(lst$value$components[[i]]$description)
+      progress_bar_update_done(lst$value$components[[i]])
     }
     if (!is.null(v$outro) && nzchar(trimws(v$outro))) {
       progress_bar_update_text("Value")
       lst$value$outro <- rd_field_translate(v$outro, lang, rs, context_summary)
-      progress_bar_update_done(lst$value$outro)
+      progress_bar_update_done(lst$value)
     }
   }
 
@@ -160,7 +115,7 @@ rd_translate <- function(rd_content, lang, context_size) {
       rs,
       context_summary
     )
-    progress_bar_update_done(lst[[sec_idx[[i]]]]$title)
+    progress_bar_update_done(lst[[sec_idx[[i]]]])
     progress_bar_update_text(lbl)
     lst[[sec_idx[[i]]]]$contents <- rd_field_translate(
       s$contents,
@@ -168,7 +123,7 @@ rd_translate <- function(rd_content, lang, context_size) {
       rs,
       context_summary
     )
-    progress_bar_update_done(lst[[sec_idx[[i]]]]$contents)
+    progress_bar_update_done(lst[[sec_idx[[i]]]])
   }
 
   # Examples — translate # comments only
@@ -257,49 +212,6 @@ rd_examples_translate <- function(code, lang, rs, context_summary = NULL) {
 }
 
 
-rd_trans_size <- function(lst) {
-  nms <- names(lst)
-  size <- 0L
-  for (field in c(
-    "title",
-    "description",
-    "details",
-    "note",
-    "author",
-    "references",
-    "seealso"
-  )) {
-    if (!is.null(lst[[field]])) {
-      size <- size + as.integer(object.size(lst[[field]]))
-    }
-  }
-  for (i in seq_along(lst$arguments)) {
-    size <- size + as.integer(object.size(lst$arguments[[i]]$description))
-  }
-  if (!is.null(lst$value)) {
-    v <- lst$value
-    if (!is.null(v$intro) && nzchar(trimws(v$intro))) {
-      size <- size + as.integer(object.size(v$intro))
-    }
-    for (i in seq_along(v$components)) {
-      size <- size + as.integer(object.size(v$components[[i]]$description))
-    }
-    if (!is.null(v$outro) && nzchar(trimws(v$outro))) {
-      size <- size + as.integer(object.size(v$outro))
-    }
-  }
-  sec_idx <- which(nms == "section")
-  for (i in seq_along(sec_idx)) {
-    s <- lst[[sec_idx[[i]]]]
-    size <- size + as.integer(object.size(s$title))
-    size <- size + as.integer(object.size(s$contents))
-  }
-  if (!is.null(lst$examples)) {
-    size <- size + as.integer(object.size(lst$examples))
-  }
-  size
-}
-
 rd_count_fields <- function(lst) {
   nms <- names(lst)
   n <- 0L
@@ -332,6 +244,54 @@ rd_count_fields <- function(lst) {
     n <- n + 1L
   }
   n
+}
+
+lang_rs_refresh <- function(rs) {
+  lang_args <- lang_use_impl(.is_internal = TRUE)
+  backend <- lang_args[["backend"]]
+  use_args <- list(.cache = lang_args[[".cache"]])
+  if (!is.null(backend)) {
+    use_args[["backend"]] <- backend
+  }
+  # Chat objects have their model built in; passing model separately is an error
+  if (!inherits(backend, "Chat")) {
+    use_args[["model"]] <- lang_args[["model"]]
+  }
+  args <- lang_args[["args"]]
+  if (length(args) > 0) {
+    use_args <- c(use_args, args)
+  }
+  rs$run(
+    function(x) rlang::exec(mall::llm_use, !!!x),
+    args = list(x = use_args)
+  )
+}
+
+lang_rs_hash <- function() {
+  s <- .lang_env$session
+  paste(s[["backend"]], s[["model"]], s[[".cache"]], collapse = "|")
+}
+
+lang_rs_get <- function() {
+  rs <- .lang_env$rs
+  if (!is.null(rs) && rs$is_alive()) {
+    if (rs$get_state() == "starting") {
+      rs$poll_process(5000L)
+    }
+    if (rs$get_state() == "idle") {
+      current_hash <- lang_rs_hash()
+      if (!identical(.lang_env$rs_hash, current_hash)) {
+        lang_rs_refresh(rs)
+        .lang_env$rs_hash <- current_hash
+      }
+      return(rs)
+    }
+  }
+  rs <- callr::r_session$new()
+  .lang_env$rs <- rs
+  lang_rs_refresh(rs)
+  .lang_env$rs_hash <- lang_rs_hash()
+  rs
 }
 
 to_title <- function(x) {
