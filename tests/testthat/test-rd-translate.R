@@ -1,12 +1,12 @@
-test_that("Progress messages work", {
+test_that("Progress bar functions run without error", {
   local_mocked_bindings(
     is_interactive = function(...) TRUE
   )
-  new_obj <- list(1:1000)
-  expect_silent(progress_bar_init(object.size(new_obj), ""))
-  expect_silent(progress_bar_update(10))
-  expect_silent(progress_bar_update(obj = list(1:10)))
-  expect_silent(progress_bar_update(obj = new_obj))
+  suppressMessages({
+    expect_no_error(progress_bar_init(10L, ""))
+    expect_no_error(progress_bar_update("Label"))
+    expect_no_error(progress_bar_update("Label", done = TRUE))
+  })
 })
 
 # ---- rd_flatten ---------------------------------------------------------------
@@ -62,7 +62,7 @@ test_that("rd_flatten returns empty string for empty list", {
 
 # ---- rd_count_fields ---------------------------------------------------------
 
-test_that("rd_count_fields adds 2 when context_size >= 1", {
+test_that("rd_count_fields counts fields correctly", {
   lst <- list(
     title = "T",
     description = "D",
@@ -70,14 +70,7 @@ test_that("rd_count_fields adds 2 when context_size >= 1", {
       list(argument = "x", description = "desc")
     )
   )
-  base_count <- rd_count_fields(lst, context_size = 0L)
-  context_count <- rd_count_fields(lst, context_size = 100L)
-  expect_equal(context_count, base_count + 2L)
-})
-
-test_that("rd_count_fields does not add 2 when context_size is 0", {
-  lst <- list(title = "T")
-  expect_equal(rd_count_fields(lst, context_size = 0L), 1L)
+  expect_equal(rd_count_fields(lst), 3L)
 })
 
 # ---- rd_field_translate context block ----------------------------------------
