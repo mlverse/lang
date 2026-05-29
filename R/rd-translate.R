@@ -6,14 +6,29 @@ rd_translate <- function(rd_content, lang, context_size) {
 
   rs <- lang_rs_get()
 
-  lst_size <- as.integer(object.size(lst[
-    !names(lst) %in% c("examples", "usage")
-  ]))
+  lst_size <- lst |>
+    lapply(object.size)
+  lst_size <- lst_size[!names(lst_size) %in% c("usage", "examples")]
+  lst_size <- lst_size |>
+    lapply(as.integer) |>
+    as.integer() |>
+    sum()
+
+  lst_comments_size <- lst$examples |>
+    lapply(strsplit, "\n") |>
+    lapply(unlist) |>
+    lapply(function(x) x[substr(x, 1, 1) == "#"]) |>
+    lapply(object.size) |>
+    as.integer() |>
+    sum()
+
+  lst_total <- lst_size +
+    lst_comments_size
 
   if (context_size >= 1L) {
     full_doc_text <- rd_flatten(lst)
     progress_bar_init(
-      total = lst_size +
+      total = lst_total +
         as.integer(object.size(full_doc_text)) +
         500,
       format = "{pb_bar} {pb_percent} | {tag_label}"
@@ -32,7 +47,7 @@ rd_translate <- function(rd_content, lang, context_size) {
     progress_bar_update_done(500)
   } else {
     progress_bar_init(
-      total = lst_size,
+      total = lst_total,
       format = "{pb_bar} {pb_percent} | {tag_label}"
     )
     context_summary <- NULL
@@ -79,6 +94,7 @@ rd_translate <- function(rd_content, lang, context_size) {
     if (!is.null(v$intro) && nzchar(trimws(v$intro))) {
       progress_bar_update_text("Value")
       lst$value$intro <- rd_field_translate(v$intro, lang, rs, context_summary)
+      progress_bar_update_done(v$intro)
     }
     for (i in seq_along(v$components)) {
       comp_name <- v$components[[i]]$component
