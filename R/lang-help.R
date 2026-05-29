@@ -41,6 +41,24 @@ lang_help <- function(
   if (en_lang(lang)) {
     abort("Language already set to English, use `help()`")
   }
+  rd <- rd_find(topic, package)
+  context_size <- context_size %||% .lang_env$session[["context_size"]]
+  topic_path <- rd_translate(rd$content, lang, context_size = context_size)
+  topic <- rd$topic
+  package <- rd$package
+  structure(
+    list(
+      topic = topic,
+      pkg = package,
+      path = topic_path,
+      stage = "render",
+      type = type
+    ),
+    class = "lang_topic"
+  )
+}
+
+rd_find <- function(topic, package = NULL) {
   if (is.null(package)) {
     # Gets the path to installed help file
     help_path <- as.character(utils::help(topic, help_type = "text"))
@@ -72,10 +90,10 @@ lang_help <- function(
     {
       .lang_env$rd_db_cache[[package]] <- Rd_db(package)
     }
-  rd_content <- db[[path(topic, ext = "Rd")]]
+  content <- db[[path(topic, ext = "Rd")]]
   # If topic cannot be found, it will try and see if the topic is aliased
   # (geom_col is inside geom_bar)
-  if (is.null(rd_content)) {
+  if (is.null(content)) {
     # Uses help() to find the actual name of the Rd file that contains
     # the function
     help_path <- as.character(utils::help(
@@ -91,20 +109,9 @@ lang_help <- function(
     }
     # Updates the topic name
     topic <- path_file(help_path)
-    rd_content <- db[[path(topic, ext = "Rd")]]
+    content <- db[[path(topic, ext = "Rd")]]
   }
-  context_size <- context_size %||% .lang_env$session[["context_size"]]
-  topic_path <- rd_translate(rd_content, lang, context_size = context_size)
-  structure(
-    list(
-      topic = topic,
-      pkg = package,
-      path = topic_path,
-      stage = "render",
-      type = type
-    ),
-    class = "lang_topic"
-  )
+  list(topic = topic, package = package, content = content)
 }
 
 #' @export

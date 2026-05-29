@@ -15,7 +15,7 @@ rd_translate <- function(rd_content, lang, context_size) {
     progress_bar_init(
       total = lst_size +
         as.integer(object.size(full_doc_text)) +
-        context_size * 8L,
+        500,
       format = "{pb_bar} {pb_percent} | {tag_label}"
     )
     progress_bar_update_text("Context: Summarizing")
@@ -29,8 +29,7 @@ rd_translate <- function(rd_content, lang, context_size) {
       function(x, lang) mall::llm_vec_translate(x, language = lang),
       args = list(x = summary_en, lang = lang)
     )
-    progress_bar_update_done(context_summary)
-    progress_bar_update_text("Translating...")
+    progress_bar_update_done(500)
   } else {
     progress_bar_init(
       total = lst_size,
@@ -95,7 +94,7 @@ rd_translate <- function(rd_content, lang, context_size) {
     if (!is.null(v$outro) && nzchar(trimws(v$outro))) {
       progress_bar_update_text("Value")
       lst$value$outro <- rd_field_translate(v$outro, lang, rs, context_summary)
-      progress_bar_update_done(lst$value)
+      progress_bar_update_done(v$outro)
     }
   }
 
