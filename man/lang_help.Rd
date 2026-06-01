@@ -13,15 +13,15 @@ lang_help(
 )
 }
 \arguments{
-\item{topic}{A character vector of the topic to search for.}
+\item{topic}{A character string specifying the help topic to translate.}
 
 \item{package}{The R package to look for the topic, if not provided the
 function will attempt to find the topic based on the loaded packages.}
 
 \item{lang}{A character vector language to translate the topic to}
 
-\item{context_size}{Maximum number of words for the context summary prepended
-to every field's translation prompt. Set to \code{0} to disable context-aware
+\item{context_size}{Maximum number of words for the context summary included
+with each translation request. Set to \code{0} to disable context-aware
 translation. When \code{NULL}, the value set via \code{lang_use()} is used (default
 \code{100}).}
 

@@ -9,10 +9,9 @@
 
 #' Drop-in replacements for help and ? functions
 #'
-#' The `?` and `help` functions are replacements for functions of the
-#' same name in the utils package. If the LANG environment variable is not set
-#' to English, it will activate the translation to whatever language LANG is
-#' set to.
+#' The `?` and `help` functions are drop-in replacements for those in the
+#' utils package. They automatically translate help to the language specified
+#' by the `LANG` or `LANGUAGE` environment variables, or by `lang_use()`.
 #'
 #' @param topic A name or character string specifying the help topic.
 #' @param package A name or character string specifying the package in which
@@ -79,7 +78,7 @@ shim_lang_help <- function(topic, package = NULL, ...) {
 shim_lang_question <- function(e1, e2) {
   e1_expr <- substitute(e1)
   # ??foo -- Will not translate
-  # Using `ifelse` because if its not a call, then `e1_expr` cannot be subset
+  # Using `ifelse` because if it's not a call, then `e1_expr` cannot be subset
   is_vague <- ifelse(
     is_call(e1_expr),
     identical(e1_expr[[1]], quote(`?`)),

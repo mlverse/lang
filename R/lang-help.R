@@ -8,12 +8,12 @@
 #' will be processed, so the help returned will be the original package's
 #' documentation.
 #'
-#' @param topic A character vector of the topic to search for.
+#' @param topic A character string specifying the help topic to translate.
 #' @param package The R package to look for the topic, if not provided the
 #' function will attempt to find the topic based on the loaded packages.
 #' @param lang A character vector language to translate the topic to
-#' @param context_size Maximum number of words for the context summary prepended
-#' to every field's translation prompt. Set to `0` to disable context-aware
+#' @param context_size Maximum number of words for the context summary included
+#' with each translation request. Set to `0` to disable context-aware
 #' translation. When `NULL`, the value set via `lang_use()` is used (default
 #' `100`).
 #' @param type Produce "html" or "text" output for the help. It defaults to

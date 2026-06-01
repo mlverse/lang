@@ -12,8 +12,6 @@
 coverage](https://codecov.io/gh/mlverse/lang/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/lang)](https://CRAN.R-project.org/package=lang)
-[![Codecov test
-coverage](https://codecov.io/gh/mlverse/lang/graph/badge.svg)](https://app.codecov.io/gh/mlverse/lang)
 <!-- badges: end -->
 
 Use an **LLM to translate a function’s help documentation on the fly**.
@@ -56,22 +54,29 @@ chat <- ellmer::chat_openai(model = "gpt-4o")
 lang_use(backend = chat, .lang = "spanish")
 
 ?lm
-#> [1/7] ■■                                 4% | Title
+#> ■■                                 4% | Title
 ```
 
 <img src="man/figures/lm-spanish.png" align="center" width="100%"
 alt="Screenshot of the lm function's help page in Spanish"/>
 
 After setup, simply use `?` to trigger and display the translated
-documentation. During translation, `lang` will display its progress by
-showing which section of the documentation is currently translating.
-During the R session, if you request the same R function’s help more
-than one time then `lang` will use its cached results, which will run
-immediately.
+documentation. Note that R enforces the printed names of each section,
+so titles such as “Description”, “Usage”, and “Arguments” will always
+remain untranslated.
 
-R enforces the printed names of each section, so they cannot be
-translated. This means that titles such as “Description”, “Usage” and
-“Arguments” will always remain untranslated.
+During translation, `lang` will display its progress by showing which
+section of the documentation is currently translating. Because each
+section of a help page is translated independently, the LLM can lose
+track of the broader topic and produce inconsistent or out-of-context
+translations. To address this, `lang` first summarizes the full help
+page in English, translates that summary into the target language, and
+then uses it as context when translating each individual section. You
+can control the length of this summary with the `context_size` argument
+in `lang_use()` or `lang_help()` — set it to `0` to disable it, or
+increase it to give the LLM more context. During the R session, if you
+request the same R function’s help more than one time then `lang` will
+use its cached results, which will run immediately.
 
 ### LLM connections
 
@@ -106,9 +111,9 @@ language it will translate to:
 3.  `LANG` environment variable
 
 It is likely that your `LANG` variable already defaults to your locale.
-For example, mine is set to: `en_US.UTF-8` (That means English, United
+For example, mine is set to: `en_US.UTF-8` (that means English, United
 States). For someone in France, the locale would be something such as
-`fr_FR.UTF-8`. Llama3.2, recognizes these UTF locales, and using `lang`,
+`fr_FR.UTF-8`. Llama3.2 recognizes these UTF locales, and using `lang`,
 calling `?` will result in translating the function’s help documentation
 into French.
 
@@ -155,25 +160,38 @@ then consider letting R connect at start up.
 
 If present, the *.Rprofile* file runs at the beginning of any R session.
 If you wish to automatically set the model and language to use, add a
-call to `llm_use()` to this file. You can call
+call to `lang_use()` to this file. You can call
 `usethis::edit_r_profile()` to open your .Rprofile file so you can add
 the option.
 
-Here is an example of such a call that could be used in the .Rprofile
-file:
+Here is an example using Ollama:
 
 ``` r
 lang::lang_use(
-  backend = "ollama", 
-  model = "llama3.2", 
-  .cache = "~/help-translations/", 
+  backend = "ollama",
+  model = "llama3.2",
+  .cache = "~/help-translations/",
   .lang = "spanish",
   .silent = TRUE
   )
 ```
 
-In the example, we set `.silent` to `TRUE` so that there is no message
-every time the R session is restarted.
+And here is an example using an `ellmer` chat object:
+
+``` r
+lang::lang_use(
+  backend = ellmer::chat_openai(model = "gpt-4o"),
+  .cache = "~/help-translations/",
+  .lang = "spanish",
+  .silent = TRUE
+  )
+```
+
+In both examples, `.silent` is set to `TRUE` so that there is no message
+every time the R session is restarted. The `.cache` argument points to a
+fixed folder so that translations persist across sessions. You can also
+set `.context_size` here to control how much context the LLM receives
+when translating each section.
 
 ## Considerations
 
@@ -187,14 +205,14 @@ even an imperfect translation could go a long way with someone who is
 struggling to understand how to use a specific function in a package and
 may also struggle with the English language.
 
-### Debug
+### Debugging
 
 If the original English help page displays, check your environment
 variables:
 
 ``` r
 Sys.getenv("LANG")
-#> [1] "en_US.UTF-8"
+#> [1] ""
 Sys.getenv("LANGUAGE")
 #> [1] ""
 ```
@@ -206,7 +224,7 @@ to `en_...` then no translation will occur.
 If this is your case, set the `LANGUAGE` variable to your preference.
 You can use the full language name, such as ‘spanish’, or ‘french’, etc.
 You can use `Sys.setenv(LANGUAGE = "[my language]")`, or, for a more
-permanent solution, add the entry to your your .Renviron file
+permanent solution, add the entry to your .Renviron file
 (`usethis::edit_r_environ()`).
 
 ### Interaction with `mall`

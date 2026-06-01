@@ -16,24 +16,23 @@ lang_use(
 }
 \arguments{
 \item{backend}{"ollama" or an \code{ellmer} \code{Chat} object. If using "ollama",
-\code{mall} will use is out-of-the-box integration with that back-end. Defaults
-to "ollama".}
+\code{lang} provides built-in support via the \code{ollamar} package. Defaults to
+"ollama".}
 
 \item{model}{The name of model supported by the back-end provider}
 
-\item{.cache}{The path to save model results, so they can be re-used if
-the same operation is ran again. To turn off, set this argument to an empty
-character: \code{""}. It defaults to a temp folder. If this argument is left
-\code{NULL} when calling this function, no changes to the path will be made.}
+\item{.cache}{Character path where translations are cached. Set to \code{""} to
+disable caching. When \code{NULL}, the current session value is kept unchanged.
+Defaults to a temporary folder.}
 
 \item{.lang}{Target language to translate to. This will override values found
 in the LANG and LANGUAGE environment variables.}
 
-\item{.context_size}{Maximum number of words for the context summary that is
-prepended to every field's translation prompt. Set to \code{0} to disable
-context-aware translation. Defaults to \code{100}.}
+\item{.context_size}{Maximum number of words for the context summary
+included with each translation request. Set to \code{0} to disable context-aware
+translation. Defaults to \code{100}.}
 
-\item{.silent}{Boolean flag that controls if there is or not output to the
+\item{.silent}{Boolean flag that controls whether there is output to the
 console. Defaults to FALSE.}
 
 \item{...}{Additional arguments that this function will pass down to the
@@ -41,8 +40,8 @@ integrating function. In the case of Ollama, it will pass those arguments to
 \code{ollamar::chat()}.}
 }
 \value{
-Console output of the current LLM setup to be used during the
-R session.
+Invisibly returns \code{NULL}. Prints the current configuration to the
+console.
 }
 \description{
 Allows us to specify the back-end provider, model to use during the current
