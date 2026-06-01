@@ -74,9 +74,16 @@ alt="Screenshot of the lm function's help page in Spanish"/>
 
 After setup, simply use `?` to trigger and display the translated documentation.
 During translation, `lang` will display its progress by showing which section
-of the documentation is currently translating. During the R session, if you
-request the same R function's help more than one time then `lang` will use
-its cached results, which will run immediately. 
+of the documentation is currently translating. Because each section of a help
+page is translated independently, the LLM can lose track of the broader topic
+and produce inconsistent or out-of-context translations. To address this,
+`lang` first summarizes the full help page in English, translates that summary
+into the target language, and then uses it as context when translating each
+individual section. You can control the length of this summary with the
+`context_size` argument in `lang_use()` or `lang_help()` — set it to `0` to
+disable it, or increase it to give the LLM more context. During the R session,
+if you request the same R function's help more than one time then `lang` will
+use its cached results, which will run immediately.
 
 R enforces the printed names of each section, so they cannot be
 translated. This means that titles such as "Description", "Usage" and "Arguments" 
@@ -158,27 +165,40 @@ lang::lang_use(
 
 If `lang` becomes a regular part of your workflow, and running `lang_use()` at
 the beginning of every R session becomes cumbersome, then consider letting R
-connect at start up. 
+connect at start up.
 
 If present, the *.Rprofile* file runs at the beginning of any R session. If you
-wish to automatically set the model and language to use, add a call to `llm_use()`
+wish to automatically set the model and language to use, add a call to `lang_use()`
 to this file.  You can call `usethis::edit_r_profile()` to open your .Rprofile
-file so you can add the option. 
+file so you can add the option.
 
-Here is an example of such a call that could be used in the .Rprofile file:
+Here is an example using Ollama:
 
 ```r
 lang::lang_use(
-  backend = "ollama", 
-  model = "llama3.2", 
-  .cache = "~/help-translations/", 
+  backend = "ollama",
+  model = "llama3.2",
+  .cache = "~/help-translations/",
   .lang = "spanish",
   .silent = TRUE
   )
 ```
 
-In the example, we set `.silent` to `TRUE` so that there is no message every time 
-the R session is restarted. 
+And here is an example using an `ellmer` chat object:
+
+```r
+lang::lang_use(
+  backend = ellmer::chat_openai(model = "gpt-4o"),
+  .cache = "~/help-translations/",
+  .lang = "spanish",
+  .silent = TRUE
+  )
+```
+
+In both examples, `.silent` is set to `TRUE` so that there is no message every
+time the R session is restarted. The `.cache` argument points to a fixed folder
+so that translations persist across sessions. You can also set `.context_size`
+here to control how much context is prepended to each field's translation prompt.
 
 ## Considerations
 
