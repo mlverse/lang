@@ -99,7 +99,7 @@
     Code
       lang_help("nothere", lang = "spanish", type = "text")
     Condition
-      Error in `lang_help()`:
+      Error in `rd_find()`:
       ! Could not find `nothere`
       i Tip: Make sure the containing package is loaded, and the topic is spelled correctly
 
@@ -108,7 +108,7 @@
     Code
       lang_help("nothere", "notpkg", lang = "spanish", type = "text")
     Condition
-      Error in `lang_help()`:
+      Error in `rd_find()`:
       ! Package `notpkg` not found
       i Tip: Make sure package name is spelled correctly
 
@@ -117,7 +117,7 @@
     Code
       lang_help("nothere", "mall", lang = "spanish", type = "text")
     Condition
-      Error in `lang_help()`:
+      Error in `rd_find()`:
       ! `nothere` could not be found in `mall`
       i Tip: Make sure both are spelled correctly
 

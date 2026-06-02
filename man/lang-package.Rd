@@ -22,6 +22,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Edgar Ruiz \email{edgar@posit.co}
 
+Authors:
+\itemize{
+  \item Edgar Ruiz \email{edgar@posit.co}
+}
+
 Other contributors:
 \itemize{
   \item Posit Software, PBC (\href{https://ror.org/03wc8by49}{ROR}) [copyright holder, funder]

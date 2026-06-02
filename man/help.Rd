@@ -25,8 +25,7 @@ to search for the help topic. If NULL, search all packages.}
 \item{e2}{Second argument to pass along to \verb{utils::}?``.}
 }
 \description{
-The \verb{?} and \code{help} functions are replacements for functions of the
-same name in the utils package. If the LANG environment variable is not set
-to English, it will activate the translation to whatever language LANG is
-set to.
+The \verb{?} and \code{help} functions are drop-in replacements for those in the
+utils package. They automatically translate help to the language specified
+by the \code{LANG} or \code{LANGUAGE} environment variables, or by \code{lang_use()}.
 }

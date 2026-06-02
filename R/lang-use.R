@@ -5,22 +5,24 @@
 #' converting "english" to "en" for example. The value is passed directly to
 #' the LLM, and it lets the LLM interpret the target language.
 #' @param backend "ollama" or an `ellmer` `Chat` object. If using "ollama",
-#' `mall` will use is out-of-the-box integration with that back-end. Defaults
-#' to "ollama".
+#' `lang` provides built-in support via the `ollamar` package. Defaults to
+#' "ollama".
 #' @param model The name of model supported by the back-end provider
 #' @param ... Additional arguments that this function will pass down to the
 #' integrating function. In the case of Ollama, it will pass those arguments to
 #' `ollamar::chat()`.
-#' @param .cache The path to save model results, so they can be re-used if
-#' the same operation is ran again. To turn off, set this argument to an empty
-#' character: `""`. It defaults to a temp folder. If this argument is left
-#' `NULL` when calling this function, no changes to the path will be made.
+#' @param .cache Character path where translations are cached. Set to `""` to
+#' disable caching. When `NULL`, the current session value is kept unchanged.
+#' Defaults to a temporary folder.
 #' @param .lang Target language to translate to. This will override values found
 #' in the LANG and LANGUAGE environment variables.
-#' @param .silent Boolean flag that controls if there is or not output to the
+#' @param .context_size Maximum number of words for the context summary
+#' included with each translation request. Set to `0` to disable context-aware
+#' translation. Defaults to `100`.
+#' @param .silent Boolean flag that controls whether there is output to the
 #' console. Defaults to FALSE.
-#' @returns Console output of the current LLM setup to be used during the
-#' R session.
+#' @returns Invisibly returns `NULL`. Prints the current configuration to the
+#' console.
 #'
 #' @examples
 #' \donttest{
@@ -52,6 +54,7 @@ lang_use <- function(
   model = NULL,
   .cache = NULL,
   .lang = NULL,
+  .context_size = NULL,
   .silent = FALSE,
   ...
 ) {
@@ -61,6 +64,7 @@ lang_use <- function(
     .cache = .cache,
     .is_internal = FALSE,
     .lang = .lang,
+    .context_size = .context_size,
     .silent = .silent,
     ... = ...
   )
@@ -72,12 +76,13 @@ lang_use_impl <- function(
   .cache = NULL,
   .is_internal = FALSE,
   .lang = NULL,
+  .context_size = NULL,
   .silent = FALSE,
   ...
 ) {
   args <- list(...)
   ca <- .lang_env$session
-  if (!is.null(getOption(".lang_chat"))) {
+  if (!.is_internal && !is.null(getOption(".lang_chat"))) {
     cli_warn(c(
       "Option `.lang_chat` is no longer supported",
       "Use `lang::lang_use([backend])` in your .RProfile file instead"
@@ -88,6 +93,7 @@ lang_use_impl <- function(
   temp_lang <- tempfile("_lang_cache")
   ca[[".cache"]] <- .cache %||% ca[[".cache"]] %||% temp_lang
   ca[[".lang"]] <- .lang %||% ca[[".lang"]]
+  ca[["context_size"]] <- .context_size %||% ca[["context_size"]] %||% 100L
   if (length(args) > 0) {
     ca[["args"]] <- args
   }
@@ -96,7 +102,25 @@ lang_use_impl <- function(
   model_str <- NULL
   if (.is_internal) {
     return(ca)
-  } else if (!.silent) {
+  }
+  # Pre-warm the subprocess for string backends (e.g. "ollama", "simulate_llm").
+  # Chat objects are skipped: they can't be serialized to the subprocess and
+  # will be configured lazily on the first help() call via lang_rs_get().
+  if (!is.null(ca[["backend"]]) && !inherits(ca[["backend"]], "Chat")) {
+    rs <- .lang_env$rs
+    if (!is.null(rs) && rs$is_alive()) {
+      if (rs$get_state() == "starting") {
+        rs$poll_process(10000L)
+      }
+      if (rs$get_state() == "idle") {
+        lang_rs_refresh(rs)
+        .lang_env$rs_hash <- lang_rs_hash()
+      }
+    } else {
+      lang_rs_get()
+    }
+  }
+  if (!.silent) {
     backend <- ca[["backend"]]
     if (inherits(backend, "Chat")) {
       provider <- backend$get_provider()

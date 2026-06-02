@@ -1,14 +1,17 @@
 .onLoad <- function(libname, pkgname) {
   insert_global_shims(force = TRUE)
+  tryCatch(
+    .lang_env$rs <- callr::r_session$new(wait = FALSE),
+    error = function(e) NULL
+  )
 }
 
 
 #' Drop-in replacements for help and ? functions
 #'
-#' The `?` and `help` functions are replacements for functions of the
-#' same name in the utils package. If the LANG environment variable is not set
-#' to English, it will activate the translation to whatever language LANG is
-#' set to.
+#' The `?` and `help` functions are drop-in replacements for those in the
+#' utils package. They automatically translate help to the language specified
+#' by the `LANG` or `LANGUAGE` environment variables, or by `lang_use()`.
 #'
 #' @param topic A name or character string specifying the help topic.
 #' @param package A name or character string specifying the package in which
@@ -75,8 +78,12 @@ shim_lang_help <- function(topic, package = NULL, ...) {
 shim_lang_question <- function(e1, e2) {
   e1_expr <- substitute(e1)
   # ??foo -- Will not translate
-  # Using `ifelse` because if its not a call, then `e1_expr` cannot be subset
-  is_vague <- ifelse(is_call(e1_expr), identical(e1_expr[[1]], quote(`?`)), FALSE)
+  # Using `ifelse` because if it's not a call, then `e1_expr` cannot be subset
+  is_vague <- ifelse(
+    is_call(e1_expr),
+    identical(e1_expr[[1]], quote(`?`)),
+    FALSE
+  )
   if (en_lang() | is_vague) {
     # Passing as-is if language is English, or there is a `??` call
     eval(as.call(list(utils::`?`, substitute(e1), substitute(e2))))
@@ -141,7 +148,7 @@ which_lang <- function(lang = NULL, choose = FALSE) {
       if (unique(length(lang) > 1) && is.null(.lang_env$choose)) {
         cli_bullets(
           c(
-            "i" =  "The `LANG` and `LANGUAGE` variables have different values.\n",
+            "i" = "The `LANG` and `LANGUAGE` variables have different values.\n",
             " " = "Will use value of `LANGUAGE`: {.val {env_language}}",
             " " = "{.emph This message will only appear once during your session}"
           )

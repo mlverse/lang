@@ -26,7 +26,13 @@ test_that("lang_use() works with ellmer", {
 
 test_that("lang_use() works with additional arguments", {
   expect_snapshot(
-    lang_use("simulate_llm", "echo", temp = 0.8, .cache = "path/to/cache", .lang = "test")
+    lang_use(
+      "simulate_llm",
+      "echo",
+      temp = 0.8,
+      .cache = "path/to/cache",
+      .lang = "test"
+    )
   )
 })
 
@@ -39,6 +45,6 @@ test_that("lang_use() works with disabled cache", {
 test_that("Warning is displayed if .lang_chat is set", {
   withr::with_options(
     list(.lang_chat = 3),
-    expect_warning(lang_use())
+    expect_warning(lang_use(.silent = TRUE))
   )
 })

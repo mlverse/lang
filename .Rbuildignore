@@ -21,3 +21,5 @@
 ^CRAN-SUBMISSION$
 ^[.]?air[.]toml$
 ^\.vscode$
+^\.claude$
+README.html
