@@ -8,7 +8,7 @@ execute:
 ## help
 
 ## Description
-The ? and `help` functions are replacements for functions of the same name in the utils package. If the LANG environment variable is not set to English, it will activate the translation to whatever language LANG is set to.
+The ? and `help` functions are drop-in replacements for those in the utils package. They automatically translate help to the language specified by the `LANG` or `LANGUAGE` environment variables, or by `lang_use()`.
 
 
 ## Usage

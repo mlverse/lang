@@ -13,15 +13,22 @@ Translates a given topic into a target language. It uses the `lang` argument to 
 
 ## Usage
 ```r
-lang_help(topic, package = NULL, lang = NULL, type = getOption("help_type"))
+lang_help(
+  topic,
+  package = NULL,
+  lang = NULL,
+  context_size = NULL,
+  type = getOption("help_type")
+)
 ```
 
 ## Arguments
 |Arguments|Description|
 |---|---|
-| topic | A character vector of the topic to search for. |
+| topic | A character string specifying the help topic to translate. |
 | package | The R package to look for the topic, if not provided the function will attempt to find the topic based on the loaded packages. |
 | lang | A character vector language to translate the topic to |
+| context_size | Maximum number of words for the context summary included with each translation request. Set to `0` to disable context-aware translation. When `NULL`, the value set via `lang_use()` is used (default `100`). |
 | type | Produce "html" or "text" output for the help. It defaults to `getOption("help_type")` |
 
 

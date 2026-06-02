@@ -18,6 +18,7 @@ lang_use(
   model = NULL,
   .cache = NULL,
   .lang = NULL,
+  .context_size = NULL,
   .silent = FALSE,
   ...
 )
@@ -26,16 +27,17 @@ lang_use(
 ## Arguments
 |Arguments|Description|
 |---|---|
-| backend | "ollama" or an `ellmer` `Chat` object. If using "ollama", `mall` will use is out-of-the-box integration with that back-end. Defaults to "ollama". |
+| backend | "ollama" or an `ellmer` `Chat` object. If using "ollama", `lang` provides built-in support via the `ollamar` package. Defaults to "ollama". |
 | model | The name of model supported by the back-end provider |
-| .cache | The path to save model results, so they can be re-used if the same operation is ran again. To turn off, set this argument to an empty character: `""`. It defaults to a temp folder. If this argument is left `NULL` when calling this function, no changes to the path will be made. |
+| .cache | Character path where translations are cached. Set to `""` to disable caching. When `NULL`, the current session value is kept unchanged. Defaults to a temporary folder. |
 | .lang | Target language to translate to. This will override values found in the LANG and LANGUAGE environment variables. |
-| .silent | Boolean flag that controls if there is or not output to the console. Defaults to FALSE. |
+| .context_size | Maximum number of words for the context summary included with each translation request. Set to `0` to disable context-aware translation. Defaults to `100`. |
+| .silent | Boolean flag that controls whether there is output to the console. Defaults to FALSE. |
 | ... | Additional arguments that this function will pass down to the integrating function. In the case of Ollama, it will pass those arguments to `ollamar::chat()`. |
 
 
 ## Value
-Console output of the current LLM setup to be used during the R session.
+Invisibly returns `NULL`. Prints the current configuration to the console.
 
 
 
