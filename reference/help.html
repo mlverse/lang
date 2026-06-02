@@ -350,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="description" class="level2">
 <h2 class="anchored" data-anchor-id="description">Description</h2>
-<p>The ? and <code>help</code> functions are replacements for functions of the same name in the utils package. If the LANG environment variable is not set to English, it will activate the translation to whatever language LANG is set to.</p>
+<p>The ? and <code>help</code> functions are drop-in replacements for those in the utils package. They automatically translate help to the language specified by the <code>LANG</code> or <code>LANGUAGE</code> environment variables, or by <code>lang_use()</code>.</p>
 </section>
 <section id="usage" class="level2">
 <h2 class="anchored" data-anchor-id="usage">Usage</h2>
