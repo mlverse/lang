@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>license – lang</title>
+<title>news – lang</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -294,14 +294,22 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="mit-license" class="level1">
-<h1>MIT License</h1>
-<p>Copyright (c) 2024 lang authors</p>
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<section id="lang-development-version" class="level1">
+<h1>lang (development version)</h1>
+<section id="new-features" class="level2">
+<h2 class="anchored" data-anchor-id="new-features">New features</h2>
+<ul>
+<li><code>lang_use()</code> and <code>lang_help()</code> gain a <code>context_size</code> argument (<code>.context_size</code> in <code>lang_use()</code>). When set, a short summary of the full help page is generated and injected into the translation prompt for every field, giving the LLM consistent terminology across sections. Defaults to <code>100</code> words; set to <code>0</code> to disable.</li>
+</ul>
+</section>
+<section id="improvements" class="level2">
+<h2 class="anchored" data-anchor-id="improvements">Improvements</h2>
+<ul>
+<li>Rd parsing has been rewritten to use a structured intermediate list (<code>rd_to_list()</code> / <code>list_to_rd()</code>) instead of regex-based text manipulation. This makes translations more reliable and eliminates a class of edge-case formatting errors.</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
