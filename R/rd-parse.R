@@ -20,8 +20,8 @@
   if (collapse) {
     rd_txt <- paste0(rd_txt, collapse = " ")
   }
-  rd_txt <- gsub("‘", "`", rd_txt)
-  rd_txt <- gsub("’", "`", rd_txt)
+  rd_txt <- gsub("\u2018", "`", rd_txt)
+  rd_txt <- gsub("\u2019", "`", rd_txt)
   rd_txt
 }
 
@@ -36,8 +36,8 @@
   if (is.null(rd_txt) || length(rd_txt) == 0L) {
     return(as.character(x))
   }
-  rd_txt <- gsub("‘", "`", rd_txt)
-  rd_txt <- gsub("’", "`", rd_txt)
+  rd_txt <- gsub("\u2018", "`", rd_txt)
+  rd_txt <- gsub("\u2019", "`", rd_txt)
   if (trim == "tab") {
     tabbed <- substr(rd_txt, 1L, 5L) == "     "
     rd_txt[tabbed] <- substr(rd_txt[tabbed], 6L, nchar(rd_txt[tabbed]))

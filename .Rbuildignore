@@ -22,3 +22,4 @@
 ^[.]?air[.]toml$
 ^\.vscode$
 ^\.claude$
+README.html
