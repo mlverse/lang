@@ -1,4 +1,4 @@
-# lang (development version)
+# lang 0.1.1
 
 ## New features
 
