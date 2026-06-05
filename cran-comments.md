@@ -1,6 +1,8 @@
 ## Resubmission
 
-- Updates Title to title case
+- Replaced `\donttest{}` examples with `\dontrun{}` and added comments
+  explaining they require an interactive session with a local LLM provider.
+  This implements the suggestion by Uwe Ligges.
 
 - This is a new package
 

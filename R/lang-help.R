@@ -21,7 +21,8 @@
 #' @returns Original or translated version of the help documentation in the
 #' output type specified
 #' @examples
-#' \donttest{
+#' \dontrun{
+#' # Requires an interactive session with Ollama running locally
 #' library(lang)
 #'
 #' lang_use("ollama", "llama3.2", seed = 100)

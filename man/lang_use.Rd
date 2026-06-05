@@ -50,7 +50,8 @@ converting "english" to "en" for example. The value is passed directly to
 the LLM, and it lets the LLM interpret the target language.
 }
 \examples{
-\donttest{
+\dontrun{
+# Requires an interactive session with Ollama or another LLM provider
 library(lang)
 
 # Using an `ellmer` chat object

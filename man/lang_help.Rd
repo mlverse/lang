@@ -42,7 +42,8 @@ will be processed, so the help returned will be the original package's
 documentation.
 }
 \examples{
-\donttest{
+\dontrun{
+# Requires an interactive session with Ollama running locally
 library(lang)
 
 lang_use("ollama", "llama3.2", seed = 100)
