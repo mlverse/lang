@@ -21,9 +21,6 @@ devtools::test_active_file('R/{name}.R', desc = 'blah')
 # To redocument the package
 devtools::document()
 
-# To check pkgdown documentation
-pkgdown::check_pkgdown()
-
 # To check the package with R CMD check
 devtools::check()
 ```
@@ -66,9 +63,7 @@ air format .
 - Every user-facing function should be exported and have roxygen2 documentation.
 - Wrap roxygen comments at 80 characters.
 - Internal functions should not have roxygen documentation.
-- Whenever you add a new (non-internal) documentation topic, also add the topic to `_pkgdown.yml`.
 - Always re-document the package after changing a roxygen2 comment.
-- Use `pkgdown::check_pkgdown()` to check that all topics are included in the reference index.
 
 ### `NEWS.md`
 

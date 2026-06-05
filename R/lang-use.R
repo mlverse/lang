@@ -1,6 +1,6 @@
 #' Specifies the LLM provider and model to use during the R session
 #' @description
-#' Allows us to specify the back-end provider, model to use during the current
+#' Specifies the back-end provider and model to use during the current
 #' R session. The target language is not processed by the function, as in
 #' converting "english" to "en" for example. The value is passed directly to
 #' the LLM, and it lets the LLM interpret the target language.

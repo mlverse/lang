@@ -50,3 +50,12 @@
       Lang: test
       Cache: [Disabled]
 
+# Warning is displayed if .lang_chat is set
+
+    Code
+      lang_use(.silent = TRUE)
+    Condition
+      Warning:
+      Option `.lang_chat` is no longer supported
+      Use `lang::lang_use([backend])` in your .RProfile file instead
+
