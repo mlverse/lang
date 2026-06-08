@@ -1,3 +1,13 @@
+rd_test_translate <- function(rd_path, lang = "spanish") {
+  rd_content <- if (grepl("\\.rds$", rd_path)) {
+    readRDS(rd_path)
+  } else {
+    tools::parse_Rd(rd_path)
+  }
+  tmp <- rd_translate(rd_content, lang, context_size = 100L)
+  tools::Rd2txt(tmp)
+}
+
 simulate_ellmer <- function() {
   setClass(
     Class = "simulate_provider",

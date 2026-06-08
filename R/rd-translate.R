@@ -173,7 +173,9 @@ rd_translate <- function(rd_content, lang, context_size) {
 }
 
 rd_field_translate <- function(x, lang, rs, context_summary = NULL) {
-  context_block <- if (!is.null(context_summary)) {
+  word_count <- length(unlist(strsplit(paste(x, collapse = " "), " ")))
+  use_context <- !is.null(context_summary) && word_count > 10L
+  context_block <- if (use_context) {
     paste0(
       "For context, here is a short summary of the full help page in the target language:\n\n",
       context_summary,
@@ -288,6 +290,12 @@ lang_rs_hash <- function() {
 }
 
 lang_rs_get <- function() {
+  if (is.null(.lang_env$session[["backend"]])) {
+    cli_abort(
+      "No LLM backend configured. Call {.fn lang_use} first.",
+      call = NULL
+    )
+  }
   rs <- .lang_env$rs
   if (!is.null(rs) && rs$is_alive()) {
     if (rs$get_state() == "starting") {
