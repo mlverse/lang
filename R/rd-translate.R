@@ -174,7 +174,7 @@ rd_translate <- function(rd_content, lang, context_size) {
 
 rd_field_translate <- function(x, lang, rs, context_summary = NULL) {
   word_count <- length(unlist(strsplit(paste(x, collapse = " "), " ")))
-  use_context <- !is.null(context_summary) && word_count > 5L
+  use_context <- !is.null(context_summary) && word_count > 10L
   context_block <- if (use_context) {
     paste0(
       "For context, here is a short summary of the full help page in the target language:\n\n",

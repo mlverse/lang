@@ -109,3 +109,24 @@ test_that("rd_field_translate prepends context block when context_summary is set
   expect_type(result_with, "character")
   expect_type(result_without, "character")
 })
+
+# ---- Ollama integration (local only, skipped on CRAN) ------------------------
+
+test_that("rd_translate() produces correct output with Ollama", {
+  skip_on_cran()
+  skip_if(
+    !isTRUE(tryCatch(
+      {
+        con <- url("http://localhost:11434")
+        open(con)
+        close(con)
+        TRUE
+      },
+      error = \(e) FALSE
+    )),
+    "Ollama is not running locally"
+  )
+  lang_use("ollama", "llama3.2", seed = 374)
+  expect_snapshot(rd_test_translate(test_path("rd/lang_help.Rd")))
+  expect_snapshot(rd_test_translate(test_path("rd/aes.rds")))
+})
