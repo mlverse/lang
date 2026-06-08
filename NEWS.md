@@ -1,3 +1,9 @@
+# lang 0.1.1.9000
+
+## Bug fixes
+
+* When the input is 5 words or fewer, the context summary is now omitted from the translation prompt. Local LLMs can get confused by a context summary that is much longer than the field being translated, causing them to paraphrase the context instead of translating the input.
+
 # lang 0.1.1
 
 ## New features
