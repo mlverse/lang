@@ -331,6 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#installing" id="toc-installing" class="nav-link" data-scroll-target="#installing">Installing</a></li>
   <li><a href="#using-lang" id="toc-using-lang" class="nav-link" data-scroll-target="#using-lang">Using <code>lang</code></a>
   <ul class="collapse">
+  <li><a href="#context-summary" id="toc-context-summary" class="nav-link" data-scroll-target="#context-summary">Context summary</a></li>
   <li><a href="#llm-connections" id="toc-llm-connections" class="nav-link" data-scroll-target="#llm-connections">LLM connections</a></li>
   <li><a href="#target-language" id="toc-target-language" class="nav-link" data-scroll-target="#target-language">Target language</a></li>
   </ul></li>
@@ -343,6 +344,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#translations-are-not-perfect" id="toc-translations-are-not-perfect" class="nav-link" data-scroll-target="#translations-are-not-perfect">Translations are not perfect</a></li>
   <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging">Debugging</a></li>
+  <li><a href="#translation-errors" id="toc-translation-errors" class="nav-link" data-scroll-target="#translation-errors">Translation errors</a></li>
   <li><a href="#interaction-with-mall" id="toc-interaction-with-mall" class="nav-link" data-scroll-target="#interaction-with-mall">Interaction with <code>mall</code></a></li>
   </ul></li>
   </ul></li>
@@ -389,7 +391,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ■■                                 4% | Title</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><img src="man/figures/lm-spanish.png" align="center" width="100%" alt="Screenshot of the lm function's help page in Spanish"></p>
 <p>After setup, simply use <code>?</code> to trigger and display the translated documentation. Note that R enforces the printed names of each section, so titles such as “Description”, “Usage”, and “Arguments” will always remain untranslated.</p>
-<p>During translation, <code>lang</code> will display its progress by showing which section of the documentation is currently translating. Because each section of a help page is translated independently, the LLM can lose track of the broader topic and produce inconsistent or out-of-context translations. To address this, <code>lang</code> first summarizes the full help page in English, translates that summary into the target language, and then uses it as context when translating each individual section. You can control the length of this summary with the <code>context_size</code> argument in <code>lang_use()</code> or <code>lang_help()</code> — set it to <code>0</code> to disable it, or increase it to give the LLM more context. During the R session, if you request the same R function’s help more than one time then <code>lang</code> will use its cached results, which will run immediately.</p>
+<p>During translation, <code>lang</code> will display its progress by showing which section of the documentation is currently translating. During the R session, if you request the same R function’s help more than one time then <code>lang</code> will use its cached results, which will run immediately.</p>
+<section id="context-summary" class="level3">
+<h3 class="anchored" data-anchor-id="context-summary">Context summary</h3>
+<p>Because each section of a help page is translated independently, the LLM can lose track of the broader topic and produce inconsistent or out-of-context translations. To address this, <code>lang</code> first summarizes the full help page in English, translates that summary into the target language, and then uses it as context when translating each individual section. You can control the length of this summary with the <code>context_size</code> argument in <code>lang_use()</code> or <code>lang_help()</code> — set it to <code>0</code> to disable it, or increase it to give the LLM more context.</p>
+<p>To avoid the LLM getting confused by a context summary that is longer than the content being translated, context is automatically omitted for fields of 10 words or fewer.</p>
+</section>
 <section id="llm-connections" class="level3">
 <h3 class="anchored" data-anchor-id="llm-connections">LLM connections</h3>
 <p>There are two ways to define the LLM in <code>lang_use()</code>:</p>
@@ -462,11 +469,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="debugging">Debugging</h3>
 <p>If the original English help page displays, check your environment variables:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANG"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ""</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "en_US.UTF-8"</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.getenv</span>(<span class="st">"LANGUAGE"</span>)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ""</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>In my case, <code>lang</code> recognizes that the environment is set to English, because of the <code>en</code> code in the variable. If your <code>LANG</code> variable is set to <code>en_...</code> then no translation will occur.</p>
 <p>If this is your case, set the <code>LANGUAGE</code> variable to your preference. You can use the full language name, such as ‘spanish’, or ‘french’, etc. You can use <code>Sys.setenv(LANGUAGE = "[my language]")</code>, or, for a more permanent solution, add the entry to your .Renviron file (<code>usethis::edit_r_environ()</code>).</p>
+</section>
+<section id="translation-errors" class="level3">
+<h3 class="anchored" data-anchor-id="translation-errors">Translation errors</h3>
+<p>If you experience unexpected translation errors and you are using a local LLM without a <code>seed</code> set, try restarting your R session and running the translation again. Non-deterministic LLM output can occasionally produce output that causes errors. If the problem persists, please open an issue at <a href="https://github.com/mlverse/lang/issues" class="uri">https://github.com/mlverse/lang/issues</a>.</p>
 </section>
 <section id="interaction-with-mall" class="level3">
 <h3 class="anchored" data-anchor-id="interaction-with-mall">Interaction with <code>mall</code></h3>
