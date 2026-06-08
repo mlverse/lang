@@ -76,16 +76,24 @@ Note that R enforces the printed names of each section, so titles such as
 "Description", "Usage", and "Arguments" will always remain untranslated.
 
 During translation, `lang` will display its progress by showing which section
-of the documentation is currently translating. Because each section of a help
-page is translated independently, the LLM can lose track of the broader topic
-and produce inconsistent or out-of-context translations. To address this,
-`lang` first summarizes the full help page in English, translates that summary
-into the target language, and then uses it as context when translating each
-individual section. You can control the length of this summary with the
-`context_size` argument in `lang_use()` or `lang_help()` — set it to `0` to
-disable it, or increase it to give the LLM more context. During the R session,
-if you request the same R function's help more than one time then `lang` will
-use its cached results, which will run immediately.
+of the documentation is currently translating. During the R session, if you
+request the same R function's help more than one time then `lang` will use its
+cached results, which will run immediately.
+
+### Context summary
+
+Because each section of a help page is translated independently, the LLM can
+lose track of the broader topic and produce inconsistent or out-of-context
+translations. To address this, `lang` first summarizes the full help page in
+English, translates that summary into the target language, and then uses it as
+context when translating each individual section. You can control the length of
+this summary with the `context_size` argument in `lang_use()` or `lang_help()`
+— set it to `0` to disable it, or increase it to give the LLM more context.
+
+To avoid the LLM getting confused by a context summary that is longer than the
+content being translated, context is automatically omitted for fields of 10
+words or fewer.
+
 
 
 ### LLM connections
@@ -227,6 +235,14 @@ If this is your case, set the `LANGUAGE` variable to your preference. You can
 use the full language name, such as 'spanish', or 'french', etc.  You can use
 `Sys.setenv(LANGUAGE = "[my language]")`, or, for a more permanent solution, 
 add the entry to your .Renviron file (`usethis::edit_r_environ()`).
+
+### Translation errors
+
+If you experience unexpected translation errors and you are using a local LLM
+without a `seed` set, try restarting your R session and running the translation
+again. Non-deterministic LLM output can occasionally produce output that causes
+errors. If the problem persists, please open an issue at
+<https://github.com/mlverse/lang/issues>.
 
 ### Interaction with `mall`
 

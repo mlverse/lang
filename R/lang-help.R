@@ -8,6 +8,14 @@
 #' will be processed, so the help returned will be the original package's
 #' documentation.
 #'
+#' To improve translation consistency, `lang` generates a short summary of the
+#' full help page and passes it as context with each individual translation
+#' request. This helps the LLM maintain consistent terminology across sections.
+#' You can control the length of this summary with the `context_size` argument,
+#' or set it to `0` to disable context-aware translation entirely. To avoid the
+#' LLM getting confused when the context is much longer than the field being
+#' translated, context is automatically omitted for fields of 10 words or fewer.
+#'
 #' @param topic A character string specifying the help topic to translate.
 #' @param package The R package to look for the topic, if not provided the
 #' function will attempt to find the topic based on the loaded packages.
