@@ -290,6 +290,12 @@ lang_rs_hash <- function() {
 }
 
 lang_rs_get <- function() {
+  if (is.null(.lang_env$session[["backend"]])) {
+    cli_abort(
+      "No LLM backend configured. Call {.fn lang_use} first.",
+      call = NULL
+    )
+  }
   rs <- .lang_env$rs
   if (!is.null(rs) && rs$is_alive()) {
     if (rs$get_state() == "starting") {

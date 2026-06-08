@@ -7,11 +7,12 @@ test_that("rd_translate() produces correct output with Ollama", {
     !isTRUE(tryCatch(
       {
         con <- url("http://localhost:11434")
-        open(con)
+        suppressWarnings(open(con))
         close(con)
         TRUE
       },
-      error = \(e) FALSE
+      error = \(e) FALSE,
+      warning = \(e) FALSE
     )),
     "Ollama is not running locally"
   )
