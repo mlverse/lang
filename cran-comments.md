@@ -36,4 +36,10 @@ and appreciate CRAN's consideration.
 
 ## R CMD check results
 
+### Local
+
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+
+### win-builder
+
+0 errors ✔ | 0 warnings ✔ | 1 note ✖ (Days since last update: 5 — addressed in submission note above)
