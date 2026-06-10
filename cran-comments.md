@@ -13,7 +13,12 @@ consistently, producing output that was clearly wrong and immediately apparent
 to users. There was no workaround available to users short of disabling context
 summaries entirely, a feature that was the main addition in 0.1.1.
 
-We apologize for the rapid turnaround and appreciate CRAN's consideration.
+We are aware that the win-builder check flags a NOTE for "Days since last
+update: 5", which is a direct consequence of this early resubmission and the
+very reason for this explanatory note. We apologize for the rapid turnaround
+and appreciate CRAN's consideration.
+
+### Bug fixes
 
 - When the input is 10 words or fewer, the context summary is now omitted from
   the translation prompt. Local LLMs can get confused by a context summary that
