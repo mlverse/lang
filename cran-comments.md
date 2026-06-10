@@ -1,23 +1,33 @@
-## Resubmission
+## Submission
 
-- Replaced `\donttest{}` examples with `\dontrun{}` and added comments
-  explaining they require an interactive session with a local LLM provider.
-  This implements the suggestion by Uwe Ligges.
+We recognize this resubmission comes sooner than the usual one-month waiting
+period following our previous release (0.1.1). We are submitting early because
+the bug fixed in this version is user-visible and significant enough that it
+has a high probability of discouraging adoption of the package.
 
-- This is a new package
+The issue stems from an inherent unpredictability in local LLMs: when the
+context summary injected into the translation prompt is much longer than the
+field being translated, some local models paraphrase the context rather than
+translate the input. For short fields (10 words or fewer) this happened
+consistently, producing output that was clearly wrong and immediately apparent
+to users. There was no workaround available to users short of disabling context
+summaries entirely, a feature that was the main addition in 0.1.1.
 
-- Description: Use an 'LLM' to translate a function's help documentation on the fly.
-It  overrides the `?` and `help()` functions in your R session. If you are 
-using 'RStudio' or 'Positron', the translated help page will appear in the usual
-'Help' pane.
+We apologize for the rapid turnaround and appreciate CRAN's consideration.
+
+- When the input is 10 words or fewer, the context summary is now omitted from
+  the translation prompt. Local LLMs can get confused by a context summary that
+  is much longer than the field being translated, causing them to paraphrase
+  the context instead of translating the input.
 
 ## R CMD checks on GitHub
 
-- Ubuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.5.1 (2025-06-13)
-- Ubuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.4.3 (2025-02-28)
-- Ubuntu 24.04.3 LTS (x86_64, linux-gnu), R Under development (unstable) (2025-10-18 r88943)
-- macOS Sequoia 15.6.1 (aarch64, darwin20), R version 4.5.1 (2025-06-13)
-- Windows Server 2022 x64 (build 26100) (x86_64, mingw32), R version 4.5.1 (2025-06-13 ucrt)
+- Windows Server x64 (build 26100) (x86_64, mingw32), R version 4.2.3 (2023-03-15 ucrt)
+- Ubuntu 24.04.4 LTS (x86_64, linux-gnu), R Under development (unstable) (2026-06-06 r90114)
+- Windows Server 2022 x64 (build 26100) (x86_64, mingw32), R version 4.6.0 (2026-04-24 ucrt)
+- Ubuntu 24.04.4 LTS (x86_64, linux-gnu), R version 4.5.3 (2026-03-11)
+- macOS Sequoia 15.7.7 (aarch64, darwin23), R version 4.6.0 (2026-04-24)
+- Ubuntu 24.04.4 LTS (x86_64, linux-gnu), R version 4.6.0 (2026-04-24)
 
 ## R CMD check results
 

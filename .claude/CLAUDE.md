@@ -91,3 +91,65 @@ Work paragraph by paragraph, always starting by making a TODO list that includes
 Fix spelling, grammar, and other minor problems without asking the user. Label any unclear, confusing, or ambiguous sentences with a FIXME comment.
 
 Only report what you have changed.
+
+
+## Release process
+
+### 1. Update local R packages
+Before starting, make sure all local packages are up to date to avoid masking
+failures that will show up in CI:
+```r
+update.packages(ask = FALSE)
+```
+
+### 2. Run local tests and R CMD check
+Confirm the package is in a green state before making any release changes:
+```r
+devtools::test()
+devtools::check()
+```
+`devtools::test()` gives faster feedback on failures. `devtools::check()` must
+be `0 errors | 0 warnings | 0 notes` before submitting to CRAN.
+
+### 3. Update version in DESCRIPTION
+
+Remove the dev version number, bump the remaining number, usually by the minor
+version, unless there are a lot of significant changes
+
+### 4. Submit to win-builder
+```r
+devtools::check_win_devel()
+```
+Address any new NOTEs/WARNINGs.
+
+### 5. Prepare cran-comments.md
+
+Populate the three sections using:
+
+- **R CMD checks on GitHub**: `cranjobs::github_action_run("R-CMD-check.yaml")`
+- **R CMD check results**: from `devtools::check()` above
+
+Template:
+```markdown
+## Submission
+
+- <bullet points matching NEWS.md entries for this release>
+
+## R CMD checks on GitHub
+
+- <output of cranjobs::github_action_run()>
+
+## R CMD check results
+
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+```
+
+### 6. Submit to CRAN
+```r
+devtools::submit_cran()
+```
+
+## Common issues to watch for
+
+- **Undocumented exported functions**: add a roxygen title + `@keywords internal` to stub methods
+- **Broken URLs in docs**: R CMD check on win-builder validates URLs; fix dead links before submission
