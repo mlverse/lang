@@ -294,29 +294,41 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="resubmission" class="level2">
-<h2 class="anchored" data-anchor-id="resubmission">Resubmission</h2>
+<section id="submission" class="level2">
+<h2 class="anchored" data-anchor-id="submission">Submission</h2>
+<p>We recognize this resubmission comes sooner than the usual one-month waiting period following our previous release (0.1.1). We are submitting early because the bug fixed in this version is user-visible and significant enough that it has a high probability of discouraging adoption of the package.</p>
+<p>The issue stems from an inherent unpredictability in local LLMs: when the context summary injected into the translation prompt is much longer than the field being translated, some local models paraphrase the context rather than translate the input. For short fields (10 words or fewer) this happened consistently, producing output that was clearly wrong and immediately apparent to users. There was no workaround available to users short of disabling context summaries entirely, a feature that was the main addition in 0.1.1.</p>
+<p>We are aware that the win-builder check flags a NOTE for “Days since last update: 5”, which is a direct consequence of this early resubmission and the very reason for this explanatory note. We apologize for the rapid turnaround and appreciate CRAN’s consideration.</p>
+<section id="bug-fixes" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h3>
 <ul>
-<li><p>Replaced <code>\donttest{}</code> examples with <code>\dontrun{}</code> and added comments explaining they require an interactive session with a local LLM provider. This implements the suggestion by Uwe Ligges.</p></li>
-<li><p>This is a new package</p></li>
-<li><p>Description: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the <code>?</code> and <code>help()</code> functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane.</p></li>
+<li>When the input is 10 words or fewer, the context summary is now omitted from the translation prompt. Local LLMs can get confused by a context summary that is much longer than the field being translated, causing them to paraphrase the context instead of translating the input.</li>
 </ul>
+</section>
 </section>
 <section id="r-cmd-checks-on-github" class="level2">
 <h2 class="anchored" data-anchor-id="r-cmd-checks-on-github">R CMD checks on GitHub</h2>
 <ul>
-<li>Ubuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.5.1 (2025-06-13)</li>
-<li>Ubuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.4.3 (2025-02-28)</li>
-<li>Ubuntu 24.04.3 LTS (x86_64, linux-gnu), R Under development (unstable) (2025-10-18 r88943)</li>
-<li>macOS Sequoia 15.6.1 (aarch64, darwin20), R version 4.5.1 (2025-06-13)</li>
-<li>Windows Server 2022 x64 (build 26100) (x86_64, mingw32), R version 4.5.1 (2025-06-13 ucrt)</li>
+<li>Windows Server x64 (build 26100) (x86_64, mingw32), R version 4.2.3 (2023-03-15 ucrt)</li>
+<li>Ubuntu 24.04.4 LTS (x86_64, linux-gnu), R Under development (unstable) (2026-06-06 r90114)</li>
+<li>Windows Server 2022 x64 (build 26100) (x86_64, mingw32), R version 4.6.0 (2026-04-24 ucrt)</li>
+<li>Ubuntu 24.04.4 LTS (x86_64, linux-gnu), R version 4.5.3 (2026-03-11)</li>
+<li>macOS Sequoia 15.7.7 (aarch64, darwin23), R version 4.6.0 (2026-04-24)</li>
+<li>Ubuntu 24.04.4 LTS (x86_64, linux-gnu), R version 4.6.0 (2026-04-24)</li>
 </ul>
 </section>
 <section id="r-cmd-check-results" class="level2">
 <h2 class="anchored" data-anchor-id="r-cmd-check-results">R CMD check results</h2>
+<section id="local" class="level3">
+<h3 class="anchored" data-anchor-id="local">Local</h3>
 <p>0 errors ✔ | 0 warnings ✔ | 0 notes ✔</p>
+</section>
+<section id="win-builder" class="level3">
+<h3 class="anchored" data-anchor-id="win-builder">win-builder</h3>
+<p>0 errors ✔ | 0 warnings ✔ | 1 note ✖ (Days since last update: 5 — addressed in submission note above)</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

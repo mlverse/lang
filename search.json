@@ -4,28 +4,28 @@
     "href": "cran-comments.html",
     "title": "lang",
     "section": "",
-    "text": "Replaced \\donttest{} examples with \\dontrun{} and added comments explaining they require an interactive session with a local LLM provider. This implements the suggestion by Uwe Ligges.\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
+    "text": "We recognize this resubmission comes sooner than the usual one-month waiting period following our previous release (0.1.1). We are submitting early because the bug fixed in this version is user-visible and significant enough that it has a high probability of discouraging adoption of the package.\nThe issue stems from an inherent unpredictability in local LLMs: when the context summary injected into the translation prompt is much longer than the field being translated, some local models paraphrase the context rather than translate the input. For short fields (10 words or fewer) this happened consistently, producing output that was clearly wrong and immediately apparent to users. There was no workaround available to users short of disabling context summaries entirely, a feature that was the main addition in 0.1.1.\nWe are aware that the win-builder check flags a NOTE for “Days since last update: 5”, which is a direct consequence of this early resubmission and the very reason for this explanatory note. We apologize for the rapid turnaround and appreciate CRAN’s consideration.\n\n\n\nWhen the input is 10 words or fewer, the context summary is now omitted from the translation prompt. Local LLMs can get confused by a context summary that is much longer than the field being translated, causing them to paraphrase the context instead of translating the input."
   },
   {
-    "objectID": "cran-comments.html#resubmission",
-    "href": "cran-comments.html#resubmission",
+    "objectID": "cran-comments.html#submission",
+    "href": "cran-comments.html#submission",
     "title": "lang",
     "section": "",
-    "text": "Replaced \\donttest{} examples with \\dontrun{} and added comments explaining they require an interactive session with a local LLM provider. This implements the suggestion by Uwe Ligges.\nThis is a new package\nDescription: Use an ‘LLM’ to translate a function’s help documentation on the fly. It overrides the ? and help() functions in your R session. If you are using ‘RStudio’ or ‘Positron’, the translated help page will appear in the usual ‘Help’ pane."
+    "text": "We recognize this resubmission comes sooner than the usual one-month waiting period following our previous release (0.1.1). We are submitting early because the bug fixed in this version is user-visible and significant enough that it has a high probability of discouraging adoption of the package.\nThe issue stems from an inherent unpredictability in local LLMs: when the context summary injected into the translation prompt is much longer than the field being translated, some local models paraphrase the context rather than translate the input. For short fields (10 words or fewer) this happened consistently, producing output that was clearly wrong and immediately apparent to users. There was no workaround available to users short of disabling context summaries entirely, a feature that was the main addition in 0.1.1.\nWe are aware that the win-builder check flags a NOTE for “Days since last update: 5”, which is a direct consequence of this early resubmission and the very reason for this explanatory note. We apologize for the rapid turnaround and appreciate CRAN’s consideration.\n\n\n\nWhen the input is 10 words or fewer, the context summary is now omitted from the translation prompt. Local LLMs can get confused by a context summary that is much longer than the field being translated, causing them to paraphrase the context instead of translating the input."
   },
   {
     "objectID": "cran-comments.html#r-cmd-checks-on-github",
     "href": "cran-comments.html#r-cmd-checks-on-github",
     "title": "lang",
     "section": "R CMD checks on GitHub",
-    "text": "R CMD checks on GitHub\n\nUbuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.5.1 (2025-06-13)\nUbuntu 24.04.3 LTS (x86_64, linux-gnu), R version 4.4.3 (2025-02-28)\nUbuntu 24.04.3 LTS (x86_64, linux-gnu), R Under development (unstable) (2025-10-18 r88943)\nmacOS Sequoia 15.6.1 (aarch64, darwin20), R version 4.5.1 (2025-06-13)\nWindows Server 2022 x64 (build 26100) (x86_64, mingw32), R version 4.5.1 (2025-06-13 ucrt)"
+    "text": "R CMD checks on GitHub\n\nWindows Server x64 (build 26100) (x86_64, mingw32), R version 4.2.3 (2023-03-15 ucrt)\nUbuntu 24.04.4 LTS (x86_64, linux-gnu), R Under development (unstable) (2026-06-06 r90114)\nWindows Server 2022 x64 (build 26100) (x86_64, mingw32), R version 4.6.0 (2026-04-24 ucrt)\nUbuntu 24.04.4 LTS (x86_64, linux-gnu), R version 4.5.3 (2026-03-11)\nmacOS Sequoia 15.7.7 (aarch64, darwin23), R version 4.6.0 (2026-04-24)\nUbuntu 24.04.4 LTS (x86_64, linux-gnu), R version 4.6.0 (2026-04-24)"
   },
   {
     "objectID": "cran-comments.html#r-cmd-check-results",
     "href": "cran-comments.html#r-cmd-check-results",
     "title": "lang",
     "section": "R CMD check results",
-    "text": "R CMD check results\n0 errors ✔ | 0 warnings ✔ | 0 notes ✔"
+    "text": "R CMD check results\n\nLocal\n0 errors ✔ | 0 warnings ✔ | 0 notes ✔\n\n\nwin-builder\n0 errors ✔ | 0 warnings ✔ | 1 note ✖ (Days since last update: 5 — addressed in submission note above)"
   },
   {
     "objectID": "index.html#installing",
@@ -163,28 +163,28 @@
   {
     "objectID": "NEWS.html",
     "href": "NEWS.html",
-    "title": "lang 0.1.1.9000",
+    "title": "lang 0.1.2",
     "section": "",
     "text": "When the input is 10 words or fewer, the context summary is now omitted from the translation prompt. Local LLMs can get confused by a context summary that is much longer than the field being translated, causing them to paraphrase the context instead of translating the input."
   },
   {
     "objectID": "NEWS.html#bug-fixes",
     "href": "NEWS.html#bug-fixes",
-    "title": "lang 0.1.1.9000",
+    "title": "lang 0.1.2",
     "section": "",
     "text": "When the input is 10 words or fewer, the context summary is now omitted from the translation prompt. Local LLMs can get confused by a context summary that is much longer than the field being translated, causing them to paraphrase the context instead of translating the input."
   },
   {
     "objectID": "NEWS.html#new-features",
     "href": "NEWS.html#new-features",
-    "title": "lang 0.1.1.9000",
+    "title": "lang 0.1.2",
     "section": "New features",
     "text": "New features\n\nlang_use() and lang_help() gain a context_size argument (.context_size in lang_use()). When set, a short summary of the full help page is generated and injected into the translation prompt for every field, giving the LLM consistent terminology across sections. Defaults to 100 words; set to 0 to disable."
   },
   {
     "objectID": "NEWS.html#improvements",
     "href": "NEWS.html#improvements",
-    "title": "lang 0.1.1.9000",
+    "title": "lang 0.1.2",
     "section": "Improvements",
     "text": "Improvements\n\nRd parsing has been rewritten to use a structured intermediate list (rd_to_list() / list_to_rd()) instead of regex-based text manipulation. This makes translations more reliable and eliminates a class of edge-case formatting errors."
   }
